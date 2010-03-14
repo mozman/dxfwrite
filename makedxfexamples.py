@@ -232,7 +232,7 @@ def dimline_dxf(engine, filename):
     # next dimline is added as anonymous block
     dimline = DimensionLine((-2,3), points, dimstyle='dots2', angle=90.)
     dimline.set_text(1, 'CATCH')
-    dwg.add_anonymous_block(dimline, layer='DIMENSIONS')
+    dwg.add_anonymous_block(dimline, layer='DIMENSIONS', typechar="D")
     dwg.add(engine.polyline(points, color=5))
     dwg.save()
 
@@ -242,7 +242,7 @@ def get_3d_entities(engine):
     mesh = engine.polymesh(msize, msize)
     delta = math.pi / msize
     for x in range(msize):
-        sinx = sin(float(x)*delta)
+        sinx = math.sin(float(x)*delta)
         for y in range(msize):
             cosy = math.cos(float(y)*delta)
             z = sinx * cosy * height
@@ -251,8 +251,15 @@ def get_3d_entities(engine):
 
 def models3d_dxf(engine, name):
     dwg = engine.drawing(name)
+    dwg.add_viewport(
+        '*Active',
+        center_point=(0,0),
+        height = 30,
+        direction_point=(30,30,10)
+        )
+
     for dxf_obj in get_3d_entities(engine):
-        dwg.add(obj)
+        dwg.add(dxf_obj)
     dwg.save()
 
 def main():

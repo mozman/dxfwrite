@@ -27,7 +27,7 @@ class Drawing(object):
         self.tables = Sections.get('TABLES')
         self.blocks = Sections.get('BLOCKS')
         self.entities = Sections.get('ENTITIES')
-        self._anonymous_counter = 99
+        self._anonymous_counter = 0
 
         if default_values:
             self.add_default_values()
@@ -99,7 +99,7 @@ class Drawing(object):
             self.linetypes.add(ltype)
         for style in self.std_styles():
             self.styles.add(style)
-        self.tables.appids.add(DXFEngine.appid('DXFWRITE_PY') )
+        self.tables.appids.add(DXFEngine.appid('DXFWRITE') )
 
     def save(self):
         with open(self.filename, 'w') as fp:

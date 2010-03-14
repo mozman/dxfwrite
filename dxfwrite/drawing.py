@@ -7,17 +7,13 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-
 from cStringIO import StringIO
 
 from dxfwrite import DXFEngine
 from dxfwrite.base import *
 from dxfwrite.sections import Sections
-
 import dxfwrite.const as const
-
-
-import std
+import dxfwrite.std as std
 
 class Drawing(object):
     """ Collection of dxf entities. """

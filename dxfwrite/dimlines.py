@@ -12,17 +12,11 @@ dxf dimension-entity!
 
 OBJECTS
 
-DimStyle
-    describes a dimension style
-
-DimensionLine
-    A simple straight dimension line with two or more points
-DimensionAngle
-    angle dimensioning
-DimensionArc
-    arc dimensioning
-DimensionRadius
-    radius dimensioning
+- DimStyle
+- LinearDimension
+- AngularDimension
+- ArcDimension
+- RadialDimension
 
 PUBLIC MEMBERS
 
@@ -42,7 +36,7 @@ from dxfwrite.ray import Ray2D
 from dxfwrite import DXFEngine, DXFList
 import dxfwrite.const as const
 
-__all__ = ['DimensionLine', 'DimensionAngle', 'DimensionArc', 'DimensionRadius']
+__all__ = ['LinearDimension', 'AngularDimension', 'ArcDimension', 'RadialDimension']
 DIMENSIONS_MIN_DISTANCE = 0.05
 DIMENSIONS_FLOATINGPOINT = '.'
 
@@ -165,6 +159,12 @@ class _DimStyles(object):
                             layer=byblock)
         ]
         drawing.blocks.add(block('DIMTICK_ARROW', elements))
+        elements = [ # special tick for RadialDimension
+            DXFEngine.solid([(0, 0), (.3, .05), (0.25, 0. ), ( .3,-.05)], color=7,
+                            layer=byblock)
+        ]
+        drawing.blocks.add(block('DIMTICK_RADIUS', elements))
+
         drawing.add_layer('DIMENSIONS')
 
 dimstyles = _DimStyles() # use this factory tu create new dimstyles
@@ -205,7 +205,7 @@ class _DimensionBase(object):
         return self.data.__dxf__()
 
 
-class DimensionLine(_DimensionBase):
+class LinearDimension(_DimensionBase):
     """ Simple straight dimension line with two or more measure points, build
     with basic dxf entities. This is NOT a dxf dimension entity. And This is
     a 2D element, so all z-values will be ignored!
@@ -225,7 +225,7 @@ class DimensionLine(_DimensionBase):
     """
     def __init__(self, pos, measure_points, angle=0., dimstyle='Default',
                  layer=None):
-        super(DimensionLine, self).__init__(dimstyle, layer)
+        super(LinearDimension, self).__init__(dimstyle, layer)
         self.angle = angle
         self.measure_points = measure_points
         self.text_override = [""] * self.section_count
@@ -393,13 +393,13 @@ class DimensionLine(_DimensionBase):
             for index in range(self.point_count):
                 set_tick((index), False)
 
-class DimensionAngle(_DimensionBase):
+class AngularDimension(_DimensionBase):
     """ Draw an angle dimensioning line at dimline pos from start to end,
     dimension text is the angle build of the three points start-center-end.
     """
     def __init__(self, dimlinepos, center, start, end,
                  dimstyle='Default', layer=None):
-        super(DimensionAngle, self).__init__(dimstyle, layer)
+        super(AngularDimension, self).__init__(dimstyle, layer)
         self.dimlinepos = vector2d(dimlinepos)
         self.center = vector2d(center)
         self.start = vector2d(start)
@@ -449,9 +449,9 @@ class DimensionAngle(_DimensionBase):
         return vadd(self.center, vmul_scalar(vector, self.pos_radius))
 
     def _draw_dimension_text(self):
-        dimtext = self._get_dimtext(self)
+        dimtext = self._get_dimtext()
         insert_point = self._get_text_insert_point()
-        rotation = degrees((self.start_angle + self.end_angle) / 2 + pi/2.)
+        rotation = degrees((self.start_angle + self.end_angle) / 2 - pi/2.)
         self.data.append(
             DXFEngine.text(dimtext, insert_point,
                            height=self.prop('height'),
@@ -490,19 +490,19 @@ class DimensionAngle(_DimensionBase):
                     yscale=self.prop('tickfactor'),
                     layer=self.prop('layer')))
 
-class DimensionArc(DimensionAngle):
+class ArcDimension(AngularDimension):
     """ Arc is defined by start- and endpoint on arc and the centerpoint, or
     by three points lying on the arc if acr3points is True. Measured length goes
     from start- to endpoint. The dimension line goes through the dimlinepos.
     """
     def __init__(self, dimlinepos, center, start, end, arc3points=False,
                  dimstyle='Default', layer=None):
-        super(DimensionArc, self).__init__(dimlinepos, center, start, end,
+        super(ArcDimension, self).__init__(dimlinepos, center, start, end,
                                            dimstyle, layer)
         self.arc3points = arc3points
 
     def _setup(self):
-        super(DimensionArc, self)._setup()
+        super(ArcDimension, self)._setup()
         if self.arc3points:
             self.center = center_of_3points_arc(
                 self.center, self.start, self.end)
@@ -521,13 +521,13 @@ class DimensionArc(DimensionAngle):
         return self.format_dimtext(arc_length)
 
 
-class DimensionRadius(_DimensionBase):
+class RadialDimension(_DimensionBase):
     """ Draw a radius dimension line from target in direction of center with
-    length drawing units.
+    length drawing units. RadialDimension has a special tick!!
     """
     def __init__(self, center, target, length=1.,
                  dimstyle='Default', layer=None):
-        super(DimensionRadius, self).__init__(dimstyle, layer)
+        super(RadialDimension, self).__init__(dimstyle, layer)
         self.center = vector2d(center)
         self.target = vector2d(target)
         self.length = float(length)
@@ -562,6 +562,7 @@ class DimensionRadius(_DimensionBase):
             halign = const.RIGHT,
             alignpoint=insert_point,
             layer=self.prop('layer'),
+            style=self.prop('style'),
             color=self.prop('textcolor')))
 
     def _get_insert_point(self):
@@ -569,15 +570,15 @@ class DimensionRadius(_DimensionBase):
             self.target_vector, self.length + self.prop('textabove')))
 
     def _get_dimtext(self):
-        return self.format_dimtext(self.radius)
+        return self.format_dimtext(self.radius * self.prop('scale'))
 
     def _draw_ticks(self):
         rotation = vector_angle(self.target_vector)
-        rotation = degrees(rotation + (pi if self.prop('tick2x') else 0.))
+        rotation = degrees(rotation + pi)
         self.data.append(
             DXFEngine.insert(
                 insert=self.target,
-                blockname=self.prop('tick'),
+                blockname='DIMTICK_RADIUS',
                 rotation=rotation,
                 xscale=self.prop('tickfactor'),
                 yscale=self.prop('tickfactor'),

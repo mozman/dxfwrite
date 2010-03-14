@@ -217,23 +217,31 @@ def mtext_dxf(engine, name):
     dwg.save()
 
 def dimline_dxf(engine, filename):
-    from dxfwrite.dimlines import dimstyles, DimensionLine
+    from dxfwrite.dimlines import dimstyles, LinearDimension, AngularDimension
+    from dxfwrite.dimlines import ArcDimension, RadialDimension
+
     dwg = engine.drawing(filename)
     dimstyles.setup(dwg)
     points = [ (1.7,2.5), (0,0), (3.3,6.9), (8,12)]
     dimstyles.new("dots", tick="DIMTICK_DOT", scale=1., roundval=2, textabove=.5)
     dimstyles.new("arrow", tick="DIMTICK_ARROW", tick2x=True, dimlineext=0.)
 
-    dwg.add(DimensionLine((3,3), points, dimstyle='dots', angle=15.))
-    dwg.add(DimensionLine((0,3), points, angle=90.))
-    dwg.add(DimensionLine((-2,14), points, dimstyle='arrow', angle=-10))
+    dwg.add(LinearDimension((3,3), points, dimstyle='dots', angle=15.))
+    dwg.add(LinearDimension((0,3), points, angle=90.))
+    dwg.add(LinearDimension((-2,14), points, dimstyle='arrow', angle=-10))
     dimstyles.new('dots2', tick="DIMTICK_DOT", tickfactor=.5)
 
     # next dimline is added as anonymous block
-    dimline = DimensionLine((-2,3), points, dimstyle='dots2', angle=90.)
+    dimline = LinearDimension((-2,3), points, dimstyle='dots2', angle=90.)
     dimline.set_text(1, 'CATCH')
     dwg.add_anonymous_block(dimline, layer='DIMENSIONS', typechar="D")
     dwg.add(engine.polyline(points, color=5))
+
+    dimstyles.new("angle", tick="DIMTICK_ARROW", tick2x=True, dimlineext=0.)
+    dwg.add(AngularDimension((18, 5), (15, 0), (20, 0), (20, 5), dimstyle='angle'))
+    dwg.add(ArcDimension((23, 5), (20, 0), (25, 0), (25, 5), dimstyle='dots2'))
+    dimstyles.new("radius", height=0.25, prefix='R=') # RadialDimension has a special tick
+    dwg.add(RadialDimension((20, 0), (24, 1.5), dimstyle='radius'))
     dwg.save()
 
 def get_3d_entities(engine):

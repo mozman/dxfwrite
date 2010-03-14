@@ -1,0 +1,66 @@
+dxfwrite.py is a library to create DXF R12 drawings.
+
+Supported R12 Entities:
+  * ARC
+  * ATTDEF
+  * ATTRIB
+  * BLOCK
+  * CIRCLE
+  * 3DFACE
+  * INSERT
+  * LINE
+  * POINT
+  * POLYLINE (special Polyface and Polymesh objects are available)
+  * SHAPE (not tested)
+  * SOLID
+  * TEXT
+  * VERTEX (only interal used)
+not supported R13 Entities:
+  * TRACE (???)
+ 
+Buildups Entities: (build with basic R12 DXF-entities)
+  * MText 
+  * DimsionLine 
+  * DimensionAngle
+  * DimensionArc
+  * DimensionRadius
+
+Native DXF dimensions are not supported, because i don't know how this works, hints are welcome.
+
+My first Goal was to support newer DXF-Versions because R12 is well supported by SDXF (stani).
+But this try ends at the point where AutoCAD crashes on opening the dxf drawings, and
+the error messages were meaningless for me.
+And there are not enough usefull new DXF-Entities since R13 to waste my time for supporting
+DXF R13 or newer. The most interesting objects like solid models are binary encoded and
+not documented by Autodesk.
+
+Missing from R13 and later:
+  * MTEXT (R13) ... emulated as buildup
+  * ELLIPSE (R13) ... approximated by POLYLINE
+  * SPLINE (R13) ... approximated by POLYLINE
+  * LWPOLYLINE ... POLYLINE
+  * BODY, REGION, 3DSOLID (R13) binary encoded and not documented
+  * IMAGE, HATCH, MLINE, TOLERANCE, LEADER, XLINE, RAY (R13)
+  * OLEFRAME and PROXY entities (R13)
+  * WIPEOUT (R2000)
+  * TABLE (R2005)
+  * HELIX, LIGHT, MLEADER, SECTION, UNDERLAY (R2008)
+  * SURFACE (R2008) binary encoded and not documented
+  * SUN (R2009)
+  * SUBDIVISION (R2010) 
+  
+Using dxfwrite
+---------------
+.
+.
+.
+
+Good Luck!  As always, feedback is greatly appreciated.
+
+Manfred
+mozman@gmx.at
+
+dxfwrite can be found on Google-Code at:
+	http://.../
+
+

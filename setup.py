@@ -27,4 +27,5 @@ setup(name='dxfwrite',
     "Programming Language :: Python :: 2.6",
     "Intended Audience :: Developers",
     "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    ]
      )

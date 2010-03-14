@@ -36,12 +36,13 @@ PUBLIC FUNCTIONS
 setup(drawing)
     add necessary block- and layer-definitions to drawing
 """
-from math import radians, hypot
+from math import radians, degrees, hypot, atan2, pi
 
 from dxfwrite.ray import Ray2D
 from dxfwrite import DXFEngine, DXFList
 import dxfwrite.const as const
 
+__all__ = ['DimensionLine', 'DimensionAngle', 'DimensionArc', 'DimensionRadius']
 DIMENSIONS_MIN_DISTANCE = 0.05
 DIMENSIONS_FLOATINGPOINT = '.'
 
@@ -188,6 +189,16 @@ class _DimensionBase(object):
         """ build dimension line object with basic dxf entities """
         raise NotImplementedError("override abstract method _build_dimline")
 
+    def format_dimtext(self, dimvalue):
+        """ string format the dimension text """
+        dimtext = "{0:.{1}f}".format(dimvalue, self.prop('roundval'))
+        if DIMENSIONS_FLOATINGPOINT in dimtext:
+            # remove successional zeros
+            dimtext.rstrip('0')
+            # remove floating point as last char
+            dimtext.rstrip(DIMENSIONS_FLOATINGPOINT)
+        return self.prop('prefix') + dimtext + self.prop('suffix')
+
     def __dxf__(self):
         """ get the dxf string """
         self._build_dimline()
@@ -226,7 +237,7 @@ class DimensionLine(_DimensionBase):
         """
         self.text_override[section] = text
 
-    def _setup_dimension_line(self):
+    def _setup(self):
         """ calc setup values and determines the point order of the dimension
         line points.
         """
@@ -266,7 +277,7 @@ class DimensionLine(_DimensionBase):
 
     def _build_dimline(self):
         """ build dimension line object with basic dxf entities """
-        self._setup_dimension_line()
+        self._setup()
         self._draw_dimline()
         if self.prop('dimextline'):
             self._draw_extension_lines()
@@ -308,7 +319,7 @@ class DimensionLine(_DimensionBase):
             layer=self.prop('layer')))
 
     def _draw_extension_lines(self):
-        """ build the extension lines entities"""
+        """ build the extension lines entities """
         dimextlinegap = self.prop('dimextlinegap')
         for dimline_point, target_point in \
             zip(self.dimline_points, self.measure_points):
@@ -348,13 +359,7 @@ class DimensionLine(_DimensionBase):
         point1, point2 = self._get_section_points(section)
 
         dimvalue = distance(point1, point2) * self.prop('scale')
-        dimtext = "{0:.{1}f}".format(dimvalue, self.prop('roundval'))
-        if DIMENSIONS_FLOATINGPOINT in dimtext:
-            # remove successional zeros
-            dimtext.rstrip('0')
-            # remove floating point as last char
-            dimtext.rstrip(DIMENSIONS_FLOATINGPOINT)
-        return self.prop('prefix') + dimtext + self.prop('suffix')
+        return self.format_dimtext(dimvalue)
 
     def _get_text_insert_point(self, section):
         """ get the dimension value text insert point """
@@ -400,46 +405,184 @@ class DimensionAngle(_DimensionBase):
         self.start = vector2d(start)
         self.end = vector2d(end)
 
+    def _setup(self):
+        """ setup calculation values """
+        self.pos_radius = distance(self.center, self.dimlinepos)
+        self.radius = distance(self.center, self.start)
+        self.start_vector = unit_vector(vsub(self.start, self.center))
+        self.end_vector = unit_vector(vsub(self.end, self.center))
+        self.start_angle = vector_angle(self.start_vector)
+        self.end_angle = vector_angle(self.end_vector)
+
     def _build_dimline(self):
         """ build dimension line object with basic dxf entities """
-        pass
+        self._setup()
+        self._draw_dimension_line()
+        if self.prop('dimextline'):
+            self._draw_extension_lines()
+        self._draw_dimension_text()
+        self._draw_ticks()
 
-class DimensionArc(_DimensionBase):
+    def _draw_dimension_line(self):
+        """ draw the dimension line from start- to endangle. """
+        self.data.append(
+            DXFEngine.arc(self.pos_radius, self.center,
+                          degrees(self.start_angle),
+                          degrees(self.end_angle),
+                          layer=self.prop('layer'),
+                          color=self.prop('dimlinecolor')))
+
+    def _draw_extension_lines(self):
+        """ build the extension lines entities """
+        for vector in [self.start_vector, self.end_vector]:
+            self.data.append(
+                DXFEngine.line(self._get_extline_start(vector),
+                               self._get_extline_end(vector),
+                               layer=self.prop('layer'),
+                               color=self.prop('dimextlinecolor')))
+
+    def _get_extline_start(self, vector):
+        return vadd(self.center,
+                    vmul_scalar(vector, self.prop('dimextlinegap')))
+
+    def _get_extline_end(self, vector):
+        return vadd(self.center, vmul_scalar(vector, self.pos_radius))
+
+    def _draw_dimension_text(self):
+        dimtext = self._get_dimtext(self)
+        insert_point = self._get_text_insert_point()
+        rotation = degrees((self.start_angle + self.end_angle) / 2 + pi/2.)
+        self.data.append(
+            DXFEngine.text(dimtext, insert_point,
+                           height=self.prop('height'),
+                           rotation=rotation,
+                           halign=const.CENTER,
+                           valign=const.MIDDLE,
+                           layer=self.prop('layer'),
+                           style=self.prop('style'),
+                           color=self.prop('textcolor'),
+                           alignpoint=insert_point))
+
+    def _get_text_insert_point(self):
+        midvector = unit_vector(
+            vdiv_scalar(vadd(self.start_vector, self.end_vector), 2.))
+        length = self.pos_radius + self.prop('textabove') + \
+                 self.prop('height') / 2.
+        return vadd(self.center, vmul_scalar(midvector, length))
+
+    def _get_dimtext(self):
+        angle = degrees(self.end_angle - self.start_angle)
+        return self.format_dimtext(angle)
+
+    def _draw_ticks(self):
+        for vector, mirror in [(self.start_vector, False),
+                               (self.end_vector, self.prop('tick2x'))]:
+            insert_point = vadd(self.center, vmul_scalar(
+                vector, self.pos_radius))
+            rotation = vector_angle(vector) + pi / 2.
+            rotation = degrees(rotation + (pi if mirror else 0.))
+            self.data.append(
+                DXFEngine.insert(
+                    insert=insert_point,
+                    blockname=self.prop('tick'),
+                    rotation=rotation,
+                    xscale=self.prop('tickfactor'),
+                    yscale=self.prop('tickfactor'),
+                    layer=self.prop('layer')))
+
+class DimensionArc(DimensionAngle):
     """ Arc is defined by start- and endpoint on arc and the centerpoint, or
     by three points lying on the arc if acr3points is True. Measured length goes
     from start- to endpoint. The dimension line goes through the dimlinepos.
     """
     def __init__(self, dimlinepos, center, start, end, arc3points=False,
                  dimstyle='Default', layer=None):
-        super(DimensionArc, self).__init__(dimstyle, layer)
-        self.dimlinepos = vector2d(dimlinepos)
-        self.start = vector2d(start)
-        self.end = vector2d(end)
-        if arc3points:
-            self.center = center_of_3points_arc(vector2d(center),
-                                                self.start, self.end)
-        else:
-            self.center = vector2d(center)
-        self.radius = distance(self.center, self.start)
+        super(DimensionArc, self).__init__(dimlinepos, center, start, end,
+                                           dimstyle, layer)
+        self.arc3points = arc3points
 
-    def _build_dimline(self):
-        """ build dimension line object with basic dxf entities """
-        pass
+    def _setup(self):
+        super(DimensionArc, self)._setup()
+        if self.arc3points:
+            self.center = center_of_3points_arc(
+                self.center, self.start, self.end)
+
+    def _get_extline_start(self, vector):
+        return vadd(self.center,
+                    vmul_scalar(
+                        vector, self.radius + self.prop('dimextlinegap')))
+
+    def _get_extline_end(self, vector):
+        return vadd(self.center, vmul_scalar(vector, self.pos_radius))
+
+    def _get_dimtext(self):
+        arc_length = (self.end_angle - self.start_angle) * \
+                      self.radius * self.prop('scale')
+        return self.format_dimtext(arc_length)
+
 
 class DimensionRadius(_DimensionBase):
     """ Draw a radius dimension line from target in direction of center with
     length drawing units.
     """
-    def __init__(self, center, target, length=3.,
+    def __init__(self, center, target, length=1.,
                  dimstyle='Default', layer=None):
         super(DimensionRadius, self).__init__(dimstyle, layer)
         self.center = vector2d(center)
         self.target = vector2d(target)
         self.length = float(length)
 
+    def _setup(self):
+        self.target_vector = unit_vector(vsub(self.target, self.center))
+        self.radius = distance(self.center, self.target)
+
     def _build_dimline(self):
         """ build dimension line object with basic dxf entities """
-        pass
+        self._setup()
+        self._draw_dimension_line()
+        self._draw_dimension_text()
+        self._draw_ticks()
+
+    def _draw_dimension_line(self):
+        start_point = vadd(self.center, vmul_scalar(
+            self.target_vector, self.radius - self.length))
+        self.data.append(DXFEngine.line(
+            start_point, self.target,
+            layer=self.prop('layer'),
+            color=self.prop('dimlinecolor')))
+
+    def _draw_dimension_text(self):
+        insert_point = self._get_insert_point()
+        dimtext = self._get_dimtext()
+        rotation = degrees(vector_angle(self.target_vector))
+        self.data.append(DXFEngine.text(
+            dimtext, insert_point, self.prop('height'),
+            rotation=rotation,
+            valign = const.MIDDLE,
+            halign = const.RIGHT,
+            alignpoint=insert_point,
+            layer=self.prop('layer'),
+            color=self.prop('textcolor')))
+
+    def _get_insert_point(self):
+        return vsub(self.target , vmul_scalar(
+            self.target_vector, self.length + self.prop('textabove')))
+
+    def _get_dimtext(self):
+        return self.format_dimtext(self.radius)
+
+    def _draw_ticks(self):
+        rotation = vector_angle(self.target_vector)
+        rotation = degrees(rotation + (pi if self.prop('tick2x') else 0.))
+        self.data.append(
+            DXFEngine.insert(
+                insert=self.target,
+                blockname=self.prop('tick'),
+                rotation=rotation,
+                xscale=self.prop('tickfactor'),
+                yscale=self.prop('tickfactor'),
+                layer=self.prop('layer')))
+
 
 def _cmp_indexed_points(ipoint1, ipoint2):
     """ compare indexed points, sorted in order x, y
@@ -458,6 +601,9 @@ def _cmp_indexed_points(ipoint1, ipoint2):
 def vector2d(vector):
     """ return a 2d point """
     return (vector[0], vector[1])
+
+def vector_angle(vector):
+    return atan2(vector[1], vector[0])
 
 def magnitude(vector):
     """ length of a 2d vector """

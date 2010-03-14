@@ -436,12 +436,12 @@ class DXFEngine(object):
             any combination of valign (TOP, VMIDDLE, BOTTOM) and halign(LEFT,
             CENTER, RIGHT) is valid.
 
-            valign TOP, VMIDDLE, BOTTOM:
+            valign TOP, MIDDLE, BOTTOM:
             LEFT, CENTER, RIGHT: text will be insert at the alignpoint.
 
             valign BASELINE:
             LEFT: text will be insert at the insert point. (!!!)
-            RIGHT, CENTER, HMIDDLE: alignpoint specifies the insert point
+            RIGHT, CENTER, BASELINE_MIDDLE: alignpoint specifies the insert point
             ALIGNED: text is aligned between insert and alignpoint
             FIT: text is fitted between insert and alignpoint
 

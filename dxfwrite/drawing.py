@@ -14,6 +14,8 @@ from dxfwrite import DXFEngine
 from dxfwrite.base import *
 from dxfwrite.sections import Sections
 
+import dxfwrite.const as const
+
 
 import std
 
@@ -25,6 +27,7 @@ class Drawing(object):
         self.tables = Sections.get('TABLES')
         self.blocks = Sections.get('BLOCKS')
         self.entities = Sections.get('ENTITIES')
+        self._anonymous_counter = 99
 
         if default_values:
             self.add_default_values()
@@ -58,6 +61,32 @@ class Drawing(object):
         """ add an entity """
         self.entities.add(entity)
         return entity
+
+    def anonymous_blockname(self, typechar):
+        """ create an anonymous block name
+
+        typechar
+            U = *U### anonymous blocks
+            E = *E### anonymous non-uniformly scaled blocks
+            X = *X### anonymous hatches
+            D = *D### anonymous dimensions
+            A = *A### anonymous groups
+        """
+        self._anonymous_counter += 1
+        return "*{0}{1}".format(typechar, self._anonymous_counter)
+
+    def add_anonymous_block(self, entity, layer="0", typechar='U'):
+        """ insert entity (can be a DXFList) as anonymous block
+        into  drawing
+        """
+        blockname = self.anonymous_blockname(typechar)
+        block = DXFEngine.block(blockname, basepoint=(0, 0),
+                                flags=const.BLK_ANONYMOUS)
+        block.add(entity)
+        self.blocks.add(block)
+        insert = DXFEngine.insert(blockname, insert=(0, 0), layer=layer)
+        self.add(insert)
+        return blockname
 
     def add_default_values(self):
         self.header.add_vars([

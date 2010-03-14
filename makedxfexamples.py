@@ -228,18 +228,30 @@ def dimline_dxf(engine, filename):
     dwg.add(DimensionLine((0,3), points, angle=90.))
     dwg.add(DimensionLine((-2,14), points, dimstyle='arrow', angle=-10))
     dimstyles.new('dots2', tick="DIMTICK_DOT", tickfactor=.5)
-    dimline = dwg.add(DimensionLine((-2,3), points, dimstyle='dots2', angle=90.))
+
+    # next dimline is added as anonymous block
+    dimline = DimensionLine((-2,3), points, dimstyle='dots2', angle=90.)
     dimline.set_text(1, 'CATCH')
+    dwg.add_anonymous_block(dimline, layer='DIMENSIONS')
     dwg.add(engine.polyline(points, color=5))
     dwg.save()
 
-def get_3d_entities():
-    objects = []
-    return objects
+def get_3d_entities(engine):
+    msize = 20
+    height = 3.
+    mesh = engine.polymesh(msize, msize)
+    delta = math.pi / msize
+    for x in range(msize):
+        sinx = sin(float(x)*delta)
+        for y in range(msize):
+            cosy = math.cos(float(y)*delta)
+            z = sinx * cosy * height
+            mesh.set_vertex(x, y, (x, y, z))
+    return [mesh]
 
 def models3d_dxf(engine, name):
     dwg = engine.drawing(name)
-    for dxf_obj in get_3d_entities():
+    for dxf_obj in get_3d_entities(engine):
         dwg.add(obj)
     dwg.save()
 

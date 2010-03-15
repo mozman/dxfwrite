@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 #coding:utf-8
 # Author:  mozman
-# Purpose: simple dimension lines, not autocad dimlines
+# Purpose: simple with basic dxf eintities created dimension lines, but not
+# the basic DXF-DIMENSION entities.
 # module belongs to package: dxfwrite.py
 # Created: 10.03.2010
 # Copyright (C) 2010, Manfred Moitzi
@@ -12,7 +13,6 @@ dxf dimension-entity!
 
 OBJECTS
 
-- DimStyle
 - LinearDimension
 - AngularDimension
 - ArcDimension
@@ -22,14 +22,11 @@ PUBLIC MEMBERS
 
 dimstyles
     dimstyle container
-    use get(name) to get a dimstyle, 'Default' if name does not exist
-    use add(dimstyle) to add a new dimstyle
-
-PUBLIC FUNCTIONS
-
-setup(drawing)
-    add necessary block- and layer-definitions to drawing
+    - new(name, kwargs) to create a new dimstyle
+    - get(name) to get a dimstyle, 'Default' if name does not exist
+    - setup(drawing) create Blocks and Layers in drawing
 """
+
 from math import radians, degrees, hypot, atan2, pi, sin, cos
 
 from dxfwrite import DXFList

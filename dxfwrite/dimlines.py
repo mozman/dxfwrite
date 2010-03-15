@@ -40,6 +40,10 @@ __all__ = ['LinearDimension', 'AngularDimension', 'ArcDimension', 'RadialDimensi
 DIMENSIONS_MIN_DISTANCE = 0.05
 DIMENSIONS_FLOATINGPOINT = '.'
 
+ANGLE_DEG = 180./pi
+ANGLE_GRAD = 200./pi
+ANGLE_RAD = 1.
+
 class _DimStyle(dict):
     """ _DimStyle parameter struct, a dumb object just to store values """
     default_values = [
@@ -100,6 +104,17 @@ class _DimStyles(object):
     def __init__(self):
         self._styles = {}
         self.default = _DimStyle('Default')
+
+        self.new("angle.deg", scale=ANGLE_DEG, suffix='°', roundval=0,
+                 tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
+                 dimextline=False)
+        self.new("angle.grad", scale=ANGLE_GRAD, suffix='g', roundval=0,
+                 tick="DIMTICK_RADIUS",  tick2x=True, dimlineext=0.,
+                 dimextline=False)
+        self.new("angle.rad", scale=ANGLE_RAD, suffix='rad', roundval=3,
+                  tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
+                 dimextline=False)
+
 
     def get(self, name):
         """ get DimStyle()object by name """
@@ -171,9 +186,10 @@ dimstyles = _DimStyles() # use this factory tu create new dimstyles
 
 class _DimensionBase(object):
     """ Abstract base class for dimension lines """
-    def __init__(self, dimstyle, layer):
+    def __init__(self, dimstyle, layer, roundval):
         self.dimstyle = dimstyles.get(dimstyle)
         self.layer = layer
+        self.roundval = roundval
         self.data = DXFList()
 
     def prop(self, property_name):
@@ -181,7 +197,9 @@ class _DimensionBase(object):
         override several properties.
         """
         if property_name == 'layer':
-            return self.layer if self.layer else self.dimstyle.layer
+            return self.layer if self.layer is not None else self.dimstyle.layer
+        elif property_name == 'roundval':
+            return self.roundval if self.roundval is not None else self.dimstyle.roundval
         else: # pass through self.dimstyle object DimStyle()
             return self.dimstyle[property_name]
 
@@ -191,6 +209,7 @@ class _DimensionBase(object):
 
     def format_dimtext(self, dimvalue):
         """ string format the dimension text """
+        ## TODO: concider roundhalf property
         dimtext = "{0:.{1}f}".format(dimvalue, self.prop('roundval'))
         if DIMENSIONS_FLOATINGPOINT in dimtext:
             # remove successional zeros
@@ -224,8 +243,8 @@ class LinearDimension(_DimensionBase):
        dimension line layer, override the default value of dimstyle
     """
     def __init__(self, pos, measure_points, angle=0., dimstyle='Default',
-                 layer=None):
-        super(LinearDimension, self).__init__(dimstyle, layer)
+                 layer=None, roundval=None):
+        super(LinearDimension, self).__init__(dimstyle, layer, roundval)
         self.angle = angle
         self.measure_points = measure_points
         self.text_override = [""] * self.section_count
@@ -397,9 +416,13 @@ class AngularDimension(_DimensionBase):
     """ Draw an angle dimensioning line at dimline pos from start to end,
     dimension text is the angle build of the three points start-center-end.
     """
+    DEG = ANGLE_DEG
+    GRAD = ANGLE_GRAD
+    RAD = ANGLE_RAD
+
     def __init__(self, dimlinepos, center, start, end,
-                 dimstyle='Default', layer=None):
-        super(AngularDimension, self).__init__(dimstyle, layer)
+                 dimstyle='angle.deg', layer=None, roundval=None):
+        super(AngularDimension, self).__init__(dimstyle, layer, roundval)
         self.dimlinepos = vector2d(dimlinepos)
         self.center = vector2d(center)
         self.start = vector2d(start)
@@ -470,10 +493,6 @@ class AngularDimension(_DimensionBase):
                  self.prop('height') / 2.
         return vadd(self.center, vmul_scalar(midvector, length))
 
-    def _get_dimtext(self):
-        angle = degrees(self.end_angle - self.start_angle)
-        return self.format_dimtext(angle)
-
     def _draw_ticks(self):
         for vector, mirror in [(self.start_vector, False),
                                (self.end_vector, self.prop('tick2x'))]:
@@ -490,15 +509,22 @@ class AngularDimension(_DimensionBase):
                     yscale=self.prop('tickfactor'),
                     layer=self.prop('layer')))
 
+    def _get_dimtext(self):
+        # set scale = ANGLE_DEG for degrees (circle = 360 deg)
+        # set scale = ANGLE_GRAD for grad(circle = 400 grad)
+        # set scale = ANGLE_RAD for rad(circle = 2*pi)
+        angle = (self.end_angle - self.start_angle) * self.prop('scale')
+        return self.format_dimtext(angle)
+
 class ArcDimension(AngularDimension):
     """ Arc is defined by start- and endpoint on arc and the centerpoint, or
     by three points lying on the arc if acr3points is True. Measured length goes
     from start- to endpoint. The dimension line goes through the dimlinepos.
     """
     def __init__(self, dimlinepos, center, start, end, arc3points=False,
-                 dimstyle='Default', layer=None):
+                 dimstyle='Default', layer=None, roundval=None):
         super(ArcDimension, self).__init__(dimlinepos, center, start, end,
-                                           dimstyle, layer)
+                                           dimstyle, layer, roundval)
         self.arc3points = arc3points
 
     def _setup(self):
@@ -520,14 +546,13 @@ class ArcDimension(AngularDimension):
                       self.radius * self.prop('scale')
         return self.format_dimtext(arc_length)
 
-
 class RadialDimension(_DimensionBase):
     """ Draw a radius dimension line from target in direction of center with
     length drawing units. RadialDimension has a special tick!!
     """
     def __init__(self, center, target, length=1.,
-                 dimstyle='Default', layer=None):
-        super(RadialDimension, self).__init__(dimstyle, layer)
+                 dimstyle='Default', layer=None, roundval=None):
+        super(RadialDimension, self).__init__(dimstyle, layer, roundval)
         self.center = vector2d(center)
         self.target = vector2d(target)
         self.length = float(length)

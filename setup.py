@@ -12,10 +12,9 @@ from distutils.core import setup
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-
 setup(name='dxfwrite',
     version='0.1.0',
-    description='library to create DXF R12 drawings',
+    description='A Python library to create DXF R12 drawings.',
     author='mozman',
     author_email='mozman@gmx.at',
     packages=['dxfwrite', 'tests'],

@@ -12,11 +12,11 @@ from dxfwrite.engine import DXFEngine
 from dxfwrite.base import *
 from dxfwrite.const import *
 
-__version__ = "v0.3 - 2010.03.14"
+__version__ = "v0.1.0 - 2010.03.14"
 __author__ = "Manfred Moitzi (mozman)"
 __license__ = "GPLv3"
 
-__doc__ = """A library to write DXF R12 files.
+__doc__ = """A Python library to create DXF R12 drawings.
 
 Copyright %s
 Version %s
@@ -37,7 +37,9 @@ IMPLEMENTED R12 WRITING:
 - ATTRIB
 
 NOT IMPLEMENTED:
-- DIMENSION (draw it by yourself!)
+- TRACE
+- DIMENSION (use LinearDimension, AngularDimension, ArcDimension or
+             RadialDimension)
 """ % (__author__,__version__,__license__,)
 
 # --------------------------------------------------------------------------

@@ -14,7 +14,7 @@ supported R12 entities:
   * SHAPE (not tested)
   * SOLID
   * TEXT
-  * VERTEX (only interal used)
+  * VERTEX (only for internal use, see Polyline, Polyface and Polymesh objects)
 
 not supported R12 entities:
   * TRACE

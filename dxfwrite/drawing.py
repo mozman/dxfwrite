@@ -15,6 +15,8 @@ from dxfwrite.sections import Sections
 import dxfwrite.const as const
 import dxfwrite.std as std
 
+ENCODING = 'cp1252'
+
 class Drawing(object):
     """ Collection of dxf entities. """
     def __init__(self, name='noname.dxf', default_values=True):
@@ -47,11 +49,11 @@ class Drawing(object):
             return fp.getvalue()
 
     def _write_dxf(self, fp):
-        fp.write(dxfstr(self.header))
-        fp.write(dxfstr(self.tables))
-        fp.write(dxfstr(self.blocks))
-        fp.write(dxfstr(self.entities))
-        fp.write(dxfstr(DXFAtom('EOF')))
+        fp.write(dxfstr(self.header).encode(ENCODING))
+        fp.write(dxfstr(self.tables).encode(ENCODING))
+        fp.write(dxfstr(self.blocks).encode(ENCODING))
+        fp.write(dxfstr(self.entities).encode(ENCODING))
+        fp.write(dxfstr(DXFAtom('EOF')).encode(ENCODING))
 
     def add(self, entity): # shortcut for Drawing.entities.add()
         """ add an entity """

@@ -78,7 +78,7 @@ class _DXFType(object):
         """ Convert value depending on group code """
         typestr = self.group_code_type(code)
         if typestr == 'string':
-            return str(value)
+            return unicode(value)
         elif typestr == 'bool':
             return 1 if int(value) else 0
         elif typestr == 'float':
@@ -108,7 +108,7 @@ class DXFAtom(object):
         self._value = self._typecast(value, self._group_code)
 
     def __dxf__(self):
-        return "{0._group_code:3d}\n{0._value}\n".format(self)
+        return u"{0._group_code:3d}\n{0._value}\n".format(self)
 
     def _typecast(self, value, group_code):
         return self._dxftype.cast(value, group_code)
@@ -152,7 +152,7 @@ class DXFAtom(object):
 class DXFList(list):
     """ Collection of DXFAtom """
     def __dxf__(self):
-        return "".join([atom.__dxf__() for atom in self])
+        return u"".join([atom.__dxf__() for atom in self])
 
     def __eq__(self, dxflist):
         if len(self) != len(dxflist):
@@ -174,7 +174,7 @@ class DXFList(list):
 class DXFString(DXFAtom):
     """ String with group code 1 """
     def __init__(self, value, group_code=1):
-        super(DXFString, self).__init__(str(value), group_code)
+        super(DXFString, self).__init__(unicode(value), group_code)
 
 class DXFHandle(DXFAtom):
     """ Integer-handel, stored as hex-string """
@@ -184,7 +184,7 @@ class DXFHandle(DXFAtom):
 class DXFName(DXFAtom):
     """ String with group code 2 """
     def __init__(self, value, group_code=2):
-        super(DXFName, self).__init__(str(value), group_code)
+        super(DXFName, self).__init__(unicode(value), group_code)
 
 class DXFFloat(DXFAtom):
     """ float with group code 40 """
@@ -245,7 +245,7 @@ class DXFPoint(object):
             raise IndexError("Invalid axis name '{0}'".format(axis))
 
     def __dxf__(self):
-        return "".join([coord.__dxf__() for coord in self.point])
+        return u"".join([coord.__dxf__() for coord in self.point])
 
     def get_index_shift(self):
         return self.point[0].group_code - 10

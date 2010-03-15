@@ -237,8 +237,18 @@ def dimline_dxf(engine, filename):
     dwg.add_anonymous_block(dimline, layer='DIMENSIONS', typechar="D")
     dwg.add(engine.polyline(points, color=5))
 
-    dimstyles.new("angle", tick="DIMTICK_ARROW", tick2x=True, dimlineext=0.)
-    dwg.add(AngularDimension((18, 5), (15, 0), (20, 0), (20, 5), dimstyle='angle'))
+    # There are three dimstyle presets for angular dimension
+    # 'angle.deg' (default), 'angle.rad', 'angle.grad' (gon)
+    # for deg and grad roundval = 0
+    # for rad roundval = 3
+    #
+    # angular dimension in grad (gon)
+    dwg.add(AngularDimension((18, 5), (15, 0), (20, 0), (20, 5),
+                             dimstyle='angle.grad'))
+    # angular dimension in degree (default dimstyle), with one fractional digit
+    dwg.add(AngularDimension((18, 10), (15, 5), (20, 5), (20, 10),
+                             roundval=1)) #
+
     dwg.add(ArcDimension((23, 5), (20, 0), (25, 0), (25, 5), dimstyle='dots2'))
     dimstyles.new("radius", height=0.25, prefix='R=') # RadialDimension has a special tick
     dwg.add(RadialDimension((20, 0), (24, 1.5), dimstyle='radius'))

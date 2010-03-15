@@ -61,8 +61,9 @@ def simple_dxf(engine, name):
         tag='TEST'
     )
     block.add(attdef)
-    drawing.blocks.add(block)
-    for x in range(1, 10):
+
+    drawing.blocks.add(block) # add block to blocks section
+    for x in range(1, 10): # now we can insert a block reference
         block_ref = engine.insert(
             blockname='Rechteck',
             insert=(x*2,10),
@@ -70,12 +71,15 @@ def simple_dxf(engine, name):
             xscale=x,
             yscale=x)
 
+        # add an attribute
         attrib = attdef.new_attrib(
             height=0.18,
             text='attrib:{0}'.format(x),
         )
+        # relative insert, respects the block rotation
         block_ref.add(attrib, relative=True)
         drawing.add(block_ref)
+
     drawing.add(polyline(engine))
     drawing.add(polymesh(engine))
     drawing.add(cube(engine, basepoint=(-5, 0, 3), length=7))
@@ -88,10 +92,10 @@ def simple_dxf(engine, name):
     drawing.add(engine.line((0,-9), (3,-9)))
     drawing.add(engine.text("baseline_middle Text", insert=(0, -9),
                             halign=dxfwrite.BASELINE_MIDDLE, alignpoint=(3, -9)))
-
     drawing.save()
 
 def rectangle(engine, x=0, y=0, w=1, h=1):
+    # dxf list can contain any dxf entity, that supports __dxf__()
     rect = dxfwrite.DXFList()
     rect.append(engine.line(start=(x, y), end=(x+w, y), color=1))
     rect.append(engine.line(start=(x+w, y), end=(x+w, y+h), color=2))
@@ -123,8 +127,11 @@ def polymesh(engine):
 
 def polyface(engine):
     def rect(x, y, z, w, h):
+        """ create a rectangle of four vertices """
         return [(x, y, z), (x+w, y, z), (x+w, y+h, z), (x, y+h, z)]
+    # a polyface consist of arbritary 3- or 4-sided faces
     mesh = engine.polyface()
+    # a face is defined by three or four 3d-points.
     mesh.add_face(rect(40, 10, 0, 10, 10))
     mesh.add_face(rect(55, 10, 0, 10, 10))
     mesh.add_face(rect(45, 15, 1, 10, 10))
@@ -148,7 +155,8 @@ def cube(engine, basepoint, length):
 
     # define the 6 cube faces
     # look into -x direction
-    # every add_face adds 4 vertices 6x4 = 24 vertices
+    # Every add_face adds 4 vertices 6x4 = 24 vertices
+    # On dxf output double vertices will be removed.
     pface.add_face([p1, p5, p7, p3], color=1) # base
     pface.add_face([p1, p5, p6, p2], color=2) # left
     pface.add_face([p5, p7, p8, p6], color=3) # front
@@ -220,43 +228,60 @@ def dimline_dxf(engine, filename):
     from dxfwrite.dimlines import dimstyles, LinearDimension, AngularDimension
     from dxfwrite.dimlines import ArcDimension, RadialDimension
 
+    # create a new drawing: dxfwrite.DXFEngine.drawing(filename)
     dwg = engine.drawing(filename)
+
+    # add block and layer definition to drawing
     dimstyles.setup(dwg)
+
+    # create a dimension line for following points
     points = [ (1.7,2.5), (0,0), (3.3,6.9), (8,12)]
+
+    # define new dimstyles, for predefined ticks see dimlines.py
     dimstyles.new("dots", tick="DIMTICK_DOT", scale=1., roundval=2, textabove=.5)
     dimstyles.new("arrow", tick="DIMTICK_ARROW", tick2x=True, dimlineext=0.)
+    dimstyles.new('dots2', tick="DIMTICK_DOT", tickfactor=.5)
 
+    #add linear dimension lines
     dwg.add(LinearDimension((3,3), points, dimstyle='dots', angle=15.))
     dwg.add(LinearDimension((0,3), points, angle=90.))
     dwg.add(LinearDimension((-2,14), points, dimstyle='arrow', angle=-10))
-    dimstyles.new('dots2', tick="DIMTICK_DOT", tickfactor=.5)
 
     # next dimline is added as anonymous block
     dimline = LinearDimension((-2,3), points, dimstyle='dots2', angle=90.)
     dimline.set_text(1, 'CATCH')
-    dwg.add_anonymous_block(dimline, layer='DIMENSIONS', typechar="D")
+
+    # create the anonymouse block
+    dwg.add_anonymous_block(dimline, layer='DIMENSIONS')
+
+    # add anonymous block to drawing
     dwg.add(engine.polyline(points, color=5))
 
     # There are three dimstyle presets for angular dimension
     # 'angle.deg' (default), 'angle.rad', 'angle.grad' (gon)
-    # for deg and grad roundval = 0
-    # for rad roundval = 3
-    #
-    # angular dimension in grad (gon)
-    dwg.add(AngularDimension((18, 5), (15, 0), (20, 0), (20, 5),
-                             dimstyle='angle.grad'))
-    # angular dimension in degree (default dimstyle), with one fractional digit
-    dwg.add(AngularDimension((18, 10), (15, 5), (20, 5), (20, 10),
-                             roundval=1)) #
+    # for deg and grad default roundval = 0
+    # for rad default roundval = 3
 
-    dwg.add(ArcDimension((23, 5), (20, 0), (25, 0), (25, 5), dimstyle='dots2'))
-    dimstyles.new("radius", height=0.25, prefix='R=') # RadialDimension has a special tick
+    # angular dimension in grad (gon)
+    dwg.add(AngularDimension(dimlinepos=(18, 5), center=(15, 0), start=(20, 0),
+                             end=(20, 5), dimstyle='angle.grad'))
+
+    # angular dimension in degree (default dimstyle), with one fractional digit
+    dwg.add(AngularDimension(dimlinepos=(18, 10), center=(15, 5), start=(20, 5),
+                             end=(20, 10), roundval=1))
+
+    dwg.add(ArcDimension(dimlinepos=(23, 5), center=(20, 0), start=(25, 0),
+                         end=(25, 5), dimstyle='dots2'))
+
+    # RadialDimension has a special tick
+    dimstyles.new("radius", height=0.25, prefix='R=')
     dwg.add(RadialDimension((20, 0), (24, 1.5), dimstyle='radius'))
     dwg.save()
 
 def get_3d_entities(engine):
     msize = 20
     height = 3.
+    # create a new polymesh (m*n), here m=n
     mesh = engine.polymesh(msize, msize)
     delta = math.pi / msize
     for x in range(msize):
@@ -264,12 +289,13 @@ def get_3d_entities(engine):
         for y in range(msize):
             cosy = math.cos(float(y)*delta)
             z = sinx * cosy * height
+            # set the m,n vertex to 3d point x,y,z
             mesh.set_vertex(x, y, (x, y, z))
     return [mesh]
 
 def models3d_dxf(engine, name):
-    dwg = engine.drawing(name)
-    dwg.add_viewport(
+    dwg = engine.drawing(name) # create a drawing
+    dwg.add_viewport( # add the active viewport
         '*Active',
         center_point=(0,0),
         height = 30,
@@ -277,8 +303,8 @@ def models3d_dxf(engine, name):
         )
 
     for dxf_obj in get_3d_entities(engine):
-        dwg.add(dxf_obj)
-    dwg.save()
+        dwg.add(dxf_obj) # add dxf objects to drawing
+    dwg.save() # save dxf drawing
 
 def main():
     empty_dxf(dxfwrite.DXFEngine, "empty.dxf")

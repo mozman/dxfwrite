@@ -1,6 +1,6 @@
 dxfwrite.py is a library to create DXF R12 drawings.
 
-Supported R12 Entities:
+supported R12 entities:
   * ARC
   * ATTDEF
   * ATTRIB
@@ -15,19 +15,21 @@ Supported R12 Entities:
   * SOLID
   * TEXT
   * VERTEX (only interal used)
-not supported R13 Entities:
-  * TRACE (???)
 
-Buildups Entities: (build with basic R12 DXF-entities)
+not supported R12 entities:
+  * TRACE
+  * DIMENSION
+
+Buildup entities: (build with basic R12 DXF-entities)
   * MText
-  * DimsionLine
-  * DimensionAngle
-  * DimensionArc
-  * DimensionRadius
+  * LinearDimension
+  * AngularDimension
+  * ArcDimension
+  * RadialDimension
 
 Native DXF dimensions are not supported, because i don't know how this works, hints are welcome.
 
-My first Goal was to support newer DXF-Versions because R12 is well supported by SDXF (stani).
+My first goal was to support newer DXF-Versions because R12 is well supported by SDXF (stani).
 But this try ends at the point where AutoCAD crashes on opening the dxf drawings, and
 the error messages were meaningless for me.
 And there are not enough usefull new DXF-Entities since R13 to waste my time for supporting

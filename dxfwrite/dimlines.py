@@ -30,7 +30,7 @@ PUBLIC FUNCTIONS
 setup(drawing)
     add necessary block- and layer-definitions to drawing
 """
-from math import radians, degrees, hypot, atan2, pi
+from math import radians, degrees, hypot, atan2, pi, sin, cos
 
 from dxfwrite.ray import Ray2D
 from dxfwrite import DXFEngine, DXFList
@@ -108,7 +108,7 @@ class _DimStyles(object):
         self.new("angle.deg", scale=ANGLE_DEG, suffix='°', roundval=0,
                  tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
                  dimextline=False)
-        self.new("angle.grad", scale=ANGLE_GRAD, suffix='g', roundval=0,
+        self.new("angle.grad", scale=ANGLE_GRAD, suffix='gon', roundval=0,
                  tick="DIMTICK_RADIUS",  tick2x=True, dimlineext=0.,
                  dimextline=False)
         self.new("angle.rad", scale=ANGLE_RAD, suffix='rad', roundval=3,
@@ -434,8 +434,8 @@ class AngularDimension(_DimensionBase):
         self.radius = distance(self.center, self.start)
         self.start_vector = unit_vector(vsub(self.start, self.center))
         self.end_vector = unit_vector(vsub(self.end, self.center))
-        self.start_angle = vector_angle(self.start_vector)
-        self.end_angle = vector_angle(self.end_vector)
+        self.start_angle = vector2angle(self.start_vector)
+        self.end_angle = vector2angle(self.end_vector)
 
     def _build_dimline(self):
         """ build dimension line object with basic dxf entities """
@@ -498,7 +498,7 @@ class AngularDimension(_DimensionBase):
                                (self.end_vector, self.prop('tick2x'))]:
             insert_point = vadd(self.center, vmul_scalar(
                 vector, self.pos_radius))
-            rotation = vector_angle(vector) + pi / 2.
+            rotation = vector2angle(vector) + pi / 2.
             rotation = degrees(rotation + (pi if mirror else 0.))
             self.data.append(
                 DXFEngine.insert(
@@ -579,7 +579,7 @@ class RadialDimension(_DimensionBase):
     def _draw_dimension_text(self):
         insert_point = self._get_insert_point()
         dimtext = self._get_dimtext()
-        rotation = degrees(vector_angle(self.target_vector))
+        rotation = degrees(vector2angle(self.target_vector))
         self.data.append(DXFEngine.text(
             dimtext, insert_point, self.prop('height'),
             rotation=rotation,
@@ -598,7 +598,7 @@ class RadialDimension(_DimensionBase):
         return self.format_dimtext(self.radius * self.prop('scale'))
 
     def _draw_ticks(self):
-        rotation = vector_angle(self.target_vector)
+        rotation = vector2angle(self.target_vector)
         rotation = degrees(rotation + pi)
         self.data.append(
             DXFEngine.insert(
@@ -626,10 +626,15 @@ def _cmp_indexed_points(ipoint1, ipoint2):
 
 def vector2d(vector):
     """ return a 2d point """
-    return (vector[0], vector[1])
+    return (float(vector[0]), float(vector[1]))
 
-def vector_angle(vector):
+def vector2angle(vector):
+    """ get angle of vector """
     return atan2(vector[1], vector[0])
+
+def angle2uv(angle):
+    """ get unit_vector from angle """
+    return (cos(angle), sin(angle))
 
 def magnitude(vector):
     """ length of a 2d vector """
@@ -649,7 +654,7 @@ def distance(point1, point2):
 
 def midpoint(point1, point2):
     """ calc midpoint between point1 and point2 """
-    return vdiv_scalar(vadd(point1, point2), 2.)
+    return ((point1[0]+point2[0])*.5, (point1[1]+point2[1])*.5)
 
 def vsub(vector1, vector2):
     """ substract vectors """

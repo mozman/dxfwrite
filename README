@@ -17,10 +17,10 @@ Supported R12 Entities:
   * VERTEX (only interal used)
 not supported R13 Entities:
   * TRACE (???)
- 
+
 Buildups Entities: (build with basic R12 DXF-entities)
-  * MText 
-  * DimsionLine 
+  * MText
+  * DimsionLine
   * DimensionAngle
   * DimensionArc
   * DimensionRadius
@@ -47,8 +47,8 @@ Missing from R13 and later:
   * HELIX, LIGHT, MLEADER, SECTION, UNDERLAY (R2008)
   * SURFACE (R2008) binary encoded and not documented
   * SUN (R2009)
-  * SUBDIVISION (R2010) 
-  
+  * SUBDIVISION (R2010)
+
 Using dxfwrite
 ---------------
 .
@@ -60,7 +60,7 @@ Good Luck!  As always, feedback is greatly appreciated.
 Manfred
 mozman@gmx.at
 
-dxfwrite can be found on Google-Code at:
-	http://.../
+dxfwrite can be found on bitbucket.org at:
+http://bitbucket.org/mozman/dxfwrite
 
 

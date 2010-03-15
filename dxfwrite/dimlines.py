@@ -32,11 +32,14 @@ setup(drawing)
 """
 from math import radians, degrees, hypot, atan2, pi, sin, cos
 
+from dxfwrite import DXFList
 from dxfwrite.ray import Ray2D
-from dxfwrite import DXFEngine, DXFList
+from dxfwrite.entities import Line, Text, Block, Insert, Solid, Arc, Circle
 import dxfwrite.const as const
 
-__all__ = ['LinearDimension', 'AngularDimension', 'ArcDimension', 'RadialDimension']
+__all__ = ['LinearDimension', 'AngularDimension', 'ArcDimension',
+           'RadialDimension', 'dimstyles']
+
 DIMENSIONS_MIN_DISTANCE = 0.05
 DIMENSIONS_FLOATINGPOINT = '.'
 
@@ -105,13 +108,13 @@ class _DimStyles(object):
         self._styles = {}
         self.default = _DimStyle('Default')
 
-        self.new("angle.deg", scale=ANGLE_DEG, suffix='°', roundval=0,
+        self.new("angle.deg", scale=ANGLE_DEG, suffix=u'°', roundval=0,
                  tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
                  dimextline=False)
-        self.new("angle.grad", scale=ANGLE_GRAD, suffix='gon', roundval=0,
+        self.new("angle.grad", scale=ANGLE_GRAD, suffix=u'gon', roundval=0,
                  tick="DIMTICK_RADIUS",  tick2x=True, dimlineext=0.,
                  dimextline=False)
-        self.new("angle.rad", scale=ANGLE_RAD, suffix='rad', roundval=3,
+        self.new("angle.rad", scale=ANGLE_RAD, suffix=u'rad', roundval=3,
                   tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
                  dimextline=False)
 
@@ -147,7 +150,7 @@ class _DimStyles(object):
         # >=10 : 1.40mm
         def block(name, elements):
             """ create the block entity """
-            tick = DXFEngine.block(name, (0., 0.))
+            tick = Block(name=name, basepoint=(0., 0.))
             for element in elements:
                 tick.add(element)
             return tick
@@ -156,26 +159,26 @@ class _DimStyles(object):
         byblock = const.BYBLOCK
 
         elements = [
-            DXFEngine.line(( 0., +.5), (0., -.5), color=dimcolor,
-                           layer=byblock),
-            DXFEngine.line((-.2, -.2), (.2, +.2), color=4, layer=byblock)
+            Line(start=( 0., +.5), end=(0., -.5), color=dimcolor,
+                 layer=byblock),
+            Line(start=(-.2, -.2), end=(.2, +.2), color=4, layer=byblock)
         ]
         drawing.blocks.add(block('DIMTICK_ARCH', elements))
 
         elements = [
-            DXFEngine.line((0., .5), (0., -.5), color=dimcolor, layer=byblock),
-            DXFEngine.circle(radius=.1, color=4, layer=byblock)
+            Line(start=(0., .5), end=(0., -.5), color=dimcolor, layer=byblock),
+            Circle(radius=.1, color=4, layer=byblock)
         ]
         drawing.blocks.add(block('DIMTICK_DOT', elements))
 
         elements = [
-            DXFEngine.line((0., .5), (0., -.50), color=dimcolor, layer=byblock),
-            DXFEngine.solid([(0, 0), (.3, .05), (.3,-.05)], color=7,
+            Line(start=(0., .5), end=(0., -.50), color=dimcolor, layer=byblock),
+            Solid([(0, 0), (.3, .05), (.3,-.05)], color=7,
                             layer=byblock)
         ]
         drawing.blocks.add(block('DIMTICK_ARROW', elements))
         elements = [ # special tick for RadialDimension
-            DXFEngine.solid([(0, 0), (.3, .05), (0.25, 0. ), ( .3,-.05)], color=7,
+            Solid([(0, 0), (.3, .05), (0.25, 0. ), ( .3,-.05)], color=7,
                             layer=byblock)
         ]
         drawing.blocks.add(block('DIMTICK_RADIUS', elements))
@@ -332,8 +335,8 @@ class LinearDimension(_DimensionBase):
             end_point = vadd(end_point,
                              vmul_scalar(self.parallel_vector, dimlineext))
 
-        self.data.append(DXFEngine.line(
-            start_point, end_point,
+        self.data.append(Line(
+            start=start_point, end=end_point,
             color=self.prop('dimlinecolor'),
             layer=self.prop('layer')))
 
@@ -348,9 +351,9 @@ class LinearDimension(_DimensionBase):
                                                     dimline_point))
                 target_point = vsub(target_point, vmul_scalar(direction_vector,
                                                               dimextlinegap))
-                self.data.append(DXFEngine.line(
-                    dimline_point,
-                    target_point,
+                self.data.append(Line(
+                    start=dimline_point,
+                    end=target_point,
                     color=self.prop('dimextlinecolor'),
                     layer=self.prop('layer')))
 
@@ -359,7 +362,7 @@ class LinearDimension(_DimensionBase):
         for section in range(self.section_count):
             dimvalue_text = self._get_dimvalue_text(section)
             insert_point = self._get_text_insert_point(section)
-            self.data.append(DXFEngine.text(
+            self.data.append(Text(
                 text=dimvalue_text,
                 insert=insert_point,
                 height=self.prop('height'),
@@ -391,7 +394,7 @@ class LinearDimension(_DimensionBase):
         """ insert the dimension line ticks, (markers on the dimension line) """
         def tick(point, rotate=False):
             """ build the insert-entity for the tick block """
-            return DXFEngine.insert(
+            return Insert(
                 insert=point,
                 blockname=self.prop('tick'),
                 rotation=self.angle + (180. if rotate else 0.),
@@ -448,21 +451,22 @@ class AngularDimension(_DimensionBase):
 
     def _draw_dimension_line(self):
         """ draw the dimension line from start- to endangle. """
-        self.data.append(
-            DXFEngine.arc(self.pos_radius, self.center,
-                          degrees(self.start_angle),
-                          degrees(self.end_angle),
-                          layer=self.prop('layer'),
-                          color=self.prop('dimlinecolor')))
+        self.data.append(Arc(
+            radius=self.pos_radius,
+            center=self.center,
+            startangle=degrees(self.start_angle),
+            endangle=degrees(self.end_angle),
+            layer=self.prop('layer'),
+            color=self.prop('dimlinecolor')))
 
     def _draw_extension_lines(self):
         """ build the extension lines entities """
         for vector in [self.start_vector, self.end_vector]:
             self.data.append(
-                DXFEngine.line(self._get_extline_start(vector),
-                               self._get_extline_end(vector),
-                               layer=self.prop('layer'),
-                               color=self.prop('dimextlinecolor')))
+                Line(start=self._get_extline_start(vector),
+                     end=self._get_extline_end(vector),
+                     layer=self.prop('layer'),
+                     color=self.prop('dimextlinecolor')))
 
     def _get_extline_start(self, vector):
         return vadd(self.center,
@@ -475,16 +479,17 @@ class AngularDimension(_DimensionBase):
         dimtext = self._get_dimtext()
         insert_point = self._get_text_insert_point()
         rotation = degrees((self.start_angle + self.end_angle) / 2 - pi/2.)
-        self.data.append(
-            DXFEngine.text(dimtext, insert_point,
-                           height=self.prop('height'),
-                           rotation=rotation,
-                           halign=const.CENTER,
-                           valign=const.MIDDLE,
-                           layer=self.prop('layer'),
-                           style=self.prop('style'),
-                           color=self.prop('textcolor'),
-                           alignpoint=insert_point))
+        self.data.append(Text(
+            text=dimtext,
+            insert=insert_point,
+            height=self.prop('height'),
+            rotation=rotation,
+            halign=const.CENTER,
+            valign=const.MIDDLE,
+            layer=self.prop('layer'),
+            style=self.prop('style'),
+            color=self.prop('textcolor'),
+            alignpoint=insert_point))
 
     def _get_text_insert_point(self):
         midvector = unit_vector(
@@ -500,14 +505,13 @@ class AngularDimension(_DimensionBase):
                 vector, self.pos_radius))
             rotation = vector2angle(vector) + pi / 2.
             rotation = degrees(rotation + (pi if mirror else 0.))
-            self.data.append(
-                DXFEngine.insert(
-                    insert=insert_point,
-                    blockname=self.prop('tick'),
-                    rotation=rotation,
-                    xscale=self.prop('tickfactor'),
-                    yscale=self.prop('tickfactor'),
-                    layer=self.prop('layer')))
+            self.data.append(Insert(
+                insert=insert_point,
+                blockname=self.prop('tick'),
+                rotation=rotation,
+                xscale=self.prop('tickfactor'),
+                yscale=self.prop('tickfactor'),
+                layer=self.prop('layer')))
 
     def _get_dimtext(self):
         # set scale = ANGLE_DEG for degrees (circle = 360 deg)
@@ -571,8 +575,8 @@ class RadialDimension(_DimensionBase):
     def _draw_dimension_line(self):
         start_point = vadd(self.center, vmul_scalar(
             self.target_vector, self.radius - self.length))
-        self.data.append(DXFEngine.line(
-            start_point, self.target,
+        self.data.append(Line(
+            start=start_point, end=self.target,
             layer=self.prop('layer'),
             color=self.prop('dimlinecolor')))
 
@@ -580,8 +584,10 @@ class RadialDimension(_DimensionBase):
         insert_point = self._get_insert_point()
         dimtext = self._get_dimtext()
         rotation = degrees(vector2angle(self.target_vector))
-        self.data.append(DXFEngine.text(
-            dimtext, insert_point, self.prop('height'),
+        self.data.append(Text(
+            text=dimtext,
+            insert=insert_point,
+            height=self.prop('height'),
             rotation=rotation,
             valign = const.MIDDLE,
             halign = const.RIGHT,
@@ -600,15 +606,13 @@ class RadialDimension(_DimensionBase):
     def _draw_ticks(self):
         rotation = vector2angle(self.target_vector)
         rotation = degrees(rotation + pi)
-        self.data.append(
-            DXFEngine.insert(
-                insert=self.target,
-                blockname='DIMTICK_RADIUS',
-                rotation=rotation,
-                xscale=self.prop('tickfactor'),
-                yscale=self.prop('tickfactor'),
-                layer=self.prop('layer')))
-
+        self.data.append(Insert(
+            insert=self.target,
+            blockname='DIMTICK_RADIUS',
+            rotation=rotation,
+            xscale=self.prop('tickfactor'),
+            yscale=self.prop('tickfactor'),
+            layer=self.prop('layer')))
 
 def _cmp_indexed_points(ipoint1, ipoint2):
     """ compare indexed points, sorted in order x, y

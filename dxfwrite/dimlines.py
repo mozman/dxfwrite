@@ -420,10 +420,10 @@ class AngularDimension(_DimensionBase):
     GRAD = ANGLE_GRAD
     RAD = ANGLE_RAD
 
-    def __init__(self, dimlinepos, center, start, end,
+    def __init__(self, pos, center, start, end,
                  dimstyle='angle.deg', layer=None, roundval=None):
         super(AngularDimension, self).__init__(dimstyle, layer, roundval)
-        self.dimlinepos = vector2d(dimlinepos)
+        self.dimlinepos = vector2d(pos)
         self.center = vector2d(center)
         self.start = vector2d(start)
         self.end = vector2d(end)
@@ -522,9 +522,9 @@ class ArcDimension(AngularDimension):
     by three points lying on the arc if acr3points is True. Measured length goes
     from start- to endpoint. The dimension line goes through the dimlinepos.
     """
-    def __init__(self, dimlinepos, center, start, end, arc3points=False,
+    def __init__(self, pos, center, start, end, arc3points=False,
                  dimstyle='Default', layer=None, roundval=None):
-        super(ArcDimension, self).__init__(dimlinepos, center, start, end,
+        super(ArcDimension, self).__init__(pos, center, start, end,
                                            dimstyle, layer, roundval)
         self.arc3points = arc3points
 

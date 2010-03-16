@@ -30,8 +30,8 @@ Buildup entities: (build with basic R12 DXF-entities)
 Native DXF dimensions are not supported, because i don't know how this works, hints are welcome.
 
 My first goal was to support newer DXF-Versions because R12 is well supported by SDXF (stani).
-But this try ends at the point where AutoCAD crashes on opening the dxf drawings, and
-the error messages were meaningless for me.
+But this try ends at the point where AutoCAD crashes on opening the dxf drawings, and the error
+messages were meaningless for me.
 And there are not enough usefull new DXF-Entities since R13 to waste my time for supporting
 DXF R13 or newer. The most interesting objects like solid models are binary encoded and
 not documented by Autodesk.
@@ -51,11 +51,9 @@ Missing from R13 and later:
   * SUN (R2009)
   * SUBDIVISION (R2010)
 
-Using dxfwrite
+Documentation
 ---------------
-.
-.
-.
+http://bitbucket.org/mozman/dxfwrite/wiki/Home
 
 Good Luck!  As always, feedback is greatly appreciated.
 

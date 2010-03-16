@@ -42,7 +42,7 @@ def iterflatlist(alist):
         else:
             yield element
 
-def rotate_2d(self, point, angle):
+def rotate_2d(point, angle):
     """ rotate point around origin point about angle """
     x = point[0] * math.cos(angle) - point[1] * math.sin(angle)
     y = point[1] * math.cos(angle) + point[0] * math.sin(angle)

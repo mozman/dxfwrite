@@ -42,12 +42,18 @@ def iterflatlist(alist):
         else:
             yield element
 
+def rotate_2d(self, point, angle):
+    """ rotate point around origin point about angle """
+    x = point[0] * math.cos(angle) - point[1] * math.sin(angle)
+    y = point[1] * math.cos(angle) + point[0] * math.sin(angle)
+    return (x, y)
+
 def magnitude(vector):
     """ get magnitude (length) of vector """
     return sum([x**2 for x in vector ]) ** .5
 
 def unit_vector(vector):
-    """ get unit-vector of vector (magnitude = 1.0) """
+    """ get unit-vector of 3D vector (magnitude = 1.0) """
     m = magnitude(vector)
     return(vector[0]/m, vector[1]/m, vector[2]/m)
 

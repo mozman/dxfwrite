@@ -13,13 +13,18 @@ MText()
     MTEXT was introduced in R13, so this is a replacement with multiple simple
     TEXT entities. Supports valign (TOP, MIDDLE, BOTTOM), halign (LEFT, CENTER,
     RIGHT), rotation for an arbitrary (!) angle and mirror.
+
+Rectangle()
+    2D Rectangle, with optional background filling
 """
 
 import math
+from dxfwrite.vectormath import *
+from dxfwrite.util import rotate_2d
 
 import dxfwrite.const as const
 from dxfwrite.base import DXFList
-from dxfwrite.entities import Text
+from dxfwrite.entities import Text, Polyline, Solid
 
 class MText(object):
     """ MultiLine-Text buildup with simple Text-Entities.
@@ -116,4 +121,103 @@ class MText(object):
 
     def __dxf__(self):
         """ get the dxf string """
+        return self.data.__dxf__()
+
+class Rectangle(object):
+    """ 2D Rectangle, build with a polyline an d a solid as background filling
+
+    insert point
+
+    width, height
+        in drawing units
+
+    rotation
+        in degree
+
+    halign
+        LEFT, CENTER, RIGHT
+
+    valign
+        TOP, MIDDLE, BOTTOM
+
+    color
+        dxf color index, default is BYLAYER, if color is None, no polyline
+        will be created, and the rectangle consist only of the background
+        filling (if bgcolor != None)
+
+    bgcolor
+        dxf color index, default is None (no background filling)
+
+    layer
+        target layer, default is '0'
+
+    linetype
+        linetype name, None = BYLAYER
+    """
+    def __init__(self, insert, width, height, rotation=0.,
+                 halign=const.LEFT, valign=const.TOP,
+                 color=const.BYLAYER, bgcolor=None,
+                 layer='0', linetype=None):
+        self.insert = insert
+        self.width = float(width)
+        self.height = float(height)
+        self.rotation = math.radians(rotation)
+        self.halign = halign
+        self.valign = valign
+        self.color = color
+        self.bgcolor = bgcolor
+        self.layer = layer
+        self.linetype = linetype
+        self.points = None
+        self.data = DXFList()
+
+    def _build_rect(self):
+        self._calc_corners()
+        if self.color is not None:
+            self._build_polyline()
+        if self.bgcolor is not None:
+            self._build_solid()
+
+    def _calc_corners(self):
+        points = [(0., 0.), (self.width, 0.), (self.width, self.height),
+                  (0., self.height)]
+        align_vector = self._get_align_vector()
+        self.points = [vadd(self.insert, # move to insert point
+                            rotate_2d( # rotate at origin
+                                vadd(point, align_vector), self.rotation))
+                       for point in points]
+
+    def _get_align_vector(self):
+        if self.halign == const.CENTER:
+            dx = -self.width/2.
+        elif self.halign == const.RIGHT:
+            dx = -self.width
+        else: # const.LEFT
+            dx = 0.
+
+        if self.valign == const.MIDDLE:
+            dy = -self.height/2.
+        elif self.valign == const.BOTTOM:
+            dy = -self.height
+        else: #const.TOP
+            dy = 0.
+
+        return (dx, dy)
+
+    def _build_polyline(self):
+        """ build the rectangle with a polyline """
+        polyline = Polyline(self.points, color=self.color, layer=self.layer)
+        polyline.close()
+        if self.linetype is not None:
+            polyline['linetype'] = self.linetype
+        self.data.append(polyline)
+
+    def _build_solid(self):
+        """ build the background solid """
+        self.data.append(Solid(
+            self.points, color=self.bgcolor, layer=self.layer))
+
+    def __dxf__(self):
+        """ get the dxf string """
+        self._build_rect()
         return self.data.__dxf__()

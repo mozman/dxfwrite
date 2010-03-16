@@ -15,7 +15,7 @@ DXFEngine is the dxf entity creation engine, main interface for dxfwrite
 from dxfwrite.entities import Line, Point, Solid, Face3D, Text, Arc, Circle
 from dxfwrite.entities import Polyline, Polymesh, Polyface
 from dxfwrite.entities import Insert, Block, Attdef, Attrib, Shape
-from dxfwrite.buildups import MText
+from dxfwrite.buildups import MText, Rectangle
 
 from dxfwrite.tableentries import Linetype, LinePatternDef, Style, Layer
 from dxfwrite.tableentries import View, Viewport, UCS, AppID
@@ -749,3 +749,38 @@ class DXFEngine(object):
             linespacing in percent of height, 1.5 = 150% = 1+1/2 lines
         """
         return MText(text, insert, linespacing, **kwargs)
+
+    @staticmethod
+    def rectangle(insert, width, height, **kwargs):
+        """ 2D Rectangle, build with a polyline and a solid as background filling
+
+        insert point
+            where to place the rantangle
+
+        width, height
+            in drawing units
+
+        rotation
+            in degree (circle = 360 degree)
+
+        halign
+            LEFT, CENTER, RIGHT
+
+        valign
+            TOP, MIDDLE, BOTTOM
+
+        color
+            dxf color index, default is BYLAYER, if color is None, no polyline
+            will be created, and the rectangle consist only of the background
+            filling (if bgcolor != None)
+
+        bgcolor
+            dxf color index, default is None (no background filling)
+
+        layer
+            target layer, default is '0'
+
+        linetype
+            linetype name, None = BYLAYER
+        """
+        return Rectangle(insert, width, height, **kwargs)

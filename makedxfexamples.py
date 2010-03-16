@@ -266,14 +266,14 @@ def dimline_dxf(engine, filename):
     # for rad default roundval = 3
 
     # angular dimension in grad (gon)
-    dwg.add(AngularDimension(dimlinepos=(18, 5), center=(15, 0), start=(20, 0),
+    dwg.add(AngularDimension(pos=(18, 5), center=(15, 0), start=(20, 0),
                              end=(20, 5), dimstyle='angle.grad'))
 
     # angular dimension in degree (default dimstyle), with one fractional digit
-    dwg.add(AngularDimension(dimlinepos=(18, 10), center=(15, 5), start=(20, 5),
+    dwg.add(AngularDimension(pos=(18, 10), center=(15, 5), start=(20, 5),
                              end=(20, 10), roundval=1))
 
-    dwg.add(ArcDimension(dimlinepos=(23, 5), center=(20, 0), start=(25, 0),
+    dwg.add(ArcDimension(pos=(23, 5), center=(20, 0), start=(25, 0),
                          end=(25, 5), dimstyle='dots2'))
 
     # RadialDimension has a special tick

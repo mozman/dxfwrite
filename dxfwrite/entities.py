@@ -46,6 +46,12 @@ _DXF12_EntityAttributeDefinition = {
         2: AttribDef(DXFPoint3D, 3, 102), # (13, 23, 33) is drawn before (12, 22, 32) !!!
         3: AttribDef(DXFPoint3D, 2, 103),
         },
+    'TRACE': { # drawing order 0->1->2->3->0
+        0: AttribDef(DXFPoint3D, 0, priority=100),
+        1: AttribDef(DXFPoint3D, 1, 101),
+        2: AttribDef(DXFPoint3D, 2, 102),
+        3: AttribDef(DXFPoint3D, 3, 103),
+        },
     'TEXT': {
         'insert': AttribDef(DXFPoint3D, 0, priority=100),
         'height': AttribDef(DXFFloat, 40, 105),
@@ -288,6 +294,11 @@ class Solid(_Entity):
             if key not in self.attribs:
                 return False
         return True
+
+class Trace(Solid):
+    @property
+    def name(self):
+        return 'TRACE'
 
 class Face3D(Solid):
     @property

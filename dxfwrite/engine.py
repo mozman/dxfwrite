@@ -13,7 +13,7 @@ DXFEngine is the dxf entity creation engine, main interface for dxfwrite
 """
 
 from dxfwrite.entities import Line, Point, Solid, Face3D, Text, Arc, Circle
-from dxfwrite.entities import Polyline, Polymesh, Polyface
+from dxfwrite.entities import Trace, Polyline, Polymesh, Polyface
 from dxfwrite.entities import Insert, Block, Attdef, Attrib, Shape
 from dxfwrite.buildups import MText, Rectangle
 
@@ -362,6 +362,22 @@ class DXFEngine(object):
              extrusion_direction (see doc-string DXFEngine)
         """
         return Solid(points, **kwargs)
+
+    @staticmethod
+    def trace(points=[], **kwargs):
+        """ create a trace-entity with 3 or 4 sides of (3D) points, z-axis is
+        0. by default
+
+        KWARGS:
+
+        points
+            list of three or four 2D- or 3D-points
+
+        common kwargs
+             linetype, color, layer, elevation, thickness, paper_space,
+             extrusion_direction (see doc-string DXFEngine)
+        """
+        return Trace(points, **kwargs)
 
     @staticmethod
     def circle(radius=1.0, center=(0., 0.), **kwargs):

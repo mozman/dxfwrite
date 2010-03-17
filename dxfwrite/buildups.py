@@ -31,7 +31,8 @@ class MText(object):
 
     Mostly the same kwargs like DXFEngine.text().
     Caution: align point is always the insert point, I don't need a second
-    alignpoint because horizontal alignment FIT, ALIGN, HMIDDLE is not supported.
+    alignpoint because horizontal alignment FIT, ALIGN, BASELINE_MIDDLE is not
+    supported.
 
     linespacing
         linespacing in percent of height, 1.5 = 150% = 1+1/2 lines

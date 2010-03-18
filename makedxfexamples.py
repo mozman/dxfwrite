@@ -130,6 +130,13 @@ def simple_dxf(dxf, name):
     # example for baseline_middle text
     drawing.add(dxf.text("baseline_middle Text", insert=(0, -9),
                             halign=dxfwrite.BASELINE_MIDDLE, alignpoint=(3, -9)))
+
+    # example for Polyline, flags=0, creates a 2D polyline
+    # default is a 3D polyline
+    polyline= dxf.polyline(linetype='DOT', flags=0)
+    polyline.add_vertices( [(0,20), (3,20), (6,23), (9,23)] )
+    drawing.add(polyline)
+
     # and save the drawing
     drawing.save()
 
@@ -350,14 +357,24 @@ def polyface_dxf(dxf, name):
 def table_dxf(dxf, name):
     dwg = dxf.drawing(name) # create a drawing
     table = dxf.table(insert=(0,0), nrows=10, ncols=3)
+    # create a new styles
+    ctext = table.new_cellstyle('ctext', textcolor=7, textheight=0.5,
+                                halign=dxfwrite.const.CENTER,
+                                valign=dxfwrite.const.MIDDLE
+                                )
+    vtext = table.new_cellstyle('vtext', textcolor=2, textheight=0.5,
+                                rotation=90, # vertical written
+                                halign=dxfwrite.const.CENTER,
+                                valign=dxfwrite.const.MIDDLE,
+                                bgcolor=7,
+                                )
+
     # create a text cell with the default style
-    cell = table.textcell(0, 0, 'Zeile1')
-    # create a new style
-    style = table.new_cellstyle('cell1', color=7, textheight=0.5)
-    # set cell style
-    cell.style = style
+    cell1 = table.textcell(0, 0, 'Zeile1\nZeile2', 'ctext')
     # cell spans over 2 rows and 2 cols
-    cell.span=(2, 2)
+    cell1.span=(2, 2)
+    cell2 = table.textcell(4, 0, 'VERTICAL\nBABY','vtext')
+    cell2.span=(4, 1)
     dwg.add(table)
     dwg.save()
 

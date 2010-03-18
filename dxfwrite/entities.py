@@ -49,8 +49,8 @@ _DXF12_EntityAttributeDefinition = {
     'TRACE': { # drawing order 0->1->2->3->0
         0: AttribDef(DXFPoint3D, 0, priority=100),
         1: AttribDef(DXFPoint3D, 1, 101),
-        2: AttribDef(DXFPoint3D, 2, 102),
-        3: AttribDef(DXFPoint3D, 3, 103),
+        2: AttribDef(DXFPoint3D, 3, 102),# (13, 23, 33) is drawn before (12, 22, 32) !!!
+        3: AttribDef(DXFPoint3D, 2, 103),
         },
     'TEXT': {
         'insert': AttribDef(DXFPoint3D, 0, priority=100),
@@ -172,7 +172,10 @@ class _Entity(object):
         self['layer'] = '0' # set default layer
         # set attribs from kwargs
         for key, value in kwargs.iteritems():
-            self[key] = value
+            # linetype can be None which means BYLAYER!
+            # and BYLAYER is defined as linetype is omitted
+            if value is not None:
+                self[key] = value
 
     @property
     def attribute_definition(self):

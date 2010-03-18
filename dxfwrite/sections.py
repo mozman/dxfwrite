@@ -43,7 +43,7 @@ class Header(_Section):
             self.add_vars(default_vars)
 
     def _get_body(self):
-        """ return a DXFList object.
+        """ Return header section content as DXFList.
         """
         varlist = [DXFList((DXFAtom(key, 9), value))
                    for key, value in self.variables.items()]
@@ -55,28 +55,27 @@ class Header(_Section):
         return self.variables[varname]
 
     def add(self, name, value):
-        """ Set header variable.
+        """ Set header variable <name> to <value>.
 
-        PARAMETER:
-        name
-            variable name
-        value
-            dxfwrite.base.DXFAtom() or inherited
+        Arguments
+        ---------
+        name -- variable name
+        value -- dxfwrite.base.DXFAtom() or inherited
 
-        EXAMPLE:
-        add('$ACADVER', DXFString('AC1018'))
+        usage:
+            add('$ACADVER', DXFString('AC1018'))
         """
         self.variables[name] = value
 
     def add_vars(self, variables):
-        """ add many vars to header
+        """Add many vars to header.
 
-        PARAMETER:
-        variables
-            list of tuples ('varname', dxfwrite.base.DXFAtom())
+        Arguments
+        ---------
+        variables -- list of tuples ('varname', dxfwrite.base.DXFAtom())
 
-        EXAMPLE:
-        add_vars([('$ACADVER', DXFString('AC1018')), ('$EXTMIN', DXFPoint())])
+        usage:
+            add_vars([('$ACADVER', DXFString('AC1018')), ('$EXTMIN', DXFPoint())])
         """
         for name, value in variables:
             self.add(name, value)

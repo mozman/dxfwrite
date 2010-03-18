@@ -19,16 +19,14 @@ ENCODING = 'cp1252'
 
 class Drawing(object):
     """ Collection of dxf entities. """
-    def __init__(self, name='noname.dxf', default_values=True):
+    def __init__(self, name='noname.dxf'):
         self.filename = name
         self.header = Sections.get('HEADER')
         self.tables = Sections.get('TABLES')
         self.blocks = Sections.get('BLOCKS')
         self.entities = Sections.get('ENTITIES')
         self._anonymous_counter = 0
-
-        if default_values:
-            self.add_default_values()
+        self.default_settings()
 
     @property
     def linetypes(self): return self.tables.linetypes
@@ -86,7 +84,7 @@ class Drawing(object):
         self.add(insert)
         return blockname
 
-    def add_default_values(self):
+    def default_settings(self):
         self.header.add_vars([
             ('$ACADVER', DXFString('AC1009')),
             ('$INSBASE', DXFPoint()),
@@ -97,7 +95,11 @@ class Drawing(object):
             self.linetypes.add(ltype)
         for style in self.std_styles():
             self.styles.add(style)
-        self.tables.appids.add(DXFEngine.appid('DXFWRITE') )
+        self.tables.appids.add(DXFEngine.appid('DXFWRITE'))
+        self.add_layer('DIMENSIONS')
+        self.add_layer('TABLEBACKGROUND')
+        self.add_layer('TABLECONTENT')
+        self.add_layer('TABLEGRID')
 
     def save(self):
         with open(self.filename, 'w') as fp:

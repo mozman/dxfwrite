@@ -347,6 +347,20 @@ def polyface_dxf(dxf, name):
             dwg.add(get_cube(dxf, (x,y, random()), random()))
     dwg.save() # save dxf drawing
 
+def table_dxf(dxf, name):
+    dwg = dxf.drawing(name) # create a drawing
+    table = dxf.table(insert=(0,0), nrows=10, ncols=3)
+    # create a text cell with the default style
+    cell = table.textcell(0, 0, 'Zeile1')
+    # create a new style
+    style = table.new_cellstyle('cell1', color=7, textheight=0.5)
+    # set cell style
+    cell.style = style
+    # cell spans over 2 rows and 2 cols
+    cell.span=(2, 2)
+    dwg.add(table)
+    dwg.save()
+
 def main():
     empty_dxf(dxfwrite.DXFEngine, "example_empty.dxf")
     simple_dxf(dxfwrite.DXFEngine, "example_simple.dxf")
@@ -355,6 +369,7 @@ def main():
     dimline_dxf(dxfwrite.DXFEngine, "example_dimlines.dxf")
     polymesh_dxf(dxfwrite.DXFEngine, "example_polymesh.dxf")
     polyface_dxf(dxfwrite.DXFEngine, "example_polyface.dxf")
+    table_dxf(dxfwrite.DXFEngine, "example_table.dxf")
 
 if __name__=='__main__':
     main()

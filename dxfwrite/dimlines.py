@@ -181,7 +181,6 @@ class _DimStyles(object):
         ]
         drawing.blocks.add(block('DIMTICK_RADIUS', elements))
 
-        drawing.add_layer('DIMENSIONS')
 
 dimstyles = _DimStyles() # use this factory tu create new dimstyles
 

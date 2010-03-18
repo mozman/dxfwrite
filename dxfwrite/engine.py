@@ -14,6 +14,7 @@ from dxfwrite.entities import Line, Point, Solid, Face3D, Text, Arc, Circle
 from dxfwrite.entities import Trace, Polyline, Polymesh, Polyface
 from dxfwrite.entities import Insert, Block, Attdef, Attrib, Shape
 from dxfwrite.buildups import MText, Rectangle
+from dxfwrite.table import Table
 
 from dxfwrite.tableentries import Linetype, LinePatternDef, Style, Layer
 from dxfwrite.tableentries import View, Viewport, UCS, AppID
@@ -677,3 +678,7 @@ class DXFEngine(object):
         linetype -- linetype name, None = BYLAYER
         """
         return Rectangle(insert, width, height, **kwargs)
+
+    @staticmethod
+    def table(insert, nrows, ncols):
+        return Table(insert, nrows, ncols)

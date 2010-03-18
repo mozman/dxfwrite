@@ -34,8 +34,7 @@ class MText(object):
     alignpoint because horizontal alignment FIT, ALIGN, BASELINE_MIDDLE is not
     supported.
 
-    linespacing
-        linespacing in percent of height, 1.5 = 150% = 1+1/2 lines
+    linespacing -- linespacing in percent of height, 1.5 = 150% = 1+1/2 lines
     """
     def __init__(self, text, insert, linespacing=1.5, **kwargs):
         self.textlines = text.split('\n')
@@ -60,6 +59,10 @@ class MText(object):
         elif len(self.textlines) == 1: # just a normal text with one line
             kwargs['alignpoint'] = insert # text() needs the align point
             self.data.append(Text(text=text, insert=insert, **kwargs))
+    @property
+    def name(self):
+        """ entitiy type name """
+        return 'MTEXT'
 
     @property
     def lineheight(self):
@@ -76,7 +79,7 @@ class MText(object):
             self.data.append(Text(text=text, **params))
 
     def _get_align_point(self, linenum):
-        """ calculate the align point depending on the line number. """
+        """Calculate the align point depending on the line number. """
         x = self.insert[0]
         y = self.insert[1]
         try:
@@ -95,7 +98,7 @@ class MText(object):
         return self._rotate( (x, y, z) ) # consider rotation
 
     def _rotate(self, alignpoint):
-        """ rotate alignpoint around insert point about rotation degrees """
+        """Rotate alignpoint around insert point about rotation degrees."""
         dx = alignpoint[0] - self.insert[0]
         dy = alignpoint[1] - self.insert[1]
         beta = math.radians(self.rotation)
@@ -104,7 +107,7 @@ class MText(object):
         return (round(x, 6), round(y, 6), alignpoint[2])
 
     def _build_text_params(self, alignpoint):
-        """ build the calling dict for Text() """
+        """Build the calling dict for Text()."""
         return {
             'insert': alignpoint,
             'alignpoint': alignpoint,
@@ -125,35 +128,19 @@ class MText(object):
         return self.data.__dxf__()
 
 class Rectangle(object):
-    """ 2D Rectangle, build with a polyline an d a solid as background filling
+    """ 2D Rectangle, build with a polyline an d a solid as background filling.
 
     insert point
-
-    width, height
-        in drawing units
-
-    rotation
-        in degree
-
-    halign
-        LEFT, CENTER, RIGHT
-
-    valign
-        TOP, MIDDLE, BOTTOM
-
-    color
-        dxf color index, default is BYLAYER, if color is None, no polyline
+    width, height -- in drawing units
+    rotation -- in degree
+    halign -- LEFT, CENTER, RIGHT
+    valign -- TOP, MIDDLE, BOTTOM
+    color -- dxf color index, default is BYLAYER, if color is None, no polyline
         will be created, and the rectangle consist only of the background
         filling (if bgcolor != None)
-
-    bgcolor
-        dxf color index, default is None (no background filling)
-
-    layer
-        target layer, default is '0'
-
-    linetype
-        linetype name, None = BYLAYER
+    bgcolor -- dxf color index, default is None (no background filling)
+    layer -- target layer, default is '0'
+    linetype -- linetype name, None = BYLAYER
     """
     def __init__(self, insert, width, height, rotation=0.,
                  halign=const.LEFT, valign=const.TOP,
@@ -171,6 +158,11 @@ class Rectangle(object):
         self.linetype = linetype
         self.points = None
         self.data = DXFList()
+
+    @property
+    def name(self):
+        """ entitiy type name """
+        return 'RECTANGLE'
 
     def _build_rect(self):
         self._calc_corners()

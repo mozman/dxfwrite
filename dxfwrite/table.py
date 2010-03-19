@@ -96,6 +96,7 @@ class Table(object):
         self.cells[row, col] = cell
         return cell
 
+    # pylint: disable-msg=W0102
     def block_cell(self, row, col, blockdef, span=(1, 1), attribs={}, style='default'):
         """Create a new block cell at position (row, col), content is a block
         reference inserted by a DXF-INSERT entity, attributes will be added if
@@ -553,7 +554,7 @@ class Cell(object):
     @span.setter # pylint: disable-msg=E1101
     def span(self, value): # pylint: disable-msg=E0102,E0202
         """Ensures that span values are >= 1 in each direction."""
-        self._span = (max(1, value[0]), max(1, value[1]))
+        self._span = (max(1, value[0]), max(1, value[1])) # pylint: disable-msg=W0201
 
     def __init__(self, table, style='default', span=(1, 1)):
         """Constructor
@@ -572,6 +573,7 @@ class Cell(object):
         # span values has to be >= 1
         self.span = span
 
+    # pylint: disable-msg=W0613
     def get_dxf_entity(self, coords, layer):
         return DXFList()
 
@@ -647,8 +649,10 @@ class CustomCell(Cell):
         coords -- tuple of border-coordinates : left, right, top, bottom
         layer -- layer, which should be used for dxf entities
         """
-        style = self.style # access to all the parameter
+        # get access to all style parameter
+        style = self.style # pylint: disable-msg=W0612
         # reduce borders about hmargin and vmargin
+        # pylint: disable-msg=W0612
         left, right, top, bottom = self.substract_margin(coords)
         # and now do what you want ...
         # return a dxf entity which implement the __dxf__ protocoll
@@ -658,6 +662,7 @@ class CustomCell(Cell):
 
 class BlockCell(Cell):
     """ Cell that contains a block reference. """
+    # pylint: disable-msg=W0102
     def __init__(self, table, blockdef, style='default', attribs={}, span=(1, 1)):
         """Constructor
 

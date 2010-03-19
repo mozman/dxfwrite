@@ -680,5 +680,5 @@ class DXFEngine(object):
         return Rectangle(insert, width, height, **kwargs)
 
     @staticmethod
-    def table(insert, nrows, ncols):
-        return Table(insert, nrows, ncols)
+    def table(insert, nrows, ncols, default_grid=True):
+        return Table(insert, nrows, ncols, default_grid)

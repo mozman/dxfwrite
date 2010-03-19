@@ -71,16 +71,17 @@ class Drawing(object):
         self._anonymous_counter += 1
         return "*{0}{1}".format(typechar, self._anonymous_counter)
 
-    def add_anonymous_block(self, entity, layer="0", typechar='U'):
+    def add_anonymous_block(self, entity, layer="0", typechar='U',
+                            basepoint=(0, 0), insert=(0, 0)):
         """ insert entity (can be a DXFList) as anonymous block
         into  drawing
         """
         blockname = self.anonymous_blockname(typechar)
-        block = DXFEngine.block(blockname, basepoint=(0, 0),
+        block = DXFEngine.block(blockname, basepoint=basepoint,
                                 flags=const.BLK_ANONYMOUS)
         block.add(entity)
         self.blocks.add(block)
-        insert = DXFEngine.insert(blockname, insert=(0, 0), layer=layer)
+        insert = DXFEngine.insert(blockname, insert=insert, layer=layer)
         self.add(insert)
         return blockname
 

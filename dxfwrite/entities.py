@@ -410,7 +410,16 @@ class Insert(_Entity):
             relative_angle = attrib.attribs.get('rotation', angel0).value
             insert_position = self['insert']['xyz']
             insert_angle = self.attribs.get('rotation', angel0).value
-            attrib['insert'] = transform(insert_position, insert_angle, relative_position)
+            insert_position = transform(insert_position, insert_angle, relative_position)
+            # if block reference (insert-entity) is scaled in y-axis
+            # then also shrink the textheight of the attrib-entity
+            if 'yscale' in self.attribs:
+                text_height = attrib['height']
+                attrib['height'] = text_height * self['yscale']
+            attrib['insert'] = insert_position
+            # align point is always the insert point, so baseline styles
+            # like ALIGNED, FIT and BASELINE_MIDDLE is not available
+            attrib['alignpoint'] = insert_position
             attrib['rotation'] = insert_angle + relative_angle
         self.data.append(attrib)
 

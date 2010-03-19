@@ -440,7 +440,7 @@ def table_dxf(dxf, name):
 
     for pos in [3, 4 , 5, 6]:
         blockcell = table.block_cell(pos, 1, mat_symbol,
-                                    attribs={'num': str(pos)},
+                                    attribs={'num': pos},
                                     style='matsym')
 
     dwg.add(table)

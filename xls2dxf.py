@@ -32,17 +32,16 @@ from dxfwrite.std import color_index
 
 locale.setlocale(locale.LC_ALL, "")
 
-
+HAIR   = 5 # 0.13
+THIN   = 7 # 0.25
+MEDIUM = 4 # 0.50
+THICK  = 3 # 0.70
 HEIGHT_FACTOR = 0.001763671
 WIDTH_FACTOR = 0.000764724
 FONT_FACTOR = HEIGHT_FACTOR * 0.7
-BORDER_COLOR = [5, 7, 4, 3] # none, thin, middle >=2.5pt, thick >= 4.0pt
 FPOINT = '.'
-COLON = ','
 MAX_FLOAT_PREC = 6
-
-DEFAULT_COLUMN_WIDTH = 2.5
-DEFAULT_ROW_HEIGHT = 1.0
+HIDDEN = (0, 0)
 
 def grouped_number(number, float_prec, thousend_point=False):
     fmt_str = "%%.%df" % min(float_prec, MAX_FLOAT_PREC)
@@ -57,8 +56,8 @@ class XFRecord(object):
         self.font = book.font_list[self.xf_record.font_index]
         self.format_rec = book.format_map[self.xf_record.format_key]
 
-    def dxf_color(self, color_index):
-        rgb = self.book.colour_map[color_index]
+    def dxf_color(self, cindex):
+        rgb = self.book.colour_map[cindex]
         if rgb:
             return color_index(rgb)
         else:
@@ -85,29 +84,45 @@ class XFRecord(object):
         return self.font.height * FONT_FACTOR
 
     def get_margin(self):
-        return 0.1, 0.1
+        return 0.1, 0.05
+
+    def is_stacked_text(self):
+        return self.xf_record.alignment.rotation == 255
 
     def get_rotation(self):
-        return 0.0
+        if self.is_stacked_text():
+            return 0.
+        rotation = self.xf_record.alignment.rotation
+        if 90 < rotation <= 180:
+            rotation = -(rotation - 90)
+        return rotation
 
-    def get_border_style(self):
-        """Get border width as tuple (top, right, bottom, left).
-
-        values: 0=none, 1=thin, 2=middle, 3=thick
+    def get_border_styles(self):
+        """Returns a tuple of border styles.
         """
         def style(xf_style):
             border_style = {
                 'status': True,
                 'color': 5,
-                'linetype': 'CONTINUOSE',
+                'linetype': 'CONTINUOUS',
                 'priority': 50,
             }
-            if xf_style in [1, 3, 4, 7, 9, 11]: # thin
-                border_style['color'] = 7
-            elif xf_style in [2, 8, 10, 12]: # medium
-                border_style['color'] = 4
-            elif xf_style in [5, 6, 13]: # thick or double
-                border_style['color'] = 3
+            # set color = line width
+            if xf_style == 0: # no line
+                border_style['status'] = False
+                border_style['priority'] = 50
+            elif xf_style == 7: # hair OpenOffice = 0.05 pt
+                border_style['color'] = HAIR
+                border_style['priority'] = 60
+            elif xf_style in [1, 3, 4, 9, 11]: # thin OpenOffice = 0.5 & 1.0 pt
+                border_style['color'] = THIN
+                border_style['priority'] = 70
+            elif xf_style in [2, 8, 10, 12]: # medium OpenOffice = 2.5 pt
+                border_style['color'] = MEDIUM
+                border_style['priority'] = 80
+            elif xf_style in [5, 6, 13]: # thick or double OpenOffice = 4.0 pt
+                border_style['color'] = THICK
+                border_style['priority'] = 90
             return border_style
         border = self.xf_record.border
         top = style(border.top_line_style)
@@ -117,10 +132,10 @@ class XFRecord(object):
         return (left, right, top, bottom)
 
     def get_align(self):
-        """Get cell alignment as tuple (horiz, vert).
+        """Get cell alignment as tuple (halign, valign).
 
-        horiz = 0=left, 1=center, 2=right
-        vert  = 0=Baseline? 1=bottom, 2=middle, 3=top
+        halign -- LEFT, CENTER, RIGHT from const module
+        valign -- TOP, MIDDLE, BOTTM from const module
         """
         xf_halign = self.xf_record.alignment.hor_align
         xf_valign = self.xf_record.alignment.vert_align
@@ -192,12 +207,54 @@ class XFRecord(object):
     def style_name(self):
         return "xf{0}".format(self.xf_index)
 
+class VisibilityMap(object):
+    """Stores the visibility of table cells."""
+    def __init__(self, sheet):
+        """Constructor
+
+        sheet -- excel sheet from xlrd
+        """
+        self._merged_cells = dict()
+        self._create_visibility_map(sheet)
+
+    def _create_visibility_map(self, sheet):
+        """Set visibility for all merged cells."""
+        for cell_range in sheet.merged_cells:
+            self._set_span_visibility(cell_range)
+
+    def _set_span_visibility(self, cell_range):
+        """Set the visibilty of the given cell. The top-left cell itself is
+        visible, all other cells in the cell-range are invisible, they are c
+        overed by the top-left cell."""
+        row_lo, row_hi, col_lo, col_hi = cell_range
+        # set all cells in span range to HIDDEN
+        for rowx in xrange(row_lo, row_hi):
+            for colx in xrange(col_lo, col_hi):
+                self._merged_cells[rowx, colx] = HIDDEN
+
+        # set span-tuple value of the merged cell (top_left)
+        self._merged_cells[row_lo, col_lo] = (row_hi-row_lo, col_hi-col_lo)
+
+    def is_visible(self, row, col):
+        """Get visibility status of indexd cell; index is a tuple:<row>, <col>.
+        returns False for hidden or True for visible
+        """
+        return self.get_cell_span(row, col) != HIDDEN
+
+    def get_cell_span(self, row, col):
+        try:
+            return self._merged_cells[row, col]
+        except KeyError: # not a merged cell
+            return (1, 1)
+
 class SheetRenderer(object):
     def __init__(self, sheet, filename, options):
         self.sheet = sheet
-        nrows = min(options.maxrows, sheet.nrows)
-        ncols = min(options.maxcols, sheet.ncols)
+        nrows = min(options.maxrow, sheet.nrows)
+        ncols = min(options.maxcol, sheet.ncols)
         self.table = dxf.table((0,0), nrows, ncols)
+        self.xfrecords= []
+        self.vismap = VisibilityMap(sheet)
 
         self.set_col_widths()
         self.set_row_heights()
@@ -208,59 +265,38 @@ class SheetRenderer(object):
 
     def create_cell_styles(self):
         def build_style(style, xfrec):
-            halign, valign = xfrec.get_align()
-            color, bg_color = xfrec.get_colors()
-            textstyle = xfrec.get_textstyle()
-            linespacing = xfrec.get_linespacing()
-            xscale, yscale = xfrec.get_scale()
-            height = xfrec.get_textheight()
-            hmargin, vmargin = xfrec.get_margin()
-            rotation = xfrec.get_rotation()
-            left, right, top, bottom = xfrec.get_border_styles()
+            style['halign'], style['valign'] = xfrec.get_align()
+            style['textcolor'], style['bgcolor'] = xfrec.get_colors()
+            style['textstyle'] = xfrec.get_textstyle()
+            style['textheight'] = xfrec.get_textheight()
+            style['linespacing'] = xfrec.get_linespacing()
+            style['xscale'], style['yscale'] = xfrec.get_scale()
+            style['hmargin'], style['vmargin'] = xfrec.get_margin()
+            style['rotation'] = xfrec.get_rotation()
+            style['stacked'] = xfrec.is_stacked_text()
+            style['left'], style['right'], style['top'], style['bottom'] = xfrec.get_border_styles()
 
         for index, xf_info in enumerate(self.sheet.book.xf_list):
             xfrec = XFRecord(self.sheet.book, index)
+            self.xfrecords.append(xfrec)
             name = xfrec.style_name()
             style = self.table.new_cell_style(name)
-            build_style(style, xf_info)
+            build_style(style, xfrec)
 
     def create_cells(self):
         for row in xrange(self.table.nrows):
             for col in xrange(self.table.ncols):
-                cell = self.sheet.cell(row, col)
-                if cell is xlrd.empty_cell:
-                    continue
-                if self.is_visible_cell(row, col):
-                    span = self.get_cell_span(row, col)
-                    xfrec = XFRecord(self.sheet.book, cell.xf_index)
-                    style = xfrec.style_name()
+                if self.vismap.is_visible(row, col):
+                    cell = self.sheet.cell(row, col)
+                    xfrec = self.xfrecords[cell.xf_index]
                     text = xfrec.tostr(cell)
+                    span = self.vismap.get_cell_span(row, col)
+                    style = xfrec.style_name()
                     self.table.text_cell(row, col, text, span, style)
 
-    def is_merged_cell(self, row, col):
-        for (row_low, row_high, col_low, col_high) in self.sheet.merged_cells:
-            if row==row_low and col==col_low:
-                return True
-        return False
-
-    def get_cell_span(self, row, col):
-        for (row_low, row_high, col_low, col_high) in self.sheet.merged_cells:
-            if row==row_low and col==col_low:
-                row_span = row_high - row_low + 1
-                col_span = col_high - col_low + 1
-        return (1, 1)
-
-    def is_visible_cell(self, row, col):
-        for (row_low, row_high, col_low, col_high) in self.sheet.merged_cells:
-            if row==row_low and col==col_low:
-                return True
-            if row_low <= row <= row_high and \
-               col_low <= col <= col_high:
-                return False
-        return True
-
     def set_default_style(self):
-        pass
+        default_style = self.table.get_cell_style('default')
+        # now modify the default style
 
     def set_col_widths(self):
         def width(col):

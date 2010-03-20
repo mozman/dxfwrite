@@ -285,6 +285,8 @@ class Style(dict):
             'textcolor': DEFAULT_CELL_TEXTCOLOR,
             # text or block rotation in degrees
             'rotation' : 0.,
+            # Letters are stacked top-to-bottom, but not rotated
+            'stacked': False,
             # horizontal alignment (const.LEFT, const.CENTER, const.RIGHT)
             'halign': DEFAULT_CELL_HALIGN,
             # vertical alignment (const.TOP, const.MIDDLE, const.BOTTOM)
@@ -617,13 +619,18 @@ class TextCell(Cell):
         style = self.style
         halign = style['halign']
         valign = style['valign']
+        rotated = self.style['rotation']
+        text = self.text
+        if style['stacked']:
+            rotated = 0.
+            text = '\n'.join( (char for char in self.text.replace('\n', ' ')) )
         xpos = (left, float(left+right)/2., right)[halign]
         ypos = (bottom, float(bottom+top)/2., top)[valign-1]
-        return MText(self.text, (xpos, ypos),
+        return MText(text, (xpos, ypos),
                      linespacing=self.style['linespacing'],
                      style=self.style['textstyle'],
                      height=self.style['textheight'],
-                     rotation=self.style['rotation'],
+                     rotation=rotated,
                      xscale=self.style['xscale'],
                      halign=halign,
                      valign=valign,

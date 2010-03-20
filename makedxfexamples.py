@@ -65,6 +65,9 @@ def simple_dxf(dxf, name):
     # add a 3DFACE-entity
     drawing.add(dxf.face3d([(5,5), (6,5), (6,6), (5,6)], color=3))
 
+    # add a Trace-entity
+    drawing.add(dxf.trace([(7,5), (8,5), (8,6), (7,6)], color=4))
+
     # add a TEXT-entity
     drawing.add(dxf.text(text="Manfred"))
 
@@ -436,7 +439,14 @@ def table_dxf(dxf, name):
                          )
     newtable.text_cell(6, 3, "line one\nline two\nand line three",
                        span=(3,3), style='57deg')
-    dwg.add_anonymous_block(newtable, basepoint=(0,0), insert=(80, 20))
+    dwg.add_anonymous_block(newtable, basepoint=(0, 0), insert=(80, 20))
+
+    # a stacked text: Letters are stacked top-to-bottom, but not rotated
+    table.new_cell_style('stacked', textcolor=6, textheight=0.25,
+                         halign=dxfwrite.const.CENTER,
+                         valign=dxfwrite.const.MIDDLE,
+                         stacked=True)
+    table.text_cell(6, 3, "STACKED FIELD", span=(7, 1), style='stacked')
 
     for pos in [3, 4 , 5, 6]:
         blockcell = table.block_cell(pos, 1, mat_symbol,

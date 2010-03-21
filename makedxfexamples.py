@@ -11,7 +11,6 @@ from random import random
 from copy import deepcopy
 
 import dxfwrite
-import dxfwrite.const as const
 
 def empty_dxf(dxf, name):
     """ create an empty drawing """
@@ -43,7 +42,7 @@ def simple_dxf(dxf, name):
 
     # add LINE-entity
     drawing.add(dxf.line((0,0),( 10,0),
-        color=dxfwrite.const.BYLAYER,
+        color=dxfwrite.BYLAYER,
         layer='dxfwrite'
     ))
 
@@ -368,7 +367,7 @@ def table_dxf(dxf, name):
         polygon = dxf.polyline(points, color=2)
         polygon.close()
         attdef = dxf.attdef('0', tag='num', height=0.7, color=1,
-                            halign=const.CENTER, valign=const.MIDDLE
+                            halign=dxfwrite.CENTER, valign=dxfwrite.MIDDLE
                             )
         symbolblock = dxf.block('matsymbol')
         symbolblock.add(polygon)
@@ -380,8 +379,8 @@ def table_dxf(dxf, name):
     table = dxf.table(insert=(0, 0), nrows=20, ncols=10)
     # create a new styles
     ctext = table.new_cell_style('ctext', textcolor=7, textheight=0.5,
-                                 halign=dxfwrite.const.CENTER,
-                                 valign=dxfwrite.const.MIDDLE
+                                 halign=dxfwrite.CENTER,
+                                 valign=dxfwrite.MIDDLE
                                  )
     # modify border settings
     border = table.new_border_style(color=6, linetype='DOT', priority=51)
@@ -389,8 +388,8 @@ def table_dxf(dxf, name):
 
     table.new_cell_style('vtext', textcolor=3, textheight=0.3,
                          rotation=90, # vertical written
-                         halign=dxfwrite.const.CENTER,
-                         valign=dxfwrite.const.MIDDLE,
+                         halign=dxfwrite.CENTER,
+                         valign=dxfwrite.MIDDLE,
                          bgcolor=8,
                          )
     # set colum width, first column has index 0
@@ -419,8 +418,8 @@ def table_dxf(dxf, name):
     mat_symbol = get_mat_symbol()
 
     table.new_cell_style('matsym',
-                         halign=const.CENTER,
-                         valign=const.MIDDLE,
+                         halign=dxfwrite.CENTER,
+                         valign=dxfwrite.MIDDLE,
                          xscale=0.6, yscale=0.6)
 
     # add table as anonymous block
@@ -433,8 +432,8 @@ def table_dxf(dxf, name):
     newtable = deepcopy(table)
     newtable.new_cell_style('57deg', textcolor=2, textheight=0.5,
                          rotation=57, # write
-                         halign=dxfwrite.const.CENTER,
-                         valign=dxfwrite.const.MIDDLE,
+                         halign=dxfwrite.CENTER,
+                         valign=dxfwrite.MIDDLE,
                          bgcolor=123,
                          )
     newtable.text_cell(6, 3, "line one\nline two\nand line three",
@@ -443,8 +442,8 @@ def table_dxf(dxf, name):
 
     # a stacked text: Letters are stacked top-to-bottom, but not rotated
     table.new_cell_style('stacked', textcolor=6, textheight=0.25,
-                         halign=dxfwrite.const.CENTER,
-                         valign=dxfwrite.const.MIDDLE,
+                         halign=dxfwrite.CENTER,
+                         valign=dxfwrite.MIDDLE,
                          stacked=True)
     table.text_cell(6, 3, "STACKED FIELD", span=(7, 1), style='stacked')
 

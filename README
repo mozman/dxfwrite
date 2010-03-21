@@ -1,6 +1,12 @@
 dxfwrite.py is a library to create DXF R12 drawings.
 
+:Date: 2010-03-21
+:Author: Manfred Moitzi (mozman)
+:Version: 0.2.0
+:Status: Alpha
+
 supported R12 entities:
+-----------------------
   * ARC
   * ATTDEF
   * ATTRIB
@@ -13,31 +19,38 @@ supported R12 entities:
   * POLYLINE (special Polyface and Polymesh objects are available)
   * SHAPE (not tested)
   * SOLID
+  * TRACE
   * TEXT
   * VERTEX (only for internal use, see Polyline, Polyface and Polymesh objects)
 
 not supported R12 entities:
-  * TRACE
+---------------------------
   * DIMENSION
 
-Buildup entities: (build with basic R12 DXF-entities)
+Buildup entities:
+-----------------
+Build with basic R12 DXF-entities.
   * MText
   * LinearDimension
   * AngularDimension
   * ArcDimension
   * RadialDimension
+  * Table (like a HTML table)
 
-Native DXF dimensions are not supported, because i don't know how this works, hints are welcome.
+Native DXF dimensions are not supported, because I don't know how this works,
+hints are welcome.
 
-My first goal was to support newer DXF-Versions because R12 is well supported by SDXF (stani).
-But this try ends at the point where AutoCAD crashes on opening the dxf drawings, and the error
-messages were meaningless for me.
-And there are not enough usefull new DXF-Entities since R13 to waste my time for supporting
-DXF R13 or newer. The most interesting objects like solid models are binary encoded and
-not documented by Autodesk.
+My first goal was to support newer DXF-Versions as R12, because R12 is well
+supported by SDXF (stani). But this trail ends with the result that AutoCAD
+crashes on opening the dxf drawings. (error messages were useless). So I decided
+to stay at DXF R12, and there are not enough usefull new DXF-Entities since R13
+to waste my time for supporting newer DXF versions. The most interesting objects
+like solid models are binary encoded and not documented by Autodesk.
+My focus now lies in creating composite elements like MText, Table and various
+dimension lines.
 
 Missing from R13 and later:
-  * MTEXT (R13) ... emulated as buildup
+  * MTEXT (R13) ... emulated as MText buildup
   * ELLIPSE (R13) ... approximated by POLYLINE
   * SPLINE (R13) ... approximated by POLYLINE
   * LWPOLYLINE ... POLYLINE
@@ -45,22 +58,20 @@ Missing from R13 and later:
   * IMAGE, HATCH, MLINE, TOLERANCE, LEADER, XLINE, RAY (R13)
   * OLEFRAME and PROXY entities (R13)
   * WIPEOUT (R2000)
-  * TABLE (R2005)
+  * TABLE (R2005) ... emulated as Table buildup
   * HELIX, LIGHT, MLEADER, SECTION, UNDERLAY (R2008)
   * SURFACE (R2008) binary encoded and not documented
   * SUN (R2009)
   * SUBDIVISION (R2010)
 
 Documentation
----------------
+-------------
 http://bitbucket.org/mozman/dxfwrite/wiki/Home
 
-Good Luck!  As always, feedback is greatly appreciated.
+Good Luck! Feedback is greatly appreciated.
 
 Manfred
 mozman@gmx.at
 
 dxfwrite can be found on bitbucket.org at:
 http://bitbucket.org/mozman/dxfwrite
-
-

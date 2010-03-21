@@ -1,1 +1,2 @@
 include NEWS TODO README LICENSE
+include makedxfexamples.py

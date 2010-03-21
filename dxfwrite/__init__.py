@@ -12,7 +12,7 @@ from dxfwrite.engine import DXFEngine
 from dxfwrite.base import *
 from dxfwrite.const import *
 
-__version__ = "v0.1.0 - 2010.03.14"
+__version__ = "v0.2.0 - 2010.03.21"
 __author__ = "Manfred Moitzi (mozman)"
 __license__ = "GPLv3"
 

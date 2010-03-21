@@ -1,37 +1,35 @@
 
-*dxfwrite* is a library to create DXF R12 drawings.
-
 supported R12 entities:
 -----------------------
-  * ARC
-  * ATTDEF
-  * ATTRIB
-  * BLOCK
-  * CIRCLE
-  * 3DFACE
-  * INSERT
-  * LINE
-  * POINT
-  * POLYLINE (special Polyface and Polymesh objects are available)
-  * SHAPE (not tested)
-  * SOLID
-  * TRACE
-  * TEXT
-  * VERTEX (only for internal use, see Polyline, Polyface and Polymesh objects)
+ * ARC
+ * ATTDEF
+ * ATTRIB
+ * BLOCK
+ * CIRCLE
+ * 3DFACE
+ * INSERT
+ * LINE
+ * POINT
+ * POLYLINE (special Polyface and Polymesh objects are available)
+ * SHAPE (not tested)
+ * SOLID
+ * TRACE
+ * TEXT
+ * VERTEX (only for internal use, see Polyline, Polyface and Polymesh objects)
 
 not supported R12 entities:
 ---------------------------
-  * DIMENSION
+ * DIMENSION
 
 Buildup entities:
 -----------------
 Build with basic R12 DXF-entities.
-  * MText
-  * LinearDimension
-  * AngularDimension
-  * ArcDimension
-  * RadialDimension
-  * Table (like a HTML table)
+ * MText
+ * LinearDimension
+ * AngularDimension
+ * ArcDimension
+ * RadialDimension
+ * Table (like a HTML table)
 
 Native DXF dimensions are not supported, because I don't know how this works,
 hints are welcome.
@@ -67,6 +65,7 @@ http://bitbucket.org/mozman/dxfwrite/wiki/Home
 Good Luck! Feedback is greatly appreciated.
 
 Manfred
+
 mozman@gmx.at
 
 dxfwrite can be found on bitbucket.org at:

@@ -18,7 +18,6 @@ class TestLinearDimAPI(unittest.TestCase):
                                   layer="LINEARDIMENSION",
                                   roundval=1)
         dxf = dimline.__dxf__()
-        self.assertTrue(bool(dimline))
         self.assertTrue('LINEARDIMENSION' in dxf)
 
     def test_set_text(self):

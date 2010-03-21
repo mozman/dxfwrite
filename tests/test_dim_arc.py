@@ -22,7 +22,6 @@ class TestArcDimAPI(unittest.TestCase):
             layer="ARCDIMENSION",
             roundval=1)
         dxf = dimline.__dxf__()
-        self.assertTrue(bool(dimline))
         self.assertTrue("ARCDIMENSION" in dxf)
 
 class TestArcDimImplementation(unittest.TestCase):

@@ -21,7 +21,6 @@ class TestAngularDimAPI(unittest.TestCase):
             layer="ANGULARDIMENSION",
             roundval=1)
         dxf = dimline.__dxf__()
-        self.assertTrue(bool(dimline))
         self.assertTrue("ANGULARDIMENSION" in dxf)
 
 class TestAngularDimImplementation(unittest.TestCase):

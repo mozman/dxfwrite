@@ -170,7 +170,7 @@ class TestGrid(unittest.TestCase):
         self.assertAlmostEqual(top, -3., 4)
         self.assertAlmostEqual(bottom, -6., 4)
 
-    def test_grid_coords(self):
+    def test_grid_coords_span(self):
         grid = Grid(self.table)
         left, right, top, bottom = grid.cell_coords(0, 0, span=(2, 2))
         self.assertAlmostEqual(left, 0., 4)

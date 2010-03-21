@@ -382,6 +382,8 @@ class Grid(object):
         # col-indices are [0 .. ncols+1], ncols+1 for the last grid line right
         # of the last column
         self._vborders = None # created in _init_borders
+        # border style to delete border inside of merged cells
+        self.noborder = dict(status=False, priority=999, linetype=None, color=0)
 
     def _init_borders(self, hborder, vborder):
         """Init the _hborders with  <hborder> and _vborders with <vborder>."""
@@ -502,8 +504,6 @@ class Grid(object):
         vborder = default_style['left']
         self._init_borders(hborder, vborder)
         self._set_frames(self.table.frames)
-        # set frame borders before cell borders, so _set_borders can remove
-        # frame borders inside of cell span regions - not implemented yet
         self._set_borders(self.table.iter_visible_cells())
         self._draw_borders(self.table)
 
@@ -512,9 +512,24 @@ class Grid(object):
         for row, col, cell in visible_cells:
             bottom_row = row + cell.span[0]
             right_col = col + cell.span[1]
-            self._set_rect_border(row, bottom_row, col, right_col, cell.style)
+            self._set_rect_borders(row, bottom_row, col, right_col, cell.style)
+            self._set_inner_borders(row, bottom_row, col, right_col,
+                                    self.noborder)
 
-    def _set_rect_border(self, top_row, bottom_row, left_col, right_col, style):
+
+    def _set_inner_borders(self, top_row, bottom_row, left_col, right_col, border_style):
+        """Set <border_style> to the inner borders of the rectangle <top_row...
+        """
+        if bottom_row - top_row > 1:
+            for col in xrange(left_col, right_col):
+                for row in xrange(top_row+1, bottom_row):
+                    self.set_hborder(row, col, border_style)
+        if right_col - left_col > 1:
+            for row in xrange(top_row, bottom_row):
+                for col in xrange(left_col+1, right_col):
+                    self.set_vborder(row, col, border_style)
+
+    def _set_rect_borders(self, top_row, bottom_row, left_col, right_col, style):
         """Set border <style> to the rectangle <top_row><bottom_row...
         The values describing the grid lines between the cells, see doc-strings
         for set_hborder and set_vborder and see comments for self._hborders and
@@ -534,9 +549,8 @@ class Grid(object):
             left_col = frame.pos[1]
             bottom_row = top_row + frame.span[0]
             right_col = left_col + frame.span[1]
-            self._set_rect_border(top_row, bottom_row, left_col, right_col,
+            self._set_rect_borders(top_row, bottom_row, left_col, right_col,
                                   frame.style)
-
     def _draw_borders(self, table):
         """Draw the grid lines as DXF-LINE entities."""
         def append_line(start, end, style):

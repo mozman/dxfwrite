@@ -25,9 +25,11 @@ import glob
 from datetime import datetime
 from optparse import OptionParser
 
+# http://www.lexicon.net/sjmachin/xlrd.htm
 import xlrd
-from dxfwrite import DXFEngine as dxf
+# http://bitbucket.org/mozman/dxfwrite
 import dxfwrite.const as const
+from dxfwrite import DXFEngine as dxf
 from dxfwrite.std import color_index
 
 locale.setlocale(locale.LC_ALL, "")
@@ -311,7 +313,7 @@ class SheetRenderer(object):
             try:
                 row_height = self.sheet.rowinfo_map[row].height
             except KeyError:
-                row_heigth = self.sheet.default_row_height
+                row_height = self.sheet.default_row_height
             return float(row_height) * HEIGHT_FACTOR
 
         for row in xrange(self.table.nrows):

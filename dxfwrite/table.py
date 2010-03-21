@@ -7,8 +7,17 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 """
-A spreadsheet like table, but without calculations, buildup with
-DXF R12 entities.
+Table object like a HTML-Table, buildup with DXF R12 entities.
+
+Cells can contain Multiline-Text or DXF-BLOCKs, or you can create your own
+cell-type by extending the CustomCell object.
+Cells can span over columns and rows.
+Text cells can contain text with an arbitrary rotation angle, or letters can be
+stacked top-to-bottom.
+BlockCells contains block references (INSERT-entity) created from a block
+definition (BLOCK), if the block definition contains attribute definitions
+(ATTDEF-entity), attribs created by Attdef.new_attrib() will be added to the
+block reference (ATTRIB-entity).
 """
 from array import array
 from copy import deepcopy
@@ -45,7 +54,7 @@ VISIBLE = 1
 HIDDEN = 0
 
 class Table(object):
-    """ Table is a spreadsheet-like table, but without calculation.
+    """A HTML-table like object.
 
     The table object contains the table data cells.
     """
@@ -71,12 +80,16 @@ class Table(object):
         if not default_grid:
             default_style = self.get_cell_style('default')
             default_style.set_border_status(False, False, False, False)
-        self.cells = {}
-        self.frames = []
-        self.visibility_map = None # created in _setup
-        self.grid = None # manage the border lines, created in _setup
-        self.data = DXFList() # dxf entities
-        self.empty_cell = Cell(self)
+
+        self._cells = {} # data cells
+        self.frames = [] # border frame objects
+        # visibility_map stores the visibilty of the cells, created in _setup
+        self.visibility_map = None
+        # grid manages the border lines, created in _setup
+        self.grid = None
+        # data contains the resulting dxf entities
+        self.data = DXFList()
+        self.empty_cell = Cell(self) # represents all empty cells
 
     def set_col_width(self, column, value):
         """Set column width of <column> to <value>."""
@@ -93,8 +106,7 @@ class Table(object):
         name <style>.
         """
         cell = TextCell(self, text, style=style, span=span)
-        self.cells[row, col] = cell
-        return cell
+        return self.set_cell(row, col, cell)
 
     # pylint: disable-msg=W0102
     def block_cell(self, row, col, blockdef, span=(1, 1), attribs={}, style='default'):
@@ -108,15 +120,19 @@ class Table(object):
         name <style>.
         """
         cell = BlockCell(self, blockdef, style=style, attribs=attribs, span=span)
-        self.cells[row, col] = cell
+        return self.set_cell(row, col, cell)
+
+    def set_cell(self, row, col, cell):
+        """Insert a <cell> at position (<row>, <col>)."""
+        self._cells[row, col] = cell
         return cell
 
-    def custom_cell(self, row, col, custom_cell):
-        """Insert a <custom_cell> at position (<row>, <col>), the cell spans
-        over <span> cells and has the cell style with the name <style>.
-        """
-        self.cells[row, col] = custom_cell
-        return custom_cell
+    def get_cell(self, row, col):
+        """Get cell at position (<row>, <col>)."""
+        try:
+            return self._cells[row, col]
+        except KeyError:
+            return self.empty_cell # emtpy cell with default style
 
     def frame(self, row, col, width=1, height=1, style='default'):
         """Create a Frame object which frames the cell area starting at
@@ -158,20 +174,14 @@ class Table(object):
         """
         return self.styles[name]
 
-    def cell(self, row, col):
-        """Get cell at position (<row>, <col>).
-        """
-        try:
-            return self.cells[(row, col)]
-        except KeyError:
-            return self.empty_cell # emtpy cell with default style
-
     def iter_visible_cells(self):
-        """Iterate of all visible cells.
+        """Iterate over all visible cells.
 
-        returs a generator which yields tuples: <row>, <col>, <cell>
+        returns a generator which yields all visible cells as tuples:
+        <row>, <col>, <cell>
         """
-        return ((row, col, self.cell(row, col)) for row, col in self.visibility_map)
+        return ((row, col, self.get_cell(row, col))
+                for row, col in self.visibility_map)
 
     @property
     def name(self):
@@ -192,10 +202,10 @@ class Table(object):
     def _build_table(self):
         """Table is generated on calling the __dxf__() method."""
         self._setup()
-        self.grid.draw()
+        self.grid.draw_lines()
         for row, col, cell in self.iter_visible_cells():
-            self.grid.draw_background(row, col, cell)
-            self.grid.draw_content(row, col, cell)
+            self.grid.draw_cell_background(row, col, cell)
+            self.grid.draw_cell_content(row, col, cell)
         self._cleanup()
 
     def _cleanup(self):
@@ -218,7 +228,7 @@ class VisibilityMap(object):
     def _create_visibility_map(self):
         """Set visibility for all existing cells."""
         for row, col in iter(self):
-            cell = self.table.cell(row, col)
+            cell = self.table.get_cell(row, col)
             self._set_span_visibility(row, col, cell.span)
 
     def _set_span_visibility(self, row, col, span):
@@ -350,25 +360,31 @@ class Grid(object):
         self.col_pos = self._calc_col_pos()
         # contains the y-axis coords of the grid lines between the data rows.
         self.row_pos = self._calc_row_pos()
-        # contans the horizontal border elements, dict of border styles
-        # key is the tuple (row, col), which means the border element above row, col
-        # and row-indices are [0 .. nrows+1], nrows+1 for the grid line below
-        # the last row; only the border style with the highest priority is
-        # stored in the dict.
-        self._hborders = {}
+        # contans the horizontal border elements, list of border styles
+        # get index with _border_index(row, col), which means the border element
+        # above row, col, and row-indices are [0 .. nrows+1], nrows+1 for the
+        # grid line below the last row; list contains only the border style with
+        # the highest priority.
+        self._hborders = None # created in _init_borders
         # same as _hborders but for the vertical borders,
-        # col-indices are [0 .. ncols+1], ncols+1 for the last grid line right of
-        # the last column
-        self._vborders = {}
-        # stores the default border style
-        self.default_border_style = Style.get_default_border_style()
+        # col-indices are [0 .. ncols+1], ncols+1 for the last grid line right
+        # of the last column
+        self._vborders = None # created in _init_borders
 
-    def _init_borders(self, rows, cols, border):
-        """Init the _hborders and _vborders dicts with <border>."""
-        for row in xrange(rows+1):
-            for col in xrange(cols+1):
-                self._hborders[(row, col)] = border
-                self._vborders[(row, col)] = border
+    def _init_borders(self, hborder, vborder):
+        """Init the _hborders with  <hborder> and _vborders with <vborder>."""
+        # <border_count> has more elements than necessary, but it unifies the
+        # index calculation for _vborders and _hborders.
+        # exact values are:
+        # hborder_count = ncols * (nrows+1), hindex = ncols * <row> + <col>
+        # vborder_count = nrows * (ncols+1), vindex = (ncols+1) * <row> + <col>
+        border_count = (self.table.nrows+1) * (self.table.ncols+1)
+        self._hborders = [hborder] * border_count
+        self._vborders = [vborder] * border_count
+
+    def _border_index(self, row, col):
+        """Calculate linear index for border arrays _hborders and _vborders."""
+        return row * (self.table.ncols+1) + col
 
     def set_hborder(self, row, col, border_style):
         """Set <border_style> for the horizontal border element above <row>, <col>."""
@@ -380,16 +396,30 @@ class Grid(object):
 
     def _set_border_style(self, borders, row, col, border_style):
         """Set <border_style> for <row>, <col> in <borders>. """
-        try:
-            actual_borderstyle = borders[(row, col)]
-            if border_style['priority'] >= actual_borderstyle['priority']:
-                borders[(row, col)] = border_style
-        except KeyError:
-            borders[(row, col)] = border_style
+        border_index = self._border_index(row, col)
+        actual_borderstyle = borders[border_index]
+        if border_style['priority'] >= actual_borderstyle['priority']:
+            borders[border_index] = border_style
+
+    def get_hborder(self, row, col):
+        """Get the horizontal border element above <row>, <col>.
+        Last grid line (below <nrows>) is the element above of <nrows+1>.
+        """
+        return self._get_border(self._hborders, row, col)
+
+    def get_vborder(self, row, col):
+        """Get the vertical border element left of <row>, <col>.
+        Last grid line (right of <ncols>) is the element left of <ncols+1>.
+        """
+        return self._get_border(self._vborders, row, col)
+
+    def _get_border(self, borders, row, col):
+        """Get border element at <row>, <col> from <borders>."""
+        return borders[self._border_index(row, col)]
 
     def _sum_fields(self, start_value, fields, append, sign=1.):
         """adds step-by-step the fields-values, starting with <start_value>,
-        and appends the resulting values to an unkown object with the
+        and appends the resulting values to an other object with the
         append-method.
         """
         position = start_value
@@ -401,7 +431,8 @@ class Grid(object):
     def _calc_col_pos(self):
         """Calculate the x-axis coords of the grid lines between the columns."""
         col_pos = array('f')
-        self._sum_fields(self.table.insert[0],
+        start_x = self.table.insert[0]
+        self._sum_fields(start_x,
                          self.table.col_widths,
                          col_pos.append)
         return col_pos
@@ -409,7 +440,8 @@ class Grid(object):
     def _calc_row_pos(self):
         """Calculate the y-axis coords of the grid lines between the rows."""
         row_pos = array('f')
-        self._sum_fields(self.table.insert[1],
+        start_y = self.table.insert[1]
+        self._sum_fields(start_y,
                          self.table.row_heights,
                          row_pos.append, -1.)
         return row_pos
@@ -424,11 +456,12 @@ class Grid(object):
         right = self.col_pos[col+span[1]]
         return (left, right, top, bottom)
 
-    def draw_background(self, row, col, cell):
-        """Draw the cell background for <row>,<col> as DXF-SOLID entity."""
+    def draw_cell_background(self, row, col, cell):
+        """Draw the cell background for <row>, <col> as DXF-SOLID entity."""
         style = cell.style
         if style['bgcolor'] is None:
             return
+        # get cell coords in absolute drawing units
         left, right, top, bottom = self.cell_coords(row, col, cell.span)
         ltop = (left, top)
         lbot = (left, bottom)
@@ -439,22 +472,23 @@ class Grid(object):
             color=style['bgcolor'],
             layer=self.table.bglayer))
 
-    def draw_content(self, row, col, cell):
+    def draw_cell_content(self, row, col, cell):
         """Draw the cell content for <row>,<col>, calls the cell
         method <cell>.get_dxf_entity() (has to return an object with a __dxf__()
         method) to create the cell content.
         """
+        # get cell coords in absolute drawing units
         coords = self.cell_coords(row, col, cell.span)
         dxf_entity = cell.get_dxf_entity(coords, self.table.fglayer)
         self.table.data.append(dxf_entity)
 
-    def draw(self):
+    def draw_lines(self):
         """Draw all grid lines."""
-        # init borders with hidden border elements
-        noborder = Style.get_default_border_style()
-        noborder['status'] = HIDDEN
-        noborder['priority'] = 0
-        self._init_borders(self.table.nrows, self.table.ncols, noborder)
+        # Init borders with default_style top- and left border.
+        default_style = self.table.get_cell_style('default')
+        hborder = default_style['top']
+        vborder = default_style['left']
+        self._init_borders(hborder, vborder)
         self._set_frames(self.table.frames)
         # set frame borders before cell borders, so _set_borders can remove
         # frame borders inside of cell span regions - not implemented yet
@@ -510,7 +544,7 @@ class Grid(object):
                 for col in xrange(table.ncols):
                     xleft = self.col_pos[col]
                     xright = self.col_pos[col+1]
-                    style = self._hborders[row, col]
+                    style = self.get_hborder(row, col)
                     append_line((xleft, yrow), (xright, yrow), style)
 
         def draw_vborders():
@@ -520,7 +554,7 @@ class Grid(object):
                 for row in xrange(table.nrows):
                     ytop = self.row_pos[row]
                     ybottom = self.row_pos[row+1]
-                    style = self._vborders[row, col]
+                    style = self.get_vborder(row, col)
                     append_line((xcol, ytop), (xcol, ybottom), style)
 
         layer = table.gridlayer

@@ -20,6 +20,8 @@ setup(name='dxfwrite',
     author_email='mozman@gmx.at',
     packages=['dxfwrite'],
     long_description=read('README'),
+    platforms="OS Independent",
+    license="GPLv3",
     classifiers=[
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: GNU General Public License (GPL)",

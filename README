@@ -1,9 +1,5 @@
-dxfwrite.py is a library to create DXF R12 drawings.
 
-:Date: 2010-03-21
-:Author: Manfred Moitzi (mozman)
-:Version: 0.2.0
-:Status: Alpha
+*dxfwrite* is a library to create DXF R12 drawings.
 
 supported R12 entities:
 -----------------------

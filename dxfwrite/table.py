@@ -124,15 +124,25 @@ class Table(object):
 
     def set_cell(self, row, col, cell):
         """Insert a <cell> at position (<row>, <col>)."""
+        row, col = self.validate_index(row, col)
         self._cells[row, col] = cell
         return cell
 
     def get_cell(self, row, col):
         """Get cell at position (<row>, <col>)."""
+        row, col = self.validate_index(row, col)
         try:
             return self._cells[row, col]
         except KeyError:
             return self.empty_cell # emtpy cell with default style
+
+    def validate_index(self, row, col):
+        row = int(row)
+        col = int(col)
+        if row < 0 or row >= self.nrows or \
+           col < 0 or col >= self.ncols:
+            raise IndexError('cell index out of range')
+        return row, col
 
     def frame(self, row, col, width=1, height=1, style='default'):
         """Create a Frame object which frames the cell area starting at
@@ -180,6 +190,8 @@ class Table(object):
         returns a generator which yields all visible cells as tuples:
         <row>, <col>, <cell>
         """
+        if self.visibility_map is None:
+            raise Exception("Can only be called at dxf creation.")
         return ((row, col, self.get_cell(row, col))
                 for row, col in self.visibility_map)
 

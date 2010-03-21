@@ -9,11 +9,35 @@
 import unittest2 as unittest
 
 from dxfwrite.dimlines import LinearDimension
-from dxfwrite.dimlines import AngularDimension
+class TestLinearDimAPI(unittest.TestCase):
+    def test_init(self):
+        dimline = LinearDimension(pos=(5, 5),
+                                  measure_points=[(0, 0),(10, 0)],
+                                  angle = 0.,
+                                  dimstyle='default',
+                                  layer="LINEARDIMENSION",
+                                  roundval=1)
+        dxf = dimline.__dxf__()
+        self.assertTrue(bool(dimline))
+        self.assertTrue('LINEARDIMENSION' in dxf)
 
-class TestLinearDimension(unittest.TestCase):
+    def test_set_text(self):
+        dimline = LinearDimension(
+            (5, 5), [(0, 0), (5, 0), (10, 0), (15, 0), (20, 0)])
+        dimline.set_text(1, 'override')
+        self.assertEqual(dimline.text_override[1], 'override')
+        dxf = dimline.__dxf__()
+        self.assertTrue('override' in dxf)
+        self.assertRaises(IndexError, dimline.set_text, 5, 'out of range')
 
-    def test_linear_dimension_horiz(self):
+    def test_count(self):
+        dimline = LinearDimension(
+            (5, 5), [(0, 0), (5, 0), (10, 0), (15, 0), (20, 0)])
+        self.assertEqual(dimline.point_count, 5)
+        self.assertEqual(dimline.section_count, 4)
+
+class TestLinearDimensionImplementation(unittest.TestCase):
+    def test_horiz(self):
         expected = u"  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n-0.3\n" \
                  " 20\n5.0\n 30\n0.0\n 11\n10.3\n 21\n5.0\n 31\n" \
                  "0.0\n  0\nLINE\n 62\n5\n  8\nDIMENSIONS\n 10\n" \
@@ -33,7 +57,7 @@ class TestLinearDimension(unittest.TestCase):
         dimline = LinearDimension(pos=(5,5),measure_points=[(0,0),(10,0)])
         self.assertEqual(dimline.__dxf__(), expected)
 
-    def test_linear_dimension_45deg(self):
+    def test_45deg(self):
         expected = u"  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n-0.212132034356\n" \
                  " 20\n-0.212132034356\n 30\n0.0\n 11\n5.21213203436\n 21\n" \
                  "5.21213203436\n 31\n0.0\n  0\nLINE\n 62\n5\n  8\n" \

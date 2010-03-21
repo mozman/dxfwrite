@@ -20,7 +20,6 @@ class TestRadialDimAPI(unittest.TestCase):
             layer="RADIALDIMENSION",
             roundval=1)
         dxf = dimline.__dxf__()
-        self.assertTrue(bool(dimline))
         self.assertTrue("RADIALDIMENSION" in dxf)
 
 class TestRadialDimImplementation(unittest.TestCase):

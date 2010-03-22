@@ -25,7 +25,7 @@ from copy import deepcopy
 import dxfwrite.const as const
 from dxfwrite.base import DXFList
 from dxfwrite.entities import Line, Solid, Insert
-from dxfwrite.buildups import MText
+from dxfwrite.mtext import MText
 
 __all__ = ['Table', 'CustomCell']
 

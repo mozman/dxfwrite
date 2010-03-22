@@ -8,8 +8,8 @@
 
 import unittest2 as unittest
 
-from dxfwrite.buildups import MText
-import dxfwrite.const as const
+from dxfwrite.mtext import MText
+import dxfwrite
 
 class TestMText(unittest.TestCase):
 
@@ -27,7 +27,7 @@ class TestMText(unittest.TestCase):
 
     def test_horiz_top(self):
         text = "lineA\nlineB"
-        valign = const.TOP
+        valign = dxfwrite.TOP
         mtext = MText(text, (0., 0., 0.), 1.0)
         line1 = self.expected_line.format(text='lineA', point=(0., 0., 0.), valign=valign)
         line2 = self.expected_line.format(text='lineB', point=(0.,-1., 0.), valign=valign)
@@ -35,7 +35,7 @@ class TestMText(unittest.TestCase):
 
     def test_horiz_bottom(self):
         text = "lineA\nlineB"
-        valign = const.BOTTOM
+        valign = dxfwrite.BOTTOM
         mtext = MText(text, (0., 0., 0.), 1.0, valign=valign)
         line1 = self.expected_line.format(text='lineA', point=(0., 1., 0.), valign=valign)
         line2 = self.expected_line.format(text='lineB', point=(0., 0., 0.), valign=valign)
@@ -43,7 +43,7 @@ class TestMText(unittest.TestCase):
 
     def test_horiz_middle(self):
         text = "lineA\nlineB"
-        valign = const.MIDDLE
+        valign = dxfwrite.MIDDLE
         mtext = MText(text, (0., 0., 0.), 1.0, valign=valign)
         line1 = self.expected_line.format(text='lineA', point=(0., 0.5, 0.), valign=valign)
         line2 = self.expected_line.format(text='lineB', point=(0., -.5, 0.), valign=valign)
@@ -51,7 +51,7 @@ class TestMText(unittest.TestCase):
 
     def test_45deg_top(self):
         text = "lineA\nlineB\nlineC"
-        valign = const.TOP
+        valign = dxfwrite.TOP
         rotation = 45.
         mtext = MText(text, (0., 0., 0.), 1.0, rotation=rotation)
         line1 = self.expected_line_rot.format(text='lineA', point=(0., 0., 0.),
@@ -65,7 +65,7 @@ class TestMText(unittest.TestCase):
 
     def test_45deg_bottom(self):
         text = "lineA\nlineB\nlineC"
-        valign = const.BOTTOM
+        valign = dxfwrite.BOTTOM
         rotation = 45.
         mtext = MText(text, (0., 0., 0.), 1.0, valign=valign, rotation=rotation)
         line1 = self.expected_line_rot.format(text='lineA', point=(-1.414214, +1.414214, 0.),

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding:utf-8
 # Author:  mozman
-# Purpose: buildups, consisting of basic R12 entities
+# Purpose: composite entities, consisting of basic R12 entities
 # module belongs to package: dxfwrite.py
 # Created: 09.03.2010
 # Copyright (C) 2010, Manfred Moitzi

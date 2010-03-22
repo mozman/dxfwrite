@@ -47,11 +47,6 @@ class TestAtom(unittest.TestCase):
         self.assertFalse(DXFBool(0)._value)
         self.assertTrue(DXFBool(1)._value)
 
-    def test_dxf_handle(self):
-        atom = DXFHandle('FF') # handle as hex-string
-        self.assertTrue(isinstance(atom._value, basestring))
-        self.assertEqual(atom._value, 'FF')
-
     def test_Atom_to_string_valid(self):
         # numbers < 100 are formated with leading spaces
         atom = DXFAtom('HEADER', 0)

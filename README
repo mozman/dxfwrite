@@ -1,6 +1,22 @@
+========
+dxfwrite
+========
 
-supported R12 entities:
------------------------
+Abstract
+========
+A Python library to create DXF R12 drawings.
+
+a simple example::
+
+    from dxfwrite import DXFEngine as dxf
+    drawing = dxf.drawing('test.dxf')
+    drawing.add(dxf.line((0, 0), (10, 0), color=7))
+    drawing.add_layer('TEXTLAYER', color=2)
+    drawing.add(dxf.text('Test', insert=(0, 0.2), layer='TEXTLAYER')
+    drawing.save()
+
+supported R12 entities
+----------------------
  * ARC
  * ATTDEF
  * ATTRIB
@@ -17,12 +33,12 @@ supported R12 entities:
  * TEXT
  * VERTEX (only for internal use, see Polyline, Polyface and Polymesh objects)
 
-not supported R12 entities:
----------------------------
+not supported R12 entities
+--------------------------
  * DIMENSION
 
-composite entities:
------------------
+composite entities
+------------------
 consisting of basic R12 DXF-entities.
  * MText
  * LinearDimension
@@ -58,8 +74,19 @@ Missing from R13 and later:
  * SUN (R2009)
  * SUBDIVISION (R2010)
 
+Installation
+============
+
+with easy_install::
+
+    easy_install dxfwrite
+
+or from source::
+
+    python setup.py install
+
 Documentation
--------------
+=============
 http://bitbucket.org/mozman/dxfwrite/wiki/Home
 
 Good Luck! Feedback is greatly appreciated.
@@ -69,4 +96,5 @@ Manfred
 mozman@gmx.at
 
 dxfwrite can be found on bitbucket.org at:
+
 http://bitbucket.org/mozman/dxfwrite

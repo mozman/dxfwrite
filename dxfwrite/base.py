@@ -176,11 +176,6 @@ class DXFString(DXFAtom):
     def __init__(self, value, group_code=1):
         super(DXFString, self).__init__(unicode(value), group_code)
 
-class DXFHandle(DXFAtom):
-    """ Integer-handel, stored as hex-string """
-    def __init__(self, value, group_code=5):
-        super(DXFHandle, self).__init__(value, group_code)
-
 class DXFName(DXFAtom):
     """ String with group code 2 """
     def __init__(self, value, group_code=2):
@@ -271,18 +266,6 @@ class DXFPoint3D(DXFPoint):
         if len(coords) == 2:
             coords = (coords[0], coords[1], 0.)
         super(DXFPoint3D, self).__init__(coords, index_shift)
-
-class DXFGroup(DXFList):
-    def __init__(self, group_name):
-        self.group_name = group_name
-
-    def __dxf__(self):
-        dxf = DXFList((
-            DXFString('{%s' %self.group_name, 102),
-            DXFList(self),
-            DXFString('}', 102)
-            ))
-        return dxfstr(dxf)
 
 def PassThroughFactory(value, group_code):
     return value

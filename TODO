@@ -1,3 +1,6 @@
 Goals for release:
 ------------------
-
+Beta1 0.3.0
+ * Spline (polyline)
+ * Bezier (polyline)
+ * Ellipse (polyline)

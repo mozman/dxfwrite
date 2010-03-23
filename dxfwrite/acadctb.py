@@ -78,6 +78,7 @@ def color_name(index):
     return 'Color_{0}'.format(index+1)
 
 class Pen(object):
+    """Define a pen style."""
     def __init__(self, index, init_dict={}):
         self.index = index
         self.name = unicode(init_dict.get('name', color_name(index)))
@@ -101,34 +102,39 @@ class Pen(object):
     @staticmethod
     def default_style(index):
         pen = Pen(index)
-        pen._color = -1 # object color
+        pen._color = OBJECT_COLOR
         return pen
 
     def set_color(self, red, green, blue):
+        """Set color as rgb-tuple."""
         self._color = mode_color2int(red, green, blue)
         self._mode_color = self._color
 
     def set_object_color(self):
+        """Set color to object color."""
         self._color = OBJECT_COLOR
         self._mode_color = OBJECT_COLOR
 
     def has_object_color(self):
-        return self._color == -1 or self._color==OBJECT_COLOR
+        """True if pen has object color."""
+        return self._color == OBJECT_COLOR or \
+               self._color == OBJECT_COLOR2
 
     def get_color(self):
+        """Get pen color as rgb-tuple or None if pen has object color."""
         if self.has_object_color():
             return None # object color
         else:
             return int2color(self._mode_color)[:3]
 
     def write(self, fp):
-        """Write pen data to file <fp>."""
+        """Write pen data to file-like object <fp>."""
         fp.write(' {0}{{\n'.format(self.index))
         fp.write('  name="{0}\n'.format(self.name))
         fp.write('  localized_name="{0}\n'.format(self.localized_name))
         fp.write('  description="{0}\n'.format(self.description))
         fp.write('  color={0}\n'.format(self._color))
-        if self._color != -1:
+        if self._color != OBJECT_COLOR:
             fp.write('  mode_color={0}\n'.format(self._mode_color))
         fp.write('  color_policy={0}\n'.format(self.color_policy))
         fp.write('  physical_pen_number={0}\n'.format(self.physical_pen_number))
@@ -144,6 +150,7 @@ class Pen(object):
         fp.write(' }\n')
 
 class PenStyles(object, ):
+    """Pen style container"""
     def __init__(self):
         self.description = ""
         self.write_aci_table = False
@@ -154,14 +161,17 @@ class PenStyles(object, ):
         self.lineweights = list(DEFAULT_LINE_WEIGHTS)
 
     def new(self, index, init_dict={}):
+        """Set color <index> to new attributes defined in init_dict."""
         pen = Pen(index, init_dict)
         self.styles[pen.name] = pen
         return pen
 
     def get(self, name):
+        """Get style <name>."""
         return self.styles[name]
 
     def get_style_number(self, index):
+        """Get style by index number."""
         for style in self.styles.itervalues():
             if index == style.index:
                 return style
@@ -179,6 +189,7 @@ class PenStyles(object, ):
         return self.lineweights[index]
 
     def write(self, fp):
+        """Create and compress the ctb-file to <fp>."""
         memfile=StringIO()
         self.write_content(memfile)
         memfile.write(chr(0)) # end of file
@@ -187,6 +198,7 @@ class PenStyles(object, ):
         self._compress(fp, body)
 
     def write_content(self, fp):
+        """Write the ctb-file to <fp>."""
         self._write_header(fp)
         if self.write_aci_table:
             self._write_aci_table(fp)
@@ -194,6 +206,7 @@ class PenStyles(object, ):
         self._write_lineweights(fp)
 
     def _write_header(self, fp):
+        """Write header values of ctb-file to <fp>."""
         fp.write('description="{0}\n'.format(self.description))
         write_aci = unicode(self.write_aci_table).upper()
         fp.write('aci_table_available={0}\n'.format(write_aci))
@@ -203,13 +216,17 @@ class PenStyles(object, ):
             self.custom_lineweight_display_units))
 
     def _write_aci_table(self, fp):
+        """Write autocad color index table to ctb-file <fp>."""
         fp.write('aci_table{\n')
         for index in xrange(255):
             style = self.get_style_number(index)
+            if style is None:
+                style = Pen.default_style(index)
             fp.write(' {0}="{1}\n'.format(index, style.name))
         fp.write('}\n')
 
     def _write_ctb_plot_styles(self, fp):
+        """Write pen styles to ctb-file <fp>."""
         fp.write('plot_style{\n')
         for index in xrange(255):
             style = self.get_style_number(index)
@@ -219,14 +236,16 @@ class PenStyles(object, ):
         fp.write('}\n')
 
     def _write_lineweights(self, fp):
+        """Write custom lineweights table to ctb-file <fp>."""
         fp.write('custom_lineweight_table{\n')
         for index, weight in enumerate(self.lineweights):
             fp.write(' {0}={1}\n'.format(index, weight))
         fp.write('}\n')
 
     def parse(self, text):
+        """Parse and get values of plot styles from <text>."""
         def set_lineweights(lineweights):
-            if len(lineweights)> len(self.lineweights):
+            if len(lineweights) > len(self.lineweights):
                 self.lineweights = [0.0] * len(lineweights)
             for key, value in lineweights:
                 self.lineweights[int(key)] = float(value)
@@ -238,13 +257,14 @@ class PenStyles(object, ):
         self.apply_factor = (parser.get('apply_factor', 1.0).upper() == 'TRUE')
         self.custom_lineweight_display_units = int(
             parser.get('custom_lineweight_display_units', 1.0))
-        set_lineweights = parser.get('custom_lineweight_table', None)
-        styles = parser.get('plot_style', None)
+        set_lineweights = parser.get('custom_lineweight_table', self.lineweights)
+        styles = parser.get('plot_style', {})
         for index, style in styles.iteritems():
             pen = Pen(index, style)
             self.styles[pen.name] = pen
 
     def _compress(self, fp, body):
+        """Compress ctb-file-body and write it to <fp>."""
         header = 'PIAFILEVERSION_2.0,CTBVER1,compress\r\npmzlibcodec'
         fp.write(header)
         full_len = len(body)
@@ -255,48 +275,66 @@ class PenStyles(object, ):
         fp.write(comp_body)
 
 def read(fp):
+    """Read a ctb-file from the file-like object <fp>.
+    Returns a PenStyle object.
+    """
     content = _decompress(fp)
     styles = PenStyles()
     styles.parse(content)
     return styles
 
 def _decompress(fp):
+    """Read and decompress the file content of the file-like object <fp>."""
     content = fp.read()
     text = zlib.decompress(content[60:])
     return text[:-1] # truncate trailing \nul
 
-
 class CtbParser(object):
+    """A very simple ctb-file parser. Ctb-files are created by programms, so the
+    file structure should be correct in the most cases.
+    """
     def __init__(self, text):
+        """Construtor
+
+        text -- ctb content
+        """
         self.data = {}
         for element, value in self.iter_elements(text):
             self.data[element] = value
 
     def iter_elements(self, text):
+        """iterate over all first level (start at col 0) elements"""
         def get_name(num):
+            """Get element name of line <num>.
+            """
             line = lines[num]
-            if line.endswith('{'):
+            if line.endswith('{'): # start of a list like 'plot_style{'
                 name = line[:-1]
-            else:
+            else: # simple name=value line
                 name = line.split('=', 1)[0]
             return name.strip()
 
         def get_list(num):
+            """Get list of elements enclosed by { }.
+
+            lineweigths, plot_styles, aci_table
+            """
             data = dict()
-            while not lines[num].endswith('}'):
+            while not lines[num].endswith('}'): # while not end of list
                 name = get_name(num)
-                num, value = get_value(num)
+                num, value = get_value(num) # get value or sub-list
                 data[name] = value
             return num+1, data
 
         def get_value(num):
+            """Get value of line <num> or the list that starts in line <num>."""
             line=lines[num]
-            if line.endswith('{'):
+            if line.endswith('{'): # start of a list
                 num, value = get_list(num+1)
-            else:
+            else: # it's a simple name=value line
                 value = line.split('=', 1)[1]
-                value = value.lstrip('"')
-                num = num + 1
+                value = value.lstrip('"') # strings look like this: name="value
+                num += 1
             return num, value
 
         def skip_empty_lines(num):
@@ -316,16 +354,20 @@ class CtbParser(object):
         return self.data.get(name, default)
 
 def int2color(color):
-    magic = (color & 0xff000000) >> 24
+    """Convert color integer value from ctb-file to rgb-tuple plus a magic number.
+    """
+    magic = (color & 0xff000000) >> 24 # is 0xc3 or 0xc2 don't know what this value means
     red = (color & 0xff0000) >> 16
     green = (color & 0xff00) >> 8
     blue = color & 0xff
     return (red, green, blue, magic)
 
 def mode_color2int(red, green, blue, magic=0xc2):
+    """Convert rgb-tuple to an int value."""
     return -color2int(red, green, blue, magic)
 
 def color2int(red, green, blue, magic):
+    """Convert rgb-tuple to an int value."""
     return -((magic << 24) + (red << 16) + (green << 8) + blue) & 0xffffffff
 
 if __name__ == "__main__":
@@ -336,4 +378,3 @@ if __name__ == "__main__":
 
     with open(r'D:\User\Python\ctb\test.ctb', 'wb') as fp:
         ctb.write(fp)
-

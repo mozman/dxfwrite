@@ -361,7 +361,7 @@ class DXFEngine(object):
         halign -- horizontal justification type (int)
         valign -- vertical justification type (int)
 
-        any combination of valign (TOP, VMIDDLE, BOTTOM) and halign(LEFT,
+        any combination of valign (TOP, MIDDLE, BOTTOM) and halign(LEFT,
         CENTER, RIGHT) is valid.
 
         alignpoint -- align point (xy- or xyz-tuple), z-axis is 0 by default

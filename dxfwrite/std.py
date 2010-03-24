@@ -19,7 +19,7 @@
 # 8, 9 : 2.00mm
 # >=10 : 1.40mm
 
-_default_color_table = [
+dxf_default_color_table = [ # [0] is a dummy value, valid dxf color index = [1..255]
     (0, 0, 0), (255, 0, 0), (255, 255, 0), (0, 255, 0), (0, 255, 255), (0, 0, 255),
     (255, 0, 255), (255, 255, 255), (65, 65, 65), (128, 128, 128), (255, 0, 0),
     (255, 170, 170), (189, 0, 0), (189, 126, 126), (129, 0, 0), (129, 86, 86),
@@ -72,55 +72,86 @@ _default_color_table = [
     (104, 0, 25), (104, 69, 78), (79, 0, 19), (79, 53, 59), (51, 51, 51),
     (80, 80, 80), (105, 105, 105), (130, 130, 130), (190, 190, 190), (255, 255, 255)]
 
-_default_rgb_map = dict( (key, index) for index, key in enumerate(_default_color_table))
-
-_current_color_table = _default_color_table
-_current_color_map = _default_rgb_map
-
-def get_color_table():
-    return (_current_color_table, _current_color_map)
-
-def set_color_table(color_table):
-    global _current_color_table, _current_color_map
-    _current_color_table = color_table
-    _current_color_map = dict( (key, index) for index, key in enumerate(color_table))
-# sef default color table now
-set_color_table(_default_color_table)
-
 # tuple index
 RED = 0
 GREEN = 1
 BLUE = 2
-def color_index(rgb_tuple):
-    """ Get color index of color with the nearest rgb-values.
-    """
 
-    def get_color_distance(color1, color2):
-        """ approximation for euclidean color distance for CIE XYZ color space
+class DXFColorIndex(object):
+    def __init__(self, color_table=dxf_default_color_table, user_styles=None,
+                 start_index=1):
+        # _color_table[0] is a dummy element, valid dxf index is in the range [1..255]
+        # because of special meaning of color indices 0=BYBLOCK, 256=BYLAYER
+        self.color_table = color_table[:]
+        self.color_map = self.generate_color_map(self.color_table)
+        self.start_index = start_index # first dxf color element[0] is a dummy value
+        if user_styles is not None:
+            self.add_user_styles(user_styles)
+
+    @staticmethod
+    def generate_color_map(color_table):
+        color_map = dict( (key, index) for index, key in enumerate(color_table))
+        if color_map[(0, 0, 0)] == 0: # standard colors balck == white
+            if color_table[7] == (255, 255, 255): # color is not redefined
+                color_map[(0, 0, 0)] = 7 # black == white!
+            else: # color 7 is redefined, delete key an get nearest color!
+                del color_map[(0, 0, 0)]
+        return color_map
+
+    def add_user_styles(self, pen_styles):
+        """Add user styles to color_table and color_map.
+
+        pen_styles -- requires a method <get_color(dxf_color_index)>, which
+            returns for each dxf index a rgb-tuple or None if not defined
+            see also dxfwrite.acadctb.PenStyles object
         """
-        rmean = (float(color1[RED]) + float(color2[RED])) / 2.0
-        delta_sqr = []
-        for index in (RED, GREEN, BLUE):
-            delta_sqr.append( (float(color1[index]) - float(color2[index]))**2 )
-        part1 = (2. + rmean / 256.) * delta_sqr[RED]
-        part2 = 4. * delta_sqr[GREEN]
-        part3 = (2. + (255. - rmean)/256.) * delta_sqr[BLUE]
-        return (part1 + part2 + part3) ** 0.5
+        for dxf_color_index in xrange(self.start_index, len(self.color_table)):
+            user_color = pen_styles.get_color(dxf_color_index)
+            if user_color is not None:
+                self.color_table[dxf_color_index] = user_color
+        self.color_map = self.generate_color_map(self.color_table)
 
-    def nearest_color_index():
-        min_distance = 100000.
-        min_index = -1
-        for index, color in enumerate(color_table):
-            color_distance = get_color_distance(rgb_tuple, color)
-            if color_distance < min_distance:
-                min_distance = color_distance
-                min_index = index
-        return min_index
-    try:
-        color_table, color_map = get_color_table()
-        return color_map[rgb_tuple]
-    except KeyError:
-        return nearest_color_index()
+    def get_color(self, index):
+        if self.start_index <= index < len(self.color_table):
+            return self.color_table[index]
+        else:
+            raise IndexError('Index out of range.')
+
+    def color_index(self, rgb_tuple):
+        """ Get color index of color with the nearest rgb-values.
+
+        rgb_tuple -- (red, green , blue) values in range [0..255]
+        """
+
+        def get_color_distance(color1, color2):
+            """ approximation for euclidean color distance for CIE XYZ color space
+            """
+            rmean = (float(color1[RED]) + float(color2[RED])) / 2.0
+            delta_sqr = []
+            for index in (RED, GREEN, BLUE):
+                delta_sqr.append( (float(color1[index]) - float(color2[index]))**2 )
+            part1 = (2. + rmean / 256.) * delta_sqr[RED]
+            part2 = 4. * delta_sqr[GREEN]
+            part3 = (2. + (255. - rmean)/256.) * delta_sqr[BLUE]
+            return (part1 + part2 + part3) ** 0.5
+
+        def nearest_color_index():
+            min_distance = 100000.
+            min_index = -1
+            index = self.start_index
+            max_index = len(self.color_table)
+            while index < max_index:
+                color = self.color_table[index]
+                color_distance = get_color_distance(rgb_tuple, color)
+                if color_distance < min_distance:
+                    min_distance = color_distance
+                    min_index = index
+                index += 1
+            return min_index
+        try:
+            return self.color_map[rgb_tuple]
+        except KeyError:
+            return nearest_color_index()
 
 def linetypes():
     """ Creates a list of standard linetypes.

@@ -7,6 +7,7 @@
 # License: GPLv3
 
 from cStringIO import StringIO
+from array import array
 from struct import pack
 import zlib
 
@@ -21,7 +22,7 @@ JOINSTYLE_MITER = 0
 JOINSTYLE_BEVEL = 1
 JOINSTYLE_ROUND = 2
 JOINSTYLE_DIAMOND = 3
-JOINSTYLE_OBJECT = 4
+JOINSTYLE_OBJECT = 5
 
 FILL_STYLE_SOLID = 64
 FILL_STYLE_CHECKERBOARD = 65
@@ -43,6 +44,8 @@ OBJECT_LINEWEIGHT = 0
 
 OBJECT_COLOR = -1
 OBJECT_COLOR2 = -1006632961
+
+STYLE_COUNT = 255
 
 DEFAULT_LINE_WEIGHTS = [
  0.00, # 0
@@ -80,9 +83,7 @@ def color_name(index):
 class Pen(object):
     """Define a pen style."""
     def __init__(self, index, init_dict={}):
-        self.index = index
-        self.name = unicode(init_dict.get('name', color_name(index)))
-        self.localized_name = self.name
+        self.index = int(index)
         self.description = unicode(init_dict.get('description', ""))
         self._color = int(init_dict.get('color', OBJECT_COLOR))
         if self._color != OBJECT_COLOR:
@@ -99,16 +100,15 @@ class Pen(object):
         self.join_style = int(init_dict.get('join_style', JOINSTYLE_OBJECT))
         self.fill_style = int(init_dict.get('fill_style', 73))
 
-    @staticmethod
-    def default_style(index):
-        pen = Pen(index)
-        pen._color = OBJECT_COLOR
-        return pen
-
     def set_color(self, red, green, blue):
         """Set color as rgb-tuple."""
-        self._color = mode_color2int(red, green, blue)
-        self._mode_color = self._color
+        self._mode_color = mode_color2int(red, green, blue)
+        # when defining a user-color, <mode_color> represents the real truecolor
+        # as rgb-tuple with the magic number 0xC2 as highest byte, the <color>
+        # value calculated for a user-color is not a rgb-tuple and has the magic
+        # number 0xC3 (sometimes), I set for <color> the same value a for
+        # <mode_color>, because Autocad corrects the <color> value by itself.
+        self._color = self._mode_color
 
     def set_object_color(self):
         """Set color to object color."""
@@ -127,11 +127,35 @@ class Pen(object):
         else:
             return int2color(self._mode_color)[:3]
 
+    def get_dxf_color_index(self):
+        return self.index+1
+
+    @property
+    def dithering(self):
+        return bool(self.color_policy & DITHERING_ON)
+    @dithering.setter # pylint: disable-msg=E1101
+    def dithering(self, status): # pylint: disable-msg=E0102
+        if status :
+            self.color_policy |= DITHERING_ON
+        else:
+            self.color_policy &= ~DITHERING_ON
+
+    @property
+    def grayscale(self):
+        return bool(self.color_policy & GRAYSCALE_ON)
+    @grayscale.setter # pylint: disable-msg=E1101
+    def grayscale(self, status): # pylint: disable-msg=E0102
+        if status :
+            self.color_policy |= GRAYSCALE_ON
+        else:
+            self.color_policy &= ~GRAYSCALE_ON
+
     def write(self, fp):
         """Write pen data to file-like object <fp>."""
-        fp.write(' {0}{{\n'.format(self.index))
-        fp.write('  name="{0}\n'.format(self.name))
-        fp.write('  localized_name="{0}\n'.format(self.localized_name))
+        index = self.index
+        fp.write(' {0}{{\n'.format(index))
+        fp.write('  name="{0}\n'.format(color_name(index)))
+        fp.write('  localized_name="{0}\n'.format(color_name(index)))
         fp.write('  description="{0}\n'.format(self.description))
         fp.write('  color={0}\n'.format(self._color))
         if self._color != OBJECT_COLOR:
@@ -151,33 +175,67 @@ class Pen(object):
 
 class PenStyles(object, ):
     """Pen style container"""
-    def __init__(self):
-        self.description = ""
-        self.write_aci_table = False
-        self.scale_factor = 1.0
-        self.apply_factor = False
-        self.custom_lineweight_display_units = 0
-        self.styles = {}
-        self.lineweights = list(DEFAULT_LINE_WEIGHTS)
+    def __init__(self, description="", scale_factor=1.0, apply_factor=False):
+        self.description = description
+        self.scale_factor = scale_factor
+        self.apply_factor = apply_factor
 
-    def new(self, index, init_dict={}):
-        """Set color <index> to new attributes defined in init_dict."""
-        pen = Pen(index, init_dict)
-        self.styles[pen.name] = pen
+        # set custom_line... to 1 for showing lineweights in inch in the Autocad
+        # ctb editor window, but lineweights are always defined in mm
+        self.custom_lineweight_display_units = 0
+        self.styles = [None] * (STYLE_COUNT+1)
+        self.lineweights = array('f', DEFAULT_LINE_WEIGHTS)
+        self.set_default_styles()
+
+    def set_default_styles(self):
+        for index in xrange(STYLE_COUNT):
+            pen = Pen(index)
+            self._set_pen(pen)
+
+    @staticmethod
+    def check_color_index(color_index):
+        if 0 < color_index < 256:
+            return color_index
+        raise IndexError('color index has to be in th range [1 .. 255].')
+
+    def iter_styles(self):
+        return (style for style in self.styles[1:])
+
+    def _set_pen(self, pen):
+        self.styles[pen.get_dxf_color_index()] = pen
+
+    def set_style(self, color_index, init_dict={}):
+        """Set <color_index> to new attributes defined in init_dict.
+
+        color_index -- is the dxf color index
+        """
+        color_index=self.check_color_index(color_index)
+        # ctb table index is dxf color index - 1
+        # ctb table starts with index 0, where dxf color index 0 means BYBLOCK
+        pen = Pen(color_index-1, init_dict)
+        self._set_pen(pen)
         return pen
 
-    def get(self, name):
-        """Get style <name>."""
-        return self.styles[name]
+    def get_style(self, color_index):
+        """Get style for <color_index>.
 
-    def get_style_number(self, index):
-        """Get style by index number."""
-        for style in self.styles.itervalues():
-            if index == style.index:
-                return style
-        return None
+        color_index -- is the dxf color index
+        """
+        return self.styles[color_index]
+
+    # interface for dxfwrite.std.color_index()
+    def get_color(self, dxf_color_index):
+        """Get rgb-color-tuple for <dxf_color_index> or None if not specified.
+        """
+        pen = self.get_style(dxf_color_index)
+        return pen.get_color()
 
     def set_lineweight(self, index, weight):
+        """Index is the lineweight table index, not the dxf color index.
+
+        index -- lineweight table index = Pen.lineweight
+        weight -- in millimeters
+        """
         try:
             self.lineweights[index] = weight
             return index
@@ -186,7 +244,22 @@ class PenStyles(object, ):
             return len(self.lineweights)-1
 
     def get_lineweight(self, index):
+        """Returns lineweight in millimeters.
+
+        returns 0.0 for: use object lineweight
+
+        index -- lineweight table index = Pen.lineweight
+        """
         return self.lineweights[index]
+
+    def get_pen_lineweight(self, pen):
+        """Returns the lineweight of pen in millimeters.
+
+        returns 0.0 for: use object lineweight
+
+        pen -- Pen object
+        """
+        return self.lineweights[pen.lineweight]
 
     def write(self, fp):
         """Create and compress the ctb-file to <fp>."""
@@ -200,16 +273,14 @@ class PenStyles(object, ):
     def write_content(self, fp):
         """Write the ctb-file to <fp>."""
         self._write_header(fp)
-        if self.write_aci_table:
-            self._write_aci_table(fp)
+        self._write_aci_table(fp)
         self._write_ctb_plot_styles(fp)
         self._write_lineweights(fp)
 
     def _write_header(self, fp):
         """Write header values of ctb-file to <fp>."""
         fp.write('description="{0}\n'.format(self.description))
-        write_aci = unicode(self.write_aci_table).upper()
-        fp.write('aci_table_available={0}\n'.format(write_aci))
+        fp.write('aci_table_available=TRUE\n')
         fp.write('scale_factor={0:.1f}\n'.format(self.scale_factor))
         fp.write('apply_factor={0}\n'.format(unicode(self.apply_factor).upper()))
         fp.write('custom_lineweight_display_units={0}\n'.format(
@@ -218,20 +289,15 @@ class PenStyles(object, ):
     def _write_aci_table(self, fp):
         """Write autocad color index table to ctb-file <fp>."""
         fp.write('aci_table{\n')
-        for index in xrange(255):
-            style = self.get_style_number(index)
-            if style is None:
-                style = Pen.default_style(index)
-            fp.write(' {0}="{1}\n'.format(index, style.name))
+        for style in self.iter_styles():
+            index = style.index
+            fp.write(' {0}="{1}\n'.format(index, color_name(index)))
         fp.write('}\n')
 
     def _write_ctb_plot_styles(self, fp):
         """Write pen styles to ctb-file <fp>."""
         fp.write('plot_style{\n')
-        for index in xrange(255):
-            style = self.get_style_number(index)
-            if style is None:
-                style = Pen.default_style(index)
+        for style in self.iter_styles():
             style.write(fp)
         fp.write('}\n')
 
@@ -245,23 +311,23 @@ class PenStyles(object, ):
     def parse(self, text):
         """Parse and get values of plot styles from <text>."""
         def set_lineweights(lineweights):
-            if len(lineweights) > len(self.lineweights):
-                self.lineweights = [0.0] * len(lineweights)
-            for key, value in lineweights:
+            if lineweights is None:
+                return
+            self.lineweights = array('f', [0.0] * len(lineweights))
+            for key, value in lineweights.iteritems():
                 self.lineweights[int(key)] = float(value)
 
         parser = CtbParser(text)
         self.description = parser.get('description', "")
-        self.write_aci_table = parser.get('aci_table_available', 'FALSE').upper() == 'TRUE'
         self.scale_factor = float(parser.get('scale_factor', 1.0))
         self.apply_factor = (parser.get('apply_factor', 1.0).upper() == 'TRUE')
         self.custom_lineweight_display_units = int(
             parser.get('custom_lineweight_display_units', 1.0))
-        set_lineweights = parser.get('custom_lineweight_table', self.lineweights)
+        set_lineweights(parser.get('custom_lineweight_table', None))
         styles = parser.get('plot_style', {})
         for index, style in styles.iteritems():
             pen = Pen(index, style)
-            self.styles[pen.name] = pen
+            self._set_pen(pen)
 
     def _compress(self, fp, body):
         """Compress ctb-file-body and write it to <fp>."""
@@ -371,10 +437,17 @@ def color2int(red, green, blue, magic):
     return -((magic << 24) + (red << 16) + (green << 8) + blue) & 0xffffffff
 
 if __name__ == "__main__":
-    # filename = r'D:\User\Python\ctb\acad2.stb'
-    ctb = PenStyles()
-    for index in xrange(75):
-        ctb.new(index, {'linetype': index})
+    #ctb_in = r'D:\User\Python\ctb\eis.ctb'
+    #with open(ctb_in, 'rb') as filepointer:
+    #    ctb = read(filepointer)
+    ctb = PenStyles('test acadctb.py')
+    pen1=ctb.set_style(1, {'description': 'object_color'})
+    pen1.set_object_color()
+    pen2=ctb.get_style(2)
+    pen2.description="grey-grey-grey"
+    pen2.set_color(234,234,234)
+    pen2.grayscale=True
+    pen2.dithering=False
 
-    with open(r'D:\User\Python\ctb\test.ctb', 'wb') as fp:
-        ctb.write(fp)
+    with open(r'D:\User\Python\ctb\test.ctb', 'wb') as filepointer:
+        ctb.write(filepointer)

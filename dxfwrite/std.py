@@ -7,8 +7,9 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+from array import array
 
-# default pen assignment:
+# dxf default pen assignment:
 # 1 : 1.40mm - red
 # 2 : 0.35mm - yellow
 # 3 : 0.70mm - green
@@ -18,6 +19,16 @@
 # 7 : 0.25mm - white/black
 # 8, 9 : 2.00mm
 # >=10 : 1.40mm
+
+# iso/din default pen assignment:
+# 1 : 0.50mm - red/brown
+# 2 : 0.35mm - yellow
+# 3 : 1.00mm - green
+# 4 : 0.70mm - cyan
+# 5 : 0.70mm - blue
+# 6 : 0.18mm - magenta
+# 7 : 0.25mm - white/black
+# >=8 : 0.25
 
 dxf_default_color_table = [ # [0] is a dummy value, valid dxf color index = [1..255]
     (0, 0, 0), (255, 0, 0), (255, 255, 0), (0, 255, 0), (0, 255, 255), (0, 0, 255),
@@ -72,7 +83,37 @@ dxf_default_color_table = [ # [0] is a dummy value, valid dxf color index = [1..
     (104, 0, 25), (104, 69, 78), (79, 0, 19), (79, 53, 59), (51, 51, 51),
     (80, 80, 80), (105, 105, 105), (130, 130, 130), (190, 190, 190), (255, 255, 255)]
 
-# tuple index
+class DXFLineweight(object):
+    # element [0] = default lineweight for undefined values
+    dxf_default = [1.40, 1.40, 0.35, 0.70, 0.50, 0.13, 1.00, 0.25, 2.00, 2.00]
+    iso_default = [0.25, 0.50, 0.35, 1.00, 0.70, 0.70, 0.18, 0.25]
+
+    def __init__(self, lineweights=DXFLineweight.dxf_default, user_styles=None):
+        self.set_defaults(lineweights)
+        self.add_user_styles(user_styles)
+
+    def set_defaults(self, lineweights):
+        """Set default lineweights."""
+        self.lineweights = array('f', [lineweights[0]]*256)
+        for index, lw in enumerate(lineweights):
+            self.lineweights[index] = lw
+
+    def add_user_styles(self, user_styles):
+        """Add all in <user_styles> defined lineweights."""
+        if user_styles is None:
+            return
+        for dxf_index in xrange(1, 256):
+            lw = user_styles.get_lineweight(dxf_index)
+            if lw is not None:
+                self.lineweights[dxf_index] = lw
+
+    def get(self, dxf_color_index):
+        """Get 'real' lineweight for <dxf_color_index> in mm."""
+        if 0 < dxf_color_index < 256:
+            return self.lineweights[dxf_color_index]
+        else:
+            raise IndexError('Index out of range.')
+
 RED = 0
 GREEN = 1
 BLUE = 2
@@ -91,10 +132,10 @@ class DXFColorIndex(object):
     @staticmethod
     def generate_color_map(color_table):
         color_map = dict( (key, index) for index, key in enumerate(color_table))
-        if color_map[(0, 0, 0)] == 0: # standard colors balck == white
+        if color_map[(0, 0, 0)] == 0: # standard colors black == white
             if color_table[7] == (255, 255, 255): # color is not redefined
                 color_map[(0, 0, 0)] = 7 # black == white!
-            else: # color 7 is redefined, delete key an get nearest color!
+            else: # color 7 is redefined, delete key and get the nearest color!
                 del color_map[(0, 0, 0)]
         return color_map
 
@@ -111,16 +152,16 @@ class DXFColorIndex(object):
                 self.color_table[dxf_color_index] = user_color
         self.color_map = self.generate_color_map(self.color_table)
 
-    def get_color(self, index):
+    def get_rgb(self, index):
         if self.start_index <= index < len(self.color_table):
             return self.color_table[index]
         else:
             raise IndexError('Index out of range.')
 
-    def color_index(self, rgb_tuple):
-        """ Get color index of color with the nearest rgb-values.
+    def get_dxf_color_index(self, rgb):
+        """ Get dxf_color_index of color with the nearest rgb-values.
 
-        rgb_tuple -- (red, green , blue) values in range [0..255]
+        rgb -- (red, green , blue) values in range [0..255]
         """
 
         def get_color_distance(color1, color2):
@@ -142,14 +183,14 @@ class DXFColorIndex(object):
             max_index = len(self.color_table)
             while index < max_index:
                 color = self.color_table[index]
-                color_distance = get_color_distance(rgb_tuple, color)
+                color_distance = get_color_distance(rgb, color)
                 if color_distance < min_distance:
                     min_distance = color_distance
                     min_index = index
                 index += 1
             return min_index
         try:
-            return self.color_map[rgb_tuple]
+            return self.color_map[rgb]
         except KeyError:
             return nearest_color_index()
 

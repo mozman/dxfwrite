@@ -80,21 +80,21 @@ DEFAULT_LINE_WEIGHTS = [
 def color_name(index):
     return 'Color_{0}'.format(index+1)
 
-class Pen(object):
-    """Define a pen style."""
-    def __init__(self, index, init_dict={}):
+class UserStyle(object):
+    def __init__(self, index, init_dict={}, parent=None):
+        self.parent = parent
         self.index = int(index)
         self.description = unicode(init_dict.get('description', ""))
         self._color = int(init_dict.get('color', OBJECT_COLOR))
         if self._color != OBJECT_COLOR:
             self._mode_color = int(init_dict.get('mode_color', OBJECT_COLOR2))
         self.color_policy = int(init_dict.get('color_policy', DITHERING_ON))
-        self.physical_pen_number = int(init_dict.get('pysical_pen_number', AUTOMATIC))
-        self.virtual_pen_number = int(init_dict.get('virtual_pen_number', AUTOMATIC))
+        self.physical_style_number = int(init_dict.get('pysical_style_number', AUTOMATIC))
+        self.virtual_style_number = int(init_dict.get('virtual_style_number', AUTOMATIC))
         self.screen = int(init_dict.get('screen', 100))
         self.linepattern_size = float(init_dict.get('linepattern_size', 0.5))
         self.linetype = int(init_dict.get('linetype', 31)) # 0 .. 30
-        self.adaptive_linetype = init_dict.get('adaptive_line', 'TRUE') == 'TRUE'
+        self.adaptive_linetype = init_dict.get('adaptive_linetype', 'TRUE') == 'TRUE'
         self.lineweight = int(init_dict.get('lineweight', OBJECT_LINEWEIGHT))
         self.end_style = int(init_dict.get('end_style', ENDSTYLE_OBJECT))
         self.join_style = int(init_dict.get('join_style', JOINSTYLE_OBJECT))
@@ -115,13 +115,27 @@ class Pen(object):
         self._color = OBJECT_COLOR
         self._mode_color = OBJECT_COLOR
 
+    def set_lineweight(self, lineweight):
+        """Set lineweight. Use 0.0 to set lineweight by object.
+
+        lineweight in mm! not the lineweight index
+        """
+        self.lineweight = self.parent.get_lineweight_index(lineweight)
+
+    def get_lineweight(self):
+        """Returns the lineweight in millimeters.
+
+        returns 0.0 for: use object lineweight
+        """
+        return self.parent.lineweights[self.lineweight]
+
     def has_object_color(self):
-        """True if pen has object color."""
+        """True if style has object color."""
         return self._color == OBJECT_COLOR or \
                self._color == OBJECT_COLOR2
 
     def get_color(self):
-        """Get pen color as rgb-tuple or None if pen has object color."""
+        """Get style color as rgb-tuple or None if style has object color."""
         if self.has_object_color():
             return None # object color
         else:
@@ -151,7 +165,7 @@ class Pen(object):
             self.color_policy &= ~GRAYSCALE_ON
 
     def write(self, fp):
-        """Write pen data to file-like object <fp>."""
+        """Write style data to file-like object <fp>."""
         index = self.index
         fp.write(' {0}{{\n'.format(index))
         fp.write('  name="{0}\n'.format(color_name(index)))
@@ -161,8 +175,8 @@ class Pen(object):
         if self._color != OBJECT_COLOR:
             fp.write('  mode_color={0}\n'.format(self._mode_color))
         fp.write('  color_policy={0}\n'.format(self.color_policy))
-        fp.write('  physical_pen_number={0}\n'.format(self.physical_pen_number))
-        fp.write('  virtual_pen_number={0}\n'.format(self.virtual_pen_number))
+        fp.write('  physical_style_number={0}\n'.format(self.physical_style_number))
+        fp.write('  virtual_style_number={0}\n'.format(self.virtual_style_number))
         fp.write('  screen={0}\n'.format(self.screen))
         fp.write('  linepattern_size={0}\n'.format(self.linepattern_size))
         fp.write('  linetype={0}\n'.format(self.linetype))
@@ -173,8 +187,8 @@ class Pen(object):
         fp.write('  join_style={0}\n'.format(self.join_style))
         fp.write(' }\n')
 
-class PenStyles(object, ):
-    """Pen style container"""
+class UserStyles(object):
+    """UserStyle container"""
     def __init__(self, description="", scale_factor=1.0, apply_factor=False):
         self.description = description
         self.scale_factor = scale_factor
@@ -189,51 +203,68 @@ class PenStyles(object, ):
 
     def set_default_styles(self):
         for index in xrange(STYLE_COUNT):
-            pen = Pen(index)
-            self._set_pen(pen)
+            style = UserStyle(index)
+            self._set_style(style)
 
     @staticmethod
-    def check_color_index(color_index):
-        if 0 < color_index < 256:
-            return color_index
+    def check_color_index(dxf_color_index):
+        if 0 < dxf_color_index < 256:
+            return dxf_color_index
         raise IndexError('color index has to be in th range [1 .. 255].')
 
     def iter_styles(self):
         return (style for style in self.styles[1:])
 
-    def _set_pen(self, pen):
-        self.styles[pen.get_dxf_color_index()] = pen
+    def _set_style(self, style):
+        style.parent = self
+        self.styles[style.get_dxf_color_index()] = style
 
-    def set_style(self, color_index, init_dict={}):
-        """Set <color_index> to new attributes defined in init_dict.
-
-        color_index -- is the dxf color index
+    def set_style(self, dxf_color_index, init_dict={}):
+        """Set <dxf_color_index> to new attributes defined in init_dict.
         """
-        color_index=self.check_color_index(color_index)
-        # ctb table index is dxf color index - 1
-        # ctb table starts with index 0, where dxf color index 0 means BYBLOCK
-        pen = Pen(color_index-1, init_dict)
-        self._set_pen(pen)
-        return pen
+        dxf_color_index=self.check_color_index(dxf_color_index)
+        # ctb table index is dxf_color_index - 1
+        # ctb table starts with index 0, where dxf_color_index=0 means BYBLOCK
+        style = UserStyle(dxf_color_index-1, init_dict)
+        self._set_style(style)
+        return style
 
-    def get_style(self, color_index):
-        """Get style for <color_index>.
-
-        color_index -- is the dxf color index
+    def get_style(self, dxf_color_index):
+        """Get style for <dxf_color_index>.
         """
-        return self.styles[color_index]
+        return self.styles[dxf_color_index]
 
-    # interface for dxfwrite.std.color_index()
+    # interface for dxfwrite.std.DXFColorIndex
     def get_color(self, dxf_color_index):
         """Get rgb-color-tuple for <dxf_color_index> or None if not specified.
         """
-        pen = self.get_style(dxf_color_index)
-        return pen.get_color()
+        style = self.get_style(dxf_color_index)
+        return style.get_color()
 
-    def set_lineweight(self, index, weight):
+    # interface for dxfwrite.std.DXFLineweight
+    def get_lineweight(self, dxf_color_index):
+        """Returns the assigned lineweight for <dxf_color_index> in mm."""
+        style = self.get_style(dxf_color_index)
+        lineweight = style.get_lineweight()
+        if lineweight == 0.0:
+            return None
+        else:
+            return lineweight
+
+    def get_lineweight_index(self, lineweight):
+        """Get index of lineweight in the lineweight table or append lineweight
+        to lineweight table.
+        """
+        try:
+            return self.lineweights.index(lineweight)
+        except ValueError:
+            self.lineweights.append(lineweight)
+            return len(self.lineweights)-1
+
+    def set_table_lineweight(self, index, weight):
         """Index is the lineweight table index, not the dxf color index.
 
-        index -- lineweight table index = Pen.lineweight
+        index -- lineweight table index = UserStyle.lineweight
         weight -- in millimeters
         """
         try:
@@ -243,23 +274,14 @@ class PenStyles(object, ):
             self.lineweights.append(weight)
             return len(self.lineweights)-1
 
-    def get_lineweight(self, index):
+    def get_table_lineweight(self, index):
         """Returns lineweight in millimeters.
 
         returns 0.0 for: use object lineweight
 
-        index -- lineweight table index = Pen.lineweight
+        index -- lineweight table index = UserStyle.lineweight
         """
         return self.lineweights[index]
-
-    def get_pen_lineweight(self, pen):
-        """Returns the lineweight of pen in millimeters.
-
-        returns 0.0 for: use object lineweight
-
-        pen -- Pen object
-        """
-        return self.lineweights[pen.lineweight]
 
     def write(self, fp):
         """Create and compress the ctb-file to <fp>."""
@@ -295,7 +317,7 @@ class PenStyles(object, ):
         fp.write('}\n')
 
     def _write_ctb_plot_styles(self, fp):
-        """Write pen styles to ctb-file <fp>."""
+        """Write user styles to ctb-file <fp>."""
         fp.write('plot_style{\n')
         for style in self.iter_styles():
             style.write(fp)
@@ -305,7 +327,7 @@ class PenStyles(object, ):
         """Write custom lineweights table to ctb-file <fp>."""
         fp.write('custom_lineweight_table{\n')
         for index, weight in enumerate(self.lineweights):
-            fp.write(' {0}={1}\n'.format(index, weight))
+            fp.write(' {0}={1:.2f}\n'.format(index, weight))
         fp.write('}\n')
 
     def parse(self, text):
@@ -326,8 +348,8 @@ class PenStyles(object, ):
         set_lineweights(parser.get('custom_lineweight_table', None))
         styles = parser.get('plot_style', {})
         for index, style in styles.iteritems():
-            pen = Pen(index, style)
-            self._set_pen(pen)
+            style = UserStyle(index, style)
+            self._set_style(style)
 
     def _compress(self, fp, body):
         """Compress ctb-file-body and write it to <fp>."""
@@ -342,10 +364,10 @@ class PenStyles(object, ):
 
 def read(fp):
     """Read a ctb-file from the file-like object <fp>.
-    Returns a PenStyle object.
+    Returns a UserStyle object.
     """
     content = _decompress(fp)
-    styles = PenStyles()
+    styles = UserStyles()
     styles.parse(content)
     return styles
 
@@ -435,19 +457,3 @@ def mode_color2int(red, green, blue, magic=0xc2):
 def color2int(red, green, blue, magic):
     """Convert rgb-tuple to an int value."""
     return -((magic << 24) + (red << 16) + (green << 8) + blue) & 0xffffffff
-
-if __name__ == "__main__":
-    #ctb_in = r'D:\User\Python\ctb\eis.ctb'
-    #with open(ctb_in, 'rb') as filepointer:
-    #    ctb = read(filepointer)
-    ctb = PenStyles('test acadctb.py')
-    pen1=ctb.set_style(1, {'description': 'object_color'})
-    pen1.set_object_color()
-    pen2=ctb.get_style(2)
-    pen2.description="grey-grey-grey"
-    pen2.set_color(234,234,234)
-    pen2.grayscale=True
-    pen2.dithering=False
-
-    with open(r'D:\User\Python\ctb\test.ctb', 'wb') as filepointer:
-        ctb.write(filepointer)

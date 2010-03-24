@@ -1,4 +1,5 @@
 Version 0.3.0 - ???
+  * new: acadctb.py to read, write and create AutoCAD ctb-files
   * splitted buildups.py into mtext.py and rect.py
 Version 0.2.0 - 21 March 2010
   * Alpha status - api may change

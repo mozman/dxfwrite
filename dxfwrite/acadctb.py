@@ -26,7 +26,7 @@ JOINSTYLE_OBJECT = 5
 
 FILL_STYLE_SOLID = 64
 FILL_STYLE_CHECKERBOARD = 65
-FILL_STYLE_CROSSHATCH =66
+FILL_STYLE_CROSSHATCH = 66
 FILL_STYLE_DIAMONDS = 67
 FILL_STYLE_HORIZONTAL_BARS = 68
 FILL_STYLE_SLANT_LEFT = 69
@@ -35,13 +35,12 @@ FILL_STYLE_SQUARE_DOTS = 71
 FILL_STYLE_VERICAL_BARS = 72
 FILL_STYLE_OBJECT = 73
 
-# add to switch both on: DITHERING_ON + GRAYSCALE_ON
 DITHERING_ON = 1 # bit coded color_policy
 GRAYSCALE_ON = 2 # bit coded color_policy
 
 AUTOMATIC = 0
 OBJECT_LINEWEIGHT = 0
-
+OBJECT_LINETYPE = 31
 OBJECT_COLOR = -1
 OBJECT_COLOR2 = -1006632961
 
@@ -80,25 +79,38 @@ DEFAULT_LINE_WEIGHTS = [
 def color_name(index):
     return 'Color_{0}'.format(index+1)
 
+def get_bool(value):
+    if isinstance(value, basestring):
+        upperstr = value.upper()
+        if upperstr == 'TRUE':
+            value = True
+        elif upperstr == 'FALSE':
+            value = False
+        else:
+            raise ValueError("Unknown bool value '{0}'.".format(value))
+    return bool(value)
+
 class UserStyle(object):
     def __init__(self, index, init_dict={}, parent=None):
         self.parent = parent
         self.index = int(index)
         self.description = unicode(init_dict.get('description', ""))
+        # do not set _color, _mode_color or _color_policy directly
+        # use set_color() method, and the properties dithering and grayscale
         self._color = int(init_dict.get('color', OBJECT_COLOR))
         if self._color != OBJECT_COLOR:
-            self._mode_color = int(init_dict.get('mode_color', OBJECT_COLOR2))
-        self.color_policy = int(init_dict.get('color_policy', DITHERING_ON))
-        self.physical_style_number = int(init_dict.get('pysical_style_number', AUTOMATIC))
-        self.virtual_style_number = int(init_dict.get('virtual_style_number', AUTOMATIC))
+            self._mode_color = int(init_dict.get('mode_color', self._color))
+        self._color_policy = int(init_dict.get('color_policy', DITHERING_ON))
+        self.physical_pen_number = int(init_dict.get('physical_pen_number', AUTOMATIC))
+        self.virtual_pen_number = int(init_dict.get('virtual_pen_number', AUTOMATIC))
         self.screen = int(init_dict.get('screen', 100))
         self.linepattern_size = float(init_dict.get('linepattern_size', 0.5))
-        self.linetype = int(init_dict.get('linetype', 31)) # 0 .. 30
-        self.adaptive_linetype = init_dict.get('adaptive_linetype', 'TRUE') == 'TRUE'
+        self.linetype = int(init_dict.get('linetype', OBJECT_LINETYPE)) # 0 .. 30
+        self.adaptive_linetype = get_bool(init_dict.get('adaptive_linetype', True))
         self.lineweight = int(init_dict.get('lineweight', OBJECT_LINEWEIGHT))
         self.end_style = int(init_dict.get('end_style', ENDSTYLE_OBJECT))
         self.join_style = int(init_dict.get('join_style', JOINSTYLE_OBJECT))
-        self.fill_style = int(init_dict.get('fill_style', 73))
+        self.fill_style = int(init_dict.get('fill_style', FILL_STYLE_OBJECT))
 
     def set_color(self, red, green, blue):
         """Set color as rgb-tuple."""
@@ -146,46 +158,46 @@ class UserStyle(object):
 
     @property
     def dithering(self):
-        return bool(self.color_policy & DITHERING_ON)
+        return bool(self._color_policy & DITHERING_ON)
     @dithering.setter # pylint: disable-msg=E1101
     def dithering(self, status): # pylint: disable-msg=E0102
         if status :
-            self.color_policy |= DITHERING_ON
+            self._color_policy |= DITHERING_ON
         else:
-            self.color_policy &= ~DITHERING_ON
+            self._color_policy &= ~DITHERING_ON
 
     @property
     def grayscale(self):
-        return bool(self.color_policy & GRAYSCALE_ON)
+        return bool(self._color_policy & GRAYSCALE_ON)
     @grayscale.setter # pylint: disable-msg=E1101
     def grayscale(self, status): # pylint: disable-msg=E0102
         if status :
-            self.color_policy |= GRAYSCALE_ON
+            self._color_policy |= GRAYSCALE_ON
         else:
-            self.color_policy &= ~GRAYSCALE_ON
+            self._color_policy &= ~GRAYSCALE_ON
 
-    def write(self, fp):
-        """Write style data to file-like object <fp>."""
+    def write(self, fileobj):
+        """Write style data to file-like object <fileobj>."""
         index = self.index
-        fp.write(' {0}{{\n'.format(index))
-        fp.write('  name="{0}\n'.format(color_name(index)))
-        fp.write('  localized_name="{0}\n'.format(color_name(index)))
-        fp.write('  description="{0}\n'.format(self.description))
-        fp.write('  color={0}\n'.format(self._color))
+        fileobj.write(' {0}{{\n'.format(index))
+        fileobj.write('  name="{0}\n'.format(color_name(index)))
+        fileobj.write('  localized_name="{0}\n'.format(color_name(index)))
+        fileobj.write('  description="{0}\n'.format(self.description))
+        fileobj.write('  color={0}\n'.format(self._color))
         if self._color != OBJECT_COLOR:
-            fp.write('  mode_color={0}\n'.format(self._mode_color))
-        fp.write('  color_policy={0}\n'.format(self.color_policy))
-        fp.write('  physical_style_number={0}\n'.format(self.physical_style_number))
-        fp.write('  virtual_style_number={0}\n'.format(self.virtual_style_number))
-        fp.write('  screen={0}\n'.format(self.screen))
-        fp.write('  linepattern_size={0}\n'.format(self.linepattern_size))
-        fp.write('  linetype={0}\n'.format(self.linetype))
-        fp.write('  adaptive_linetype={0}\n'.format(unicode(bool(self.adaptive_linetype)).upper()))
-        fp.write('  lineweight={0}\n'.format(self.lineweight))
-        fp.write('  fill_style={0}\n'.format(self.fill_style))
-        fp.write('  end_style={0}\n'.format(self.end_style))
-        fp.write('  join_style={0}\n'.format(self.join_style))
-        fp.write(' }\n')
+            fileobj.write('  mode_color={0}\n'.format(self._mode_color))
+        fileobj.write('  color_policy={0}\n'.format(self._color_policy))
+        fileobj.write('  physical_pen_number={0}\n'.format(self.physical_pen_number))
+        fileobj.write('  virtual_pen_number={0}\n'.format(self.virtual_pen_number))
+        fileobj.write('  screen={0}\n'.format(self.screen))
+        fileobj.write('  linepattern_size={0}\n'.format(self.linepattern_size))
+        fileobj.write('  linetype={0}\n'.format(self.linetype))
+        fileobj.write('  adaptive_linetype={0}\n'.format(unicode(bool(self.adaptive_linetype)).upper()))
+        fileobj.write('  lineweight={0}\n'.format(self.lineweight))
+        fileobj.write('  fill_style={0}\n'.format(self.fill_style))
+        fileobj.write('  end_style={0}\n'.format(self.end_style))
+        fileobj.write('  join_style={0}\n'.format(self.join_style))
+        fileobj.write(' }\n')
 
 class UserStyles(object):
     """UserStyle container"""
@@ -210,7 +222,7 @@ class UserStyles(object):
     def check_color_index(dxf_color_index):
         if 0 < dxf_color_index < 256:
             return dxf_color_index
-        raise IndexError('color index has to be in th range [1 .. 255].')
+        raise IndexError('color index has to be in the range [1 .. 255].')
 
     def iter_styles(self):
         return (style for style in self.styles[1:])
@@ -222,7 +234,7 @@ class UserStyles(object):
     def set_style(self, dxf_color_index, init_dict={}):
         """Set <dxf_color_index> to new attributes defined in init_dict.
         """
-        dxf_color_index=self.check_color_index(dxf_color_index)
+        dxf_color_index = self.check_color_index(dxf_color_index)
         # ctb table index is dxf_color_index - 1
         # ctb table starts with index 0, where dxf_color_index=0 means BYBLOCK
         style = UserStyle(dxf_color_index-1, init_dict)
@@ -232,6 +244,7 @@ class UserStyles(object):
     def get_style(self, dxf_color_index):
         """Get style for <dxf_color_index>.
         """
+        dxf_color_index = self.check_color_index(dxf_color_index)
         return self.styles[dxf_color_index]
 
     # interface for dxfwrite.std.DXFColorIndex
@@ -283,52 +296,52 @@ class UserStyles(object):
         """
         return self.lineweights[index]
 
-    def write(self, fp):
-        """Create and compress the ctb-file to <fp>."""
-        memfile=StringIO()
+    def write(self, fileobj):
+        """Create and compress the ctb-file to <fileobj>."""
+        memfile = StringIO()
         self.write_content(memfile)
         memfile.write(chr(0)) # end of file
         body = memfile.getvalue()
         memfile.close()
-        self._compress(fp, body)
+        self._compress(fileobj, body)
 
-    def write_content(self, fp):
-        """Write the ctb-file to <fp>."""
-        self._write_header(fp)
-        self._write_aci_table(fp)
-        self._write_ctb_plot_styles(fp)
-        self._write_lineweights(fp)
+    def write_content(self, fileobj):
+        """Write the ctb-file to <fileobj>."""
+        self._write_header(fileobj)
+        self._write_aci_table(fileobj)
+        self._write_ctb_plot_styles(fileobj)
+        self._write_lineweights(fileobj)
 
-    def _write_header(self, fp):
-        """Write header values of ctb-file to <fp>."""
-        fp.write('description="{0}\n'.format(self.description))
-        fp.write('aci_table_available=TRUE\n')
-        fp.write('scale_factor={0:.1f}\n'.format(self.scale_factor))
-        fp.write('apply_factor={0}\n'.format(unicode(self.apply_factor).upper()))
-        fp.write('custom_lineweight_display_units={0}\n'.format(
+    def _write_header(self, fileobj):
+        """Write header values of ctb-file to <fileobj>."""
+        fileobj.write('description="{0}\n'.format(self.description))
+        fileobj.write('aci_table_available=TRUE\n')
+        fileobj.write('scale_factor={0:.1f}\n'.format(self.scale_factor))
+        fileobj.write('apply_factor={0}\n'.format(unicode(self.apply_factor).upper()))
+        fileobj.write('custom_lineweight_display_units={0}\n'.format(
             self.custom_lineweight_display_units))
 
-    def _write_aci_table(self, fp):
-        """Write autocad color index table to ctb-file <fp>."""
-        fp.write('aci_table{\n')
+    def _write_aci_table(self, fileobj):
+        """Write autocad color index table to ctb-file <fileobj>."""
+        fileobj.write('aci_table{\n')
         for style in self.iter_styles():
             index = style.index
-            fp.write(' {0}="{1}\n'.format(index, color_name(index)))
-        fp.write('}\n')
+            fileobj.write(' {0}="{1}\n'.format(index, color_name(index)))
+        fileobj.write('}\n')
 
-    def _write_ctb_plot_styles(self, fp):
-        """Write user styles to ctb-file <fp>."""
-        fp.write('plot_style{\n')
+    def _write_ctb_plot_styles(self, fileobj):
+        """Write user styles to ctb-file <fileobj>."""
+        fileobj.write('plot_style{\n')
         for style in self.iter_styles():
-            style.write(fp)
-        fp.write('}\n')
+            style.write(fileobj)
+        fileobj.write('}\n')
 
-    def _write_lineweights(self, fp):
-        """Write custom lineweights table to ctb-file <fp>."""
-        fp.write('custom_lineweight_table{\n')
+    def _write_lineweights(self, fileobj):
+        """Write custom lineweights table to ctb-file <fileobj>."""
+        fileobj.write('custom_lineweight_table{\n')
         for index, weight in enumerate(self.lineweights):
-            fp.write(' {0}={1:.2f}\n'.format(index, weight))
-        fp.write('}\n')
+            fileobj.write(' {0}={1:.2f}\n'.format(index, weight))
+        fileobj.write('}\n')
 
     def parse(self, text):
         """Parse and get values of plot styles from <text>."""
@@ -339,41 +352,41 @@ class UserStyles(object):
             for key, value in lineweights.iteritems():
                 self.lineweights[int(key)] = float(value)
 
+        def set_styles(styles):
+            for index, style in styles.iteritems():
+                style = UserStyle(index, style)
+                self._set_style(style)
+
         parser = CtbParser(text)
         self.description = parser.get('description', "")
         self.scale_factor = float(parser.get('scale_factor', 1.0))
-        self.apply_factor = (parser.get('apply_factor', 1.0).upper() == 'TRUE')
+        self.apply_factor = get_bool(parser.get('apply_factor', True))
         self.custom_lineweight_display_units = int(
-            parser.get('custom_lineweight_display_units', 1.0))
+            parser.get('custom_lineweight_display_units', 0))
         set_lineweights(parser.get('custom_lineweight_table', None))
-        styles = parser.get('plot_style', {})
-        for index, style in styles.iteritems():
-            style = UserStyle(index, style)
-            self._set_style(style)
+        set_styles(parser.get('plot_style', {}))
 
-    def _compress(self, fp, body):
-        """Compress ctb-file-body and write it to <fp>."""
-        header = 'PIAFILEVERSION_2.0,CTBVER1,compress\r\npmzlibcodec'
-        fp.write(header)
-        full_len = len(body)
+    @staticmethod
+    def _compress(fileobj, body):
+        """Compress ctb-file-body and write it to <fileobj>."""
         comp_body = zlib.compress(body)
-        comp_len = len(comp_body)
-        adler = zlib.adler32(comp_body)
-        fp.write(pack('LLL', adler, full_len, comp_len))
-        fp.write(comp_body)
+        adler_chksum = zlib.adler32(comp_body)
+        fileobj.write('PIAFILEVERSION_2.0,CTBVER1,compress\r\npmzlibcodec')
+        fileobj.write(pack('LLL', adler_chksum, len(body), len(comp_body)))
+        fileobj.write(comp_body)
 
-def read(fp):
-    """Read a ctb-file from the file-like object <fp>.
+def read(fileobj):
+    """Read a ctb-file from the file-like object <fileobj>.
     Returns a UserStyle object.
     """
-    content = _decompress(fp)
+    content = _decompress(fileobj)
     styles = UserStyles()
     styles.parse(content)
     return styles
 
-def _decompress(fp):
-    """Read and decompress the file content of the file-like object <fp>."""
-    content = fp.read()
+def _decompress(fileobj):
+    """Read and decompress the file content of the file-like object <fileobj>."""
+    content = fileobj.read()
     text = zlib.decompress(content[60:])
     return text[:-1] # truncate trailing \nul
 
@@ -384,59 +397,65 @@ class CtbParser(object):
     def __init__(self, text):
         """Construtor
 
-        text -- ctb content
+        text -- ctb content as string
         """
         self.data = {}
-        for element, value in self.iter_elements(text):
+        for element, value in CtbParser.iteritems(text):
             self.data[element] = value
 
-    def iter_elements(self, text):
+    @staticmethod
+    def iteritems(text):
         """iterate over all first level (start at col 0) elements"""
-        def get_name(num):
-            """Get element name of line <num>.
+        def get_name(line_index):
+            """Get element name of line <line_index>.
             """
-            line = lines[num]
+            line = lines[line_index]
             if line.endswith('{'): # start of a list like 'plot_style{'
                 name = line[:-1]
             else: # simple name=value line
                 name = line.split('=', 1)[0]
             return name.strip()
 
-        def get_list(num):
+        def get_list(line_index):
             """Get list of elements enclosed by { }.
 
             lineweigths, plot_styles, aci_table
             """
-            data = dict()
-            while not lines[num].endswith('}'): # while not end of list
-                name = get_name(num)
-                num, value = get_value(num) # get value or sub-list
-                data[name] = value
-            return num+1, data
+            def end_of_list():
+                return lines[line_index].endswith('}')
 
-        def get_value(num):
-            """Get value of line <num> or the list that starts in line <num>."""
-            line=lines[num]
+            data = dict()
+            while not end_of_list():
+                name = get_name(line_index)
+                line_index, value = get_value(line_index) # get value or sub-list
+                data[name] = value
+            return line_index+1, data # skip '}' - end of list
+
+        def get_value(line_index):
+            """Get value of line <line_index> or the list that starts in line
+            <line_index>.
+            """
+            line = lines[line_index]
             if line.endswith('{'): # start of a list
-                num, value = get_list(num+1)
+                line_index, value = get_list(line_index+1)
             else: # it's a simple name=value line
                 value = line.split('=', 1)[1]
                 value = value.lstrip('"') # strings look like this: name="value
-                num += 1
-            return num, value
+                line_index += 1
+            return line_index, value
 
-        def skip_empty_lines(num):
-            while num < len(lines) and len(lines[num]) == 0:
-                num += 1
-            return num
+        def skip_empty_lines(line_index):
+            while line_index < len(lines) and len(lines[line_index]) == 0:
+                line_index += 1
+            return line_index
 
         lines = text.split('\n')
-        num = 0
-        while num < len(lines):
-            name = get_name(num)
-            num, value = get_value(num)
+        line_index = 0
+        while line_index < len(lines):
+            name = get_name(line_index)
+            line_index, value = get_value(line_index)
             yield(name, value)
-            num = skip_empty_lines(num)
+            line_index = skip_empty_lines(line_index)
 
     def get(self, name, default):
         return self.data.get(name, default)

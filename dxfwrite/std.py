@@ -83,12 +83,14 @@ dxf_default_color_table = [ # [0] is a dummy value, valid dxf color index = [1..
     (104, 0, 25), (104, 69, 78), (79, 0, 19), (79, 53, 59), (51, 51, 51),
     (80, 80, 80), (105, 105, 105), (130, 130, 130), (190, 190, 190), (255, 255, 255)]
 
-class DXFLineweight(object):
-    # element [0] = default lineweight for undefined values
-    dxf_default = [1.40, 1.40, 0.35, 0.70, 0.50, 0.13, 1.00, 0.25, 2.00, 2.00]
-    iso_default = [0.25, 0.50, 0.35, 1.00, 0.70, 0.70, 0.18, 0.25]
+# element [0] = default lineweight for undefined values
+LW_DXF = [1.40, 1.40, 0.35, 0.70, 0.50, 0.13, 1.00, 0.25, 2.00, 2.00]
+LW_ISO = [0.25, 0.50, 0.35, 1.00, 0.70, 0.70, 0.18, 0.25]
+LW_DIN = LW_ISO
 
-    def __init__(self, lineweights=DXFLineweight.dxf_default, user_styles=None):
+class DXFLineweight(object):
+
+    def __init__(self, lineweights=LW_DXF, user_styles=None):
         self.set_defaults(lineweights)
         self.add_user_styles(user_styles)
 

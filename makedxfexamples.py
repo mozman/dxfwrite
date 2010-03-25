@@ -455,9 +455,35 @@ def table_dxf(dxf, name):
     dwg.add(table)
     dwg.save()
 
+def colors_dxf(dxf, name):
+    def color_name(dxf_index):
+        try:
+            rgb = colors.get_rgb(dxf_index)
+            return "{0}: ({1}[0], {1}[1], {1}[2])".format(dxf_index, rgb)
+        except IndexError:
+            return "BYLAYER"
+
+    """Create a color table"""
+    drawing = dxf.drawing(name)
+    colors = dxfwrite.std.DXFColorIndex()
+    color = 1
+    for x in range(8):
+        for y in range(8):
+            x1 = x * 3
+            x2 = x1 + 30
+            y1 = y * 3
+            name = color_name(color)
+            drawing.add(dxf.text(name, (x1, y1+0.2), height=0.25))
+            drawing.add(dxf.rectangle((x1, y1) , 2, 2, color=color))
+            drawing.add(dxf.text(name, (x2, y1+0.2), height=0.25))
+            drawing.add(dxf.rectangle((x2, y1) , 2, 2, color=None, bgcolor=color))
+            color += 1
+    drawing.save()
+
 def main():
     empty_dxf(dxfwrite.DXFEngine, "example_empty.dxf")
     simple_dxf(dxfwrite.DXFEngine, "example_simple.dxf")
+    colors_dxf(dxfwrite.DXFEngine, "example_colors.dxf")
     mtext_dxf(dxfwrite.DXFEngine, "example_mtext.dxf")
     rectangle_dxf(dxfwrite.DXFEngine, "example_rectangle.dxf")
     dimline_dxf(dxfwrite.DXFEngine, "example_dimlines.dxf")

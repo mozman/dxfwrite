@@ -6,22 +6,23 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+import os
 import unittest2 as unittest
 from StringIO import StringIO
 
-from dxfwrite.acadctb import UserStyle, UserStyles
+from dxfwrite.acadctb import *
 
 class TestUserStyleAPI(unittest.TestCase):
     def test_init(self):
         style = UserStyle(0, dict(
             description="memo",
             color_policy = 3,
-            pysical_style_number = 7,
-            virtual_style_number = 8,
+            physical_pen_number = 7,
+            virtual_pen_number = 8,
             screen = 99,
             linepattern_size = 0.7,
             linetype = 17,
-            adaptive_linetype = 'FALSE',
+            adaptive_linetype = False,
             lineweight = 19,
             end_style = 1,
             join_style = 2,
@@ -30,8 +31,8 @@ class TestUserStyleAPI(unittest.TestCase):
         self.assertEqual(style.description, "memo")
         self.assertTrue(style.dithering)
         self.assertTrue(style.grayscale)
-        self.assertEqual(style.physical_style_number, 7)
-        self.assertEqual(style.virtual_style_number, 8)
+        self.assertEqual(style.physical_pen_number, 7)
+        self.assertEqual(style.virtual_pen_number, 8)
         self.assertEqual(style.screen, 99)
         self.assertEqual(style.linepattern_size, 0.7)
         self.assertFalse(style.adaptive_linetype)
@@ -83,8 +84,8 @@ class TestUserStyleImplementation(unittest.TestCase):
                   '  description="\n'\
                   '  color=-1\n'\
                   '  color_policy=1\n'\
-                  '  physical_style_number=0\n'\
-                  '  virtual_style_number=0\n'\
+                  '  physical_pen_number=0\n'\
+                  '  virtual_pen_number=0\n'\
                   '  screen=100\n'\
                   '  linepattern_size=0.5\n'\
                   '  linetype=31\n'\
@@ -180,7 +181,58 @@ class TestUserStylesImplementation(unittest.TestCase):
         self.assertEqual(unicode(result), unicode(expected))
 
 class TestCtbImport(unittest.TestCase):
-    pass
+    def setUp(self):
+        path, name = os.path.split(__file__)
+        ctbfile = os.path.join(path, 'ctbtest.ctb')
+        with open(ctbfile, 'rb') as fileobj:
+            self.ctb = read(fileobj)
+
+    def test_ctb_attribs(self):
+        styles = self.ctb
+        self.assertEqual(styles.description, 'Comment')
+        self.assertEqual(styles.apply_factor, True)
+        self.assertEqual(styles.scale_factor, 2)
+
+    def test_lineweight_table(self):
+        lineweights = self.ctb.lineweights
+        for default_lw, ctb_lw in zip(DEFAULT_LINE_WEIGHTS, lineweights):
+            self.assertAlmostEqual(default_lw, ctb_lw, 6)
+
+    def test_style_1(self):
+        """all attribs are user defined."""
+        style = self.ctb.get_style(1)
+        assert isinstance(style, UserStyle)
+        should = self.assertEqual
+        should(style.get_dxf_color_index(), 1)
+        should(style.get_color(), (235, 135,20))
+        should(style.dithering, True)
+        should(style.grayscale, True)
+        should(style.has_object_color(), False)
+        should(style.physical_pen_number, 11)
+        should(style.virtual_pen_number, 5)
+        should(style.screen, 95)
+        should(style.linetype, 1)
+        should(style.end_style, ENDSTYLE_SQUARE)
+        should(style.join_style, JOINSTYLE_ROUND)
+        should(style.fill_style, FILL_STYLE_SOLID)
+
+    def test_style_3(self):
+        """all attribs are default or auto"""
+        style = self.ctb.get_style(3)
+        assert isinstance(style, UserStyle)
+        should = self.assertEqual
+        should(style.get_dxf_color_index(), 3)
+        should(style.get_color(), None)
+        should(style.dithering, True)
+        should(style.grayscale, False)
+        should(style.has_object_color(), True)
+        should(style.physical_pen_number, AUTOMATIC)
+        should(style.virtual_pen_number, AUTOMATIC)
+        should(style.screen, 100)
+        should(style.linetype, OBJECT_LINETYPE)
+        should(style.end_style, ENDSTYLE_OBJECT)
+        should(style.join_style, JOINSTYLE_OBJECT)
+        should(style.fill_style, FILL_STYLE_OBJECT)
 
 if __name__=='__main__':
     unittest.main()

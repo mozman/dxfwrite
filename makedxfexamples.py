@@ -68,7 +68,7 @@ def simple_dxf(dxf, name):
     drawing.add(dxf.trace([(7,5), (8,5), (8,6), (7,6)], color=4))
 
     # add a TEXT-entity
-    drawing.add(dxf.text(text="Manfred"))
+    drawing.add(dxf.text("Manfred"))
 
     # add a TEXT-entity with more properties
     drawing.add(dxf.text(

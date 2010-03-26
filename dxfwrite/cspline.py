@@ -2,7 +2,7 @@
 #coding:utf-8
 # Author:  mozman
 # Purpose: 2d spline
-# module belongs to package: cadlib.py
+# module belongs to package: dxfwrite
 # Created: 26.03.2010
 # License: GPL
 # Source: http://www-lehre.informatik.uni-osnabrueck.de/~cg/2000/skript/7_2_Splines.html
@@ -16,16 +16,21 @@ def _coords(points, index=0):
 class CubicSpline(object):
     def __init__(self, points):
         self.breakpoints = points
-        self.t = self.get_t_array(points)
+        self.t = self._get_t_array(points)
 
     @property
     def count(self):
         return len(self.breakpoints)
 
-    def create_array(self):
+    def approximate(self, count):
+        """Get <count> points on curve as list of xy-tuples."""
+        return zip(self._cubic_spline(_coords(self.breakpoints, 0), count),
+                   self._cubic_spline(_coords(self.breakpoints, 1), count))
+
+    def _create_array(self):
         return array('f', (0.0 for i in xrange(self.count)))
 
-    def get_t_array(self, points):
+    def _get_t_array(self, points):
         t = array('f')
         t.append(0.0)
         for p1, p2 in zip(points[:-1], points[1:]):
@@ -33,14 +38,11 @@ class CubicSpline(object):
             t.append(t[-1] + distance)
         return t
 
-    def approximate(self, count):
-        return zip(self.cubic_spline(_coords(self.breakpoints, 0), count),
-                   self.cubic_spline(_coords(self.breakpoints, 1), count))
 
-    def cubic_spline(self, f, spline_size):
+    def _cubic_spline(self, f, spline_size):
         def get_delta_t_D(f):
-            delta_t = self.create_array()
-            D = self.create_array()
+            delta_t = self._create_array()
+            D = self._create_array()
             for i in nrange:
                 delta_t[i] = t[i] - t[i-1];
                 D[i] = (f[i] - f[i-1])/ delta_t[i]
@@ -48,8 +50,8 @@ class CubicSpline(object):
             return delta_t, D
 
         def get_b_c(a, D, delta_t):
-            b = self.create_array()
-            c = self.create_array()
+            b = self._create_array()
+            c = self._create_array()
             for i in nrange[1:]:
                 dh = D[i]
                 bh = delta_t[i]
@@ -59,15 +61,15 @@ class CubicSpline(object):
             return b, c
 
         def get_a(h, k, m, delta_t):
-            a = self.create_array()
+            a = self._create_array()
             a[n-1] = (h * k[n-2] + k[n-1]) / m[n-1]
             for i in reversed(nrange[:-1]):
                 a[i] = (k[i] - delta_t[i] * a[i+1]) / m[i]
             return a
 
         def get_h_k_m(D, delta_t):
-            m = self.create_array()
-            k = self.create_array()
+            m = self._create_array()
+            k = self._create_array()
             h = delta_t[1]
             m[0] = delta_t[2]
             k[0] = ((h + 2 * delta_t[0]) * D[1] * delta_t[2] + h * h * D[2]) / delta_t[0]

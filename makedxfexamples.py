@@ -458,14 +458,21 @@ def table_dxf(dxf, name):
 def colors_dxf(dxf, name):
     def color_name(dxf_index):
         try:
-            rgb = colors.get_rgb(dxf_index)
-            return "{0}: ({1[0]}, {1[1]}, {1[2]})".format(dxf_index, rgb)
+            if dxf_index==7:
+                return 'BLACK/WHITE'
+            else:
+                rgb = colors.get_rgb(dxf_index)
+                return "{0}: ({1[0]}, {1[1]}, {1[2]})".format(dxf_index, rgb)
         except IndexError:
             return "BYLAYER"
-    def cmp_colors(color1, color2):
-        return sum([color1[0] - color2[0],
-                   color1[1] - color2[1],
-                   color1[2] - color2[2]])
+
+    def color_square(x, y, color=None, bgcolor=None):
+        if color:
+            name = color_name(color)
+        if bgcolor:
+            name = color_name(bgcolor)
+        drawing.add(dxf.rectangle((x, y) , 2, 2, color=color, bgcolor=bgcolor))
+        drawing.add(dxf.text(name, (x, y-0.4), height=0.18))
 
     """Create a color table"""
     drawing = dxf.drawing(name)
@@ -474,35 +481,22 @@ def colors_dxf(dxf, name):
     for y in range(16):
         for x in range(16):
             x1 = x * 3
-            x2 = x1 + 60
             y1 = y * 3
-            name = color_name(color)
-            drawing.add(dxf.rectangle((x1, y1) , 2, 2, color=color))
-            drawing.add(dxf.text(name, (x1, y1-0.4), height=0.18))
-            drawing.add(dxf.rectangle((x2, y1) , 2, 2, color=None, bgcolor=color))
-            drawing.add(dxf.text(name, (x2, y1-0.4), height=0.18))
+            color_square(x1, y1, color=color)
+            color_square(x1+60, y1, bgcolor=color)
             color += 1
 
     index = 0
     for y in range(16):
         for x in range(16):
             x1 = x * 3
-            x2 = x1 + 60
-            x3 = x2 + 60
             y1 = 60 + y * 3
-            try:
-                color1 = colors.get_dxf_color_index((x*16, y*16, 0))
-                color2 = colors.get_dxf_color_index((x*16, 0, y*16))
-                color3 = colors.get_dxf_color_index((0, x*16, y*16))
-            except IndexError:
-                color = 256
-            name = color_name(color)
-            drawing.add(dxf.rectangle((x1, y1) , 2, 2, color=None, bgcolor=color1))
-            drawing.add(dxf.text(color_name(color1), (x1, y1-0.4), height=0.18))
-            drawing.add(dxf.rectangle((x2, y1) , 2, 2, color=None, bgcolor=color2))
-            drawing.add(dxf.text(color_name(color2), (x2, y1-0.4), height=0.18))
-            drawing.add(dxf.rectangle((x3, y1) , 2, 2, color=None, bgcolor=color3))
-            drawing.add(dxf.text(color_name(color3), (x3, y1-0.4), height=0.18))
+            color1 = colors.get_dxf_color_index((x*16, y*16, 0))
+            color2 = colors.get_dxf_color_index((x*16, 0, y*16))
+            color3 = colors.get_dxf_color_index((0, x*16, y*16))
+            color_square(x1, y1, bgcolor=color1)
+            color_square(x1+60, y1, bgcolor=color2)
+            color_square(x1+120, y1, bgcolor=color3)
     drawing.save()
 
 def main():

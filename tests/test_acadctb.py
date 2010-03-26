@@ -69,6 +69,7 @@ class TestUserStyleAPI(unittest.TestCase):
     def test_dxf_color_index(self):
         style = UserStyle(0)
         self.assertEqual(style.get_dxf_color_index(), 1)
+
     def test_set_lineweight(self):
         styles = UserStyles()
         style = styles.get_style(5)

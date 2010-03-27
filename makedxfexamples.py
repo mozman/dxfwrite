@@ -517,17 +517,50 @@ def ellipse_dxf(dxf, name):
 
     dwg.save()
 
+def spline_dxf(dxf, name):
+    dwg = dxf.drawing(name)
+    spline_points = [(0.0, 0.0), (1., 2.), (3., 1.), (5., 3.)]
+    dwg.add(dxf.spline(spline_points, color=7))
+    for point in spline_points:
+        dwg.add(dxf.circle(radius=0.1, center=point, color=1))
+    dwg.save()
+
+def bezier_dxf(dxf, name):
+    from dxfwrite.vector2d import vadd
+    def draw_control_point(point, tangent1, tangent2=(0, 0)):
+        tp1 = vadd(point, tangent1)
+        tp2 = vadd(point, tangent2)
+        dwg.add(dxf.circle(0.05, center=point, color=1))
+        dwg.add(dxf.line(point, tp1, color=2))
+        dwg.add(dxf.line(point, tp2, color=2))
+
+    dwg = dxf.drawing(name)
+    bezier = dxf.bezier(color=4)
+    dwg.add(bezier)
+    bezier.start_point((2, 4), tangent=(0, 2))
+    draw_control_point((2, 4), (0, 2))
+    bezier.append_point((6, 7), tangent1=(-2, 0), tangent2=(1, 2))
+    draw_control_point((6, 7), (-2, 0), (1, 2))
+    bezier.append_point((12, 5), tangent1=(-2, 0)) # tangent2 = -tangent1 = (+2, 0)
+    draw_control_point((12, 5), (-2, 0), (2, 0))
+    # for last point tangent2 is meaningless
+    bezier.append_point((16, 9), tangent1=(-0.5, -3))
+    draw_control_point((16, 9), (-0.5, -3))
+    dwg.save()
+
 def main():
-    empty_dxf(dxfwrite.DXFEngine, "example_empty.dxf")
-    simple_dxf(dxfwrite.DXFEngine, "example_simple.dxf")
-    colors_dxf(dxfwrite.DXFEngine, "example_colors.dxf")
-    mtext_dxf(dxfwrite.DXFEngine, "example_mtext.dxf")
-    rectangle_dxf(dxfwrite.DXFEngine, "example_rectangle.dxf")
-    dimline_dxf(dxfwrite.DXFEngine, "example_dimlines.dxf")
-    polymesh_dxf(dxfwrite.DXFEngine, "example_polymesh.dxf")
-    polyface_dxf(dxfwrite.DXFEngine, "example_polyface.dxf")
-    table_dxf(dxfwrite.DXFEngine, "example_table.dxf")
+    #empty_dxf(dxfwrite.DXFEngine, "example_empty.dxf")
+    #simple_dxf(dxfwrite.DXFEngine, "example_simple.dxf")
+    #colors_dxf(dxfwrite.DXFEngine, "example_colors.dxf")
+    #mtext_dxf(dxfwrite.DXFEngine, "example_mtext.dxf")
+    #rectangle_dxf(dxfwrite.DXFEngine, "example_rectangle.dxf")
+    #dimline_dxf(dxfwrite.DXFEngine, "example_dimlines.dxf")
+    #polymesh_dxf(dxfwrite.DXFEngine, "example_polymesh.dxf")
+    #polyface_dxf(dxfwrite.DXFEngine, "example_polyface.dxf")
+    #table_dxf(dxfwrite.DXFEngine, "example_table.dxf")
     ellipse_dxf(dxfwrite.DXFEngine, "example_ellipse.dxf")
+    spline_dxf(dxfwrite.DXFEngine, "example_spline.dxf")
+    bezier_dxf(dxfwrite.DXFEngine, "example_bezier.dxf")
 
 if __name__=='__main__':
     main()

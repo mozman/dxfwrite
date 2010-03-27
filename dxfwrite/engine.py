@@ -709,7 +709,7 @@ class DXFEngine(object):
     def ellipse(center, radiusx, radiusy, startangle=0., endangle=360.,
                 rotation=0., segments=100, **kwargs):
         """
-        Create a new ellipse-entity, consiting of an approximation with a
+        Create a new ellipse-entity, consisting of an approximation with a
         polyline.
 
         Arguments
@@ -730,3 +730,52 @@ class DXFEngine(object):
         return Ellipse(center=center, radiusx=radiusx, radiusy=radiusy,
                        startangle=startangle, endangle=endangle, rotation=rotation,
                        segments=segments, **kwargs)
+
+    @staticmethod
+    def spline(points, segments=100, **kwargs):
+        """
+        Create a new cubic-spline-entity, consisting of an approximation with a
+        polyline.
+
+        Arguments
+        ---------
+
+        points -- breakpoints (knots) as 2D points (float-tuples), defines the
+            curve, the curve goes through this points
+        segments -- count of line segments for polyline approximation
+
+        Common kwargs
+        -------------
+        linetype, color, layer
+        """
+        return Spline(points, segments=segments, **kwargs)
+
+    @staticmethod
+    def bezier(**kwargs):
+        """
+        Create a new cubic-bezier-entity, consisting of an approximation with a
+        polyline.
+
+        Methods
+        -------
+        *start_point(point, tangent) -- set start point and -tangent*
+
+        point -- control point as a 2D point (float-tuple)
+        tangent -- control tangent as a 2D vector (float-tuple), 'right' tangent
+
+        *append_point(point, tangent1, tangent2=None, segments=20)*
+
+        Append a control point with two control tangents.
+
+        point -- control point as 2D point
+        tangent1 -- first control tangent as 2D vector 'left' of point
+        tangent2 -- second control tangent as 2D vector 'right' of point, if
+            omitted tangent2 = -tangent1
+        segments -- count of line segments for polyline approximation, count of
+            line segments from previous control point to this point.
+
+        Common kwargs
+        -------------
+        linetype, color, layer
+        """
+        return Bezier(**kwargs)

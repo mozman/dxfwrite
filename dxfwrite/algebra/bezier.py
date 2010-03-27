@@ -49,7 +49,7 @@ class CubicBezierCurve(object):
 
     def _get_curve_tangent(self, t):
         ''' classic, clear and slow implementation
-        Returns a numpy-vector T which defines the direction of the tangent.
+        Returns a vector T which defines the direction of the tangent.
         example: slope of tangent = (y) T[1]/ (x) T[0]
         position of tangent point is defined by the paramter t -> get_cuve_point_by_parameter()
         '''

@@ -5,9 +5,10 @@
 # Created: 26.03.2010
 
 
-import unittest
+import unittest2 as unittest
 
 from dxfwrite.algebra import CubicSpline
+from dxfwrite.curves import Spline
 
 expected = [(0.0, 0.0),
  (0.010310831479728222, 0.32375901937484741),
@@ -60,7 +61,7 @@ expected = [(0.0, 0.0),
  (4.9462337493896484, 2.6617558002471924),
  (5.0, 3.0)]
 
-class TestSpline(unittest.TestCase):
+class TestAlgebraCubicSpline(unittest.TestCase):
     def test_check_values(self):
         test_points = [(0.0, 0.0), (1., 2.), (3., 1.), (5., 3.)]
         spline = CubicSpline(test_points)
@@ -68,6 +69,38 @@ class TestSpline(unittest.TestCase):
         for p1, p2 in zip(result, expected):
             self.assertAlmostEqual(p1[0], p2[0], 6)
             self.assertAlmostEqual(p1[1], p2[1], 6)
+
+expected_dxf = u"  0\nPOLYLINE\n  6\nSOLID\n 62\n1\n  8\n0\n 66\n1\n 10\n0.0\n" \
+" 20\n0.0\n 30\n0.0\n 70\n8\n  0\nVERTEX\n  8\n0\n 10\n0.0\n 20\n0.0\n 30\n0.0\n" \
+"  0\nVERTEX\n  8\n0\n 10\n0.068847230952\n 20\n0.936126340936\n 30\n0.0\n  0\n" \
+"VERTEX\n  8\n0\n 10\n0.231724170207\n 20\n1.55032949111\n 30\n0.0\n  0\nVERTEX\n" \
+"  8\n0\n 10\n0.47565097908\n 20\n1.89263151751\n 30\n0.0\n  0\nVERTEX\n  8\n0\n" \
+" 10\n0.787647818886\n 20\n2.01305448714\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n" \
+"1.15473482225\n 20\n1.96162030184\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n" \
+"1.56393219616\n 20\n1.7883512954\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n" \
+"2.00226008644\n 20\n1.54326943386\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n" \
+"2.45673865957\n 20\n1.27639678767\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n" \
+"2.91438808202\n 20\n1.03775542726\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
+"3.36222847212\n 20\n0.877367354637\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
+"3.78727999646\n 20\n0.845254746947\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
+"4.1765627682\n 20\n0.991439630524\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
+"4.51709692288\n 20\n1.3659440758\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
+"4.79590259605\n 20\n2.01879015322\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
+"5.0\n 20\n3.0\n 30\n0.0\n  0\nSEQEND\n"
+
+class TestDXFSpline(unittest.TestCase):
+    def test_api(self):
+        test_points = [(0.0, 0.0), (1., 2.), (3., 1.), (5., 3.)]
+        spline = Spline(points=test_points, segments=32, color=1, layer="0",
+                        linetype='SOLID')
+        self.assertNotEqual(spline, None)
+
+    def test_implementation(self):
+        test_points = [(0.0, 0.0), (1., 2.), (3., 1.), (5., 3.)]
+        spline = Spline(points=test_points, segments=16, color=1, layer="0",
+                        linetype='SOLID')
+        result = spline.__dxf__()
+        self.assertEqual(expected_dxf, result)
 
 if __name__=='__main__':
     unittest.main()

@@ -107,8 +107,8 @@ class Bezier(object):
         tangent1 -- first control tangent as 2D vector 'left' of point
         tangent2 -- second control tangent as 2D vector 'right' of point, if
             omitted tangent2 = -tangent1
-        segments -- count of points to use for polyline approximation, count of
-            points from previous control point to this point.
+        segments -- count of line segments for polyline approximation, count of
+            line segments from previous control point to this point.
         """
         if tangent2 is None:
             tangent2 = (-tangent1[0], -tangent1[1])
@@ -118,7 +118,7 @@ class Bezier(object):
         if len(self.points)>1:
             for from_point, to_point in zip(self.points[:-1], self.points[1:]):
                 start_point = from_point[0]
-                start_tangent = from_point[3] # tangent2
+                start_tangent = from_point[2] # tangent2
                 end_point = to_point[0]
                 end_tangent = to_point[1] # tangent1
                 count = to_point[3]
@@ -133,7 +133,7 @@ class Bezier(object):
             polyline = segment.approximate()
             polyline['layer'] = self.layer
             polyline['color'] = self.color
-            polyline['linetyle'] = self.linetype
+            polyline['linetype'] = self.linetype
             polylines.append(polyline)
         return polylines
 

@@ -8,9 +8,9 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-from dxfwrite.engine import DXFEngine
-from dxfwrite.base import *
 from dxfwrite.const import *
+from dxfwrite.base import *
+from dxfwrite.engine import DXFEngine
 
 __version__ = "v0.2.0 - 2010.03.21"
 __author__ = "Manfred Moitzi (mozman)"

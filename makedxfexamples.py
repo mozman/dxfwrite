@@ -499,6 +499,24 @@ def colors_dxf(dxf, name):
             color_square(x1+120, y1, bgcolor=color3)
     drawing.save()
 
+def ellipse_dxf(dxf, name):
+    dwg = dxf.drawing(name)
+    for axis in [0.5, 0.75, 1., 1.5,  2., 3.]:
+        dwg.add(dxf.ellipse((0,0), 5., axis, segments=200))
+    dwg.add(dxf.line((-7, 0), (+7, 0), color=1, linetype='DASHDOT'))
+    dwg.add(dxf.line((0, -5), (0, +5), color=2, linetype='DASHDOT'))
+
+    for rotation in [0, 30, 45, 60, 90]:
+        dwg.add(dxf.ellipse((20,0), 5., 2., rotation=rotation, segments=100))
+
+    for startangle in [0, 30, 45, 60, 90]:
+        dwg.add(dxf.ellipse((40,0), 5., 2., startangle=startangle, endangle=startangle+90,
+                            rotation=startangle, segments=90))
+        dwg.add(dxf.ellipse((40,0), 5., 2., startangle=startangle+180, endangle=startangle+270,
+                            rotation=startangle, segments=90))
+
+    dwg.save()
+
 def main():
     empty_dxf(dxfwrite.DXFEngine, "example_empty.dxf")
     simple_dxf(dxfwrite.DXFEngine, "example_simple.dxf")
@@ -509,6 +527,7 @@ def main():
     polymesh_dxf(dxfwrite.DXFEngine, "example_polymesh.dxf")
     polyface_dxf(dxfwrite.DXFEngine, "example_polyface.dxf")
     table_dxf(dxfwrite.DXFEngine, "example_table.dxf")
+    ellipse_dxf(dxfwrite.DXFEngine, "example_ellipse.dxf")
 
 if __name__=='__main__':
     main()

@@ -16,6 +16,7 @@ from dxfwrite.entities import Insert, Block, Attdef, Attrib, Shape
 from dxfwrite.mtext import MText
 from dxfwrite.rect import Rectangle
 from dxfwrite.table import Table
+from dxfwrite.curves import Ellipse, Spline, Bezier, Clothoid
 
 from dxfwrite.tableentries import Linetype, LinePatternDef, Style, Layer
 from dxfwrite.tableentries import View, Viewport, UCS, AppID
@@ -703,3 +704,29 @@ class DXFEngine(object):
             has a priority of 50.
         """
         return Table(insert, nrows, ncols, default_grid)
+
+    @staticmethod
+    def ellipse(center, radiusx, radiusy, startangle=0., endangle=360.,
+                rotation=0., segments=100, **kwargs):
+        """
+        Create a new ellipse-entity, consiting of an approximation with a
+        polyline.
+
+        Arguments
+        ---------
+
+        center -- center point (xy- or xyz-tuple), z-axis is 0 by default
+        radiusx -- radius in x-axis (float)
+        radiusy -- radius in y-axis (float)
+        startangle -- in degree (float)
+        endangle -- in degree (float)
+        rotation -- angle between x-axis and ellipse-main-axis in degree (float)
+        segments -- count of line segments for polyline approximation
+
+        Common kwargs
+        -------------
+        linetype, color, layer
+        """
+        return Ellipse(center=center, radiusx=radiusx, radiusy=radiusy,
+                       startangle=startangle, endangle=endangle, rotation=rotation,
+                       segments=segments, **kwargs)

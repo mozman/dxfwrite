@@ -28,7 +28,7 @@ dimstyles
 """
 
 from math import radians, degrees, pi
-from vectormath import *
+from vector2d import *
 
 from dxfwrite import DXFList
 from dxfwrite.algebra import Ray2D

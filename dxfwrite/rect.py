@@ -11,7 +11,7 @@
 """
 
 import math
-from dxfwrite.vectormath import *
+from dxfwrite.vector2d import *
 from dxfwrite.util import rotate_2d
 
 import dxfwrite.const as const

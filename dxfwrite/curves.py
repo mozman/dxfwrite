@@ -7,7 +7,7 @@
 # License: GPLv3
 from math import sin, cos, radians
 
-from dxfwrite.vectormath import vadd
+from dxfwrite.vector2d import vadd
 import dxfwrite.const as const
 from dxfwrite import DXFList
 from dxfwrite.entities import Polyline

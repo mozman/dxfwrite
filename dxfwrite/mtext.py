@@ -13,8 +13,7 @@ RIGHT), rotation for an arbitrary (!) angle and mirror.
 """
 
 import math
-from dxfwrite.vectormath import *
-#from dxfwrite.util import rotate_2d
+from dxfwrite.vector2d import *
 
 import dxfwrite
 from dxfwrite.base import DXFList

@@ -49,7 +49,7 @@ consisting of basic R12 DXF-entities.
  * Ellipse (as POLYLINE)
  * Spline (cubic spline curve as POLYLINE)
  * Bezier (cubic bezier curve as POLYLINE)
- * Clothoid (as POLYLINE)
+ * Clothoid (Euler spiral as POLYLINE)
 
 Native DXF dimensions are not supported, because I don't know how this works,
 hints are welcome.

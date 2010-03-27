@@ -161,14 +161,14 @@ class Spline(object):
         return self._build_curve().__dxf__()
 
 class Clothoid(object):
-    def __init__(self, start=(0, 0), start_tangent=0., length=1., paramA=1.0,
+    def __init__(self, start=(0, 0), rotation=0., length=1., paramA=1.0,
                  mirrorx=False, mirrory=False, segments=100,
                  color=const.BYLAYER, layer='0', linetype=None):
         self.color = color
         self.layer = layer
         self.linetype = linetype
         self.start = start
-        self.start_tangent = float(start_tangent)
+        self.rotation = float(rotation)
         self.length = float(length)
         self.paramA = float(paramA)
         self.mirrorx = mirrorx
@@ -187,7 +187,7 @@ class Clothoid(object):
             return (x, y, zaxis)
 
         zaxis = 0. if len(self.start)<3 else self.start[2]
-        rotation = radians(self.start_tangent)
+        rotation = radians(self.rotation)
         clothoid = _ClothoidValues(self.paramA)
         points = []
         seg_length = self.length / self.segments

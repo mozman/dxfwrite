@@ -16,7 +16,7 @@ y(x) = y0 + x * slope in a cartesian coordinate system
 """
 
 import math
-from dxfwrite.util import equals_almost, normalize_angle, is_vertical_angle
+from dxfwrite.algebra import equals_almost, normalize_angle, is_vertical_angle
 
 __all__ = ['Ray2D', 'ParallelRaysError']
 

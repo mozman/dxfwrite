@@ -8,8 +8,8 @@
 
 import math
 
-from dxfwrite.util import equals_almost, distance, midpoint
-from dxfwrite.algebra import Ray2D
+from dxfwrite.vector2d import distance, midpoint
+from dxfwrite.algebra import Ray2D, equals_almost
 
 HALF_PI = math.pi / 2.
 

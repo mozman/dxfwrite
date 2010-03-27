@@ -4,13 +4,14 @@
 # Purpose: algebra lib to calculate with geometric forms
 # Created: 27.03.2010
 # License: GPLv3
+import math
 
+from dxfwrite.algebra.base import *
 from dxfwrite.algebra.ray import Ray2D, ParallelRaysError
 from dxfwrite.algebra.clothoid import Clothoid
 from dxfwrite.algebra.circle import Circle
 from dxfwrite.algebra.bezier import CubicBezierCurve
 from dxfwrite.algebra.cspline import CubicSpline
-
 
 __version__ = "v0.2 - 2010.03.27"
 __author__ = "Manfred Moitzi (mozman)"

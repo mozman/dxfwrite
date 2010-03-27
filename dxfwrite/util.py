@@ -48,6 +48,12 @@ def rotate_2d(point, angle):
     y = point[1] * math.cos(angle) + point[0] * math.sin(angle)
     return (x, y)
 
+def equals_almost(v1, v2, places=7):
+    """compare two float values
+       places: significant decimal places
+    """
+    return round(v1, places) == round(v2, places)
+
 def magnitude(vector):
     """ get magnitude (length) of vector """
     return sum([x**2 for x in vector ]) ** .5

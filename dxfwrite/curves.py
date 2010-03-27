@@ -5,13 +5,13 @@
 # Created: 26.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
-from math import sin, cos, radians
+from math import sin, cos, radians, fmod
 
 from dxfwrite.vector2d import vadd
 import dxfwrite.const as const
-from dxfwrite import DXFList
+from dxfwrite.base import DXFList
 from dxfwrite.entities import Polyline
-from dxfwrite.util import rotate_2d
+from dxfwrite.algebra import rotate_2d, equals_almost
 from dxfwrite.algebra import CubicSpline, CubicBezierCurve
 from dxfwrite.algebra import Clothoid as _ClothoidValues
 
@@ -25,22 +25,29 @@ class Ellipse(object):
         self.layer = layer
         self.linetype = linetype
         self.center = center
-        self.radiusx = radiusx
-        self.radiusy = radiusy
-        self.startangle = startangle
-        self.endangle = endangle
-        self.rotation = rotation
-        self.segments = segments
+        self.radiusx = float(radiusx)
+        self.radiusy = float(radiusy)
+        self.startangle = float(startangle)
+        self.endangle = float(endangle)
+        self.rotation = float(rotation)
+        self.segments = int(segments)
 
     def _build_curve(self):
         def curve_point(alpha):
             alpha = radians(alpha)
             point = (cos(alpha) * self.radiusx,
                      sin(alpha) * self.radiusy)
-            point = rotate_2d(point, self.rotation)
+            point = rotate_2d(point, radians(self.rotation))
             x, y = vadd(self.center, point)
             return (x, y, zaxis)
-        zaxis = 0. if len(self.start)<3 else self.start[2]
+
+        def normalize_angle(angle):
+            angle = fmod(angle, 360.)
+            if angle<0:
+                angle += 360.
+            return angle
+
+        zaxis = 0. if len(self.center)<3 else self.center[2]
         points = []
         delta = (self.endangle - self.startangle) / self.segments
         for segment in xrange(self.segments):
@@ -48,10 +55,13 @@ class Ellipse(object):
             points.append(curve_point(alpha))
         polyline = Polyline(points, color=self.color, layer=self.layer,
                             linetype=self.linetype)
+
+        if equals_almost(self.startangle, normalize_angle(self.endangle)):
+            polyline.close()
         return polyline
 
     def __dxf__(self):
-        self._build_curve().__dxf__()
+        return self._build_curve().__dxf__()
 
 class Bezier(object):
     class Segment(object):
@@ -102,7 +112,7 @@ class Bezier(object):
         """
         if tangent2 is None:
             tangent2 = (-tangent1[0], -tangent1[1])
-        self.points.append( (point, tangent1, tangent2, segments) )
+        self.points.append( (point, tangent1, tangent2, int(segments)) )
 
     def _build_bezier_segments(self):
         if len(self.points)>1:
@@ -128,7 +138,7 @@ class Bezier(object):
         return polylines
 
     def __dxf__(self):
-        self._build_curve().__dxf__()
+        return self._build_curve().__dxf__()
 
 class Spline(object):
     def __init__(self, points=[], segments=100, color=const.BYLAYER, layer='0',
@@ -137,7 +147,7 @@ class Spline(object):
         self.layer = layer
         self.linetype = linetype
         self.points = points
-        self.segments = segments
+        self.segments = int(segments)
 
     def _build_curve(self):
         spline = CubicSpline(self.points)
@@ -148,7 +158,7 @@ class Spline(object):
         return polyline
 
     def __dxf__(self):
-        self._build_curve().__dxf__()
+        return self._build_curve().__dxf__()
 
 class Clothoid(object):
     def __init__(self, start=(0, 0), start_tangent=0., length=1., paramA=1.0,
@@ -158,12 +168,12 @@ class Clothoid(object):
         self.layer = layer
         self.linetype = linetype
         self.start = start
-        self.start_tangent = start_tangent
-        self.length = length
-        self.paramA = paramA
+        self.start_tangent = float(start_tangent)
+        self.length = float(length)
+        self.paramA = float(paramA)
         self.mirrorx = mirrorx
         self.mirrory = mirrory
-        self.segments = segments
+        self.segments = int(segments)
 
     def _build_curve(self):
         def cpoint(distance):
@@ -182,9 +192,9 @@ class Clothoid(object):
         points = []
         seg_length = self.length / self.segments
         for segment in xrange(self.segments+1):
-            self.points.append(cpoint(seg_length * segment))
+            points.append(cpoint(seg_length * segment))
         return Polyline(points, color=self.color, layer=self.layer,
                         linetype=self.linetype)
 
     def __dxf__(self):
-        self._build_curve().__dxf__()
+        return self._build_curve().__dxf__()

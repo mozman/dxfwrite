@@ -12,9 +12,9 @@ import dxfwrite.const as const
 from dxfwrite import DXFList
 from dxfwrite.entities import Polyline
 from dxfwrite.util import rotate_2d
-from dxfwrite.cspline import CubicSpline
-from dxfwrite.clothoid import Clothoid as _ClothoidValues
-from dxfwrite.bezier import CubicBezierCurve
+from dxfwrite.algebra import CubicSpline, CubicBezierCurve
+from dxfwrite.algebra import Clothoid as _ClothoidValues
+
 
 class Ellipse(object):
     def __init__(self, center=(0., 0., 0.), radiusx=1.0, radiusy=1.0,

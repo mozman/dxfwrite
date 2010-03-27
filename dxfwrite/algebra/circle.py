@@ -2,14 +2,13 @@
 #coding:utf-8
 # Author:  mozman
 # Purpose: 2d circle calculations
-# module belongs to package: cadlib.py
+# module belongs to package dxfwrite
 # Created: 28.02.2010
 # License: GPL
 
 import math
 
-from dxfwrite.util import equals_almost
-from dxfwrite.vectormath import distance, midpoint
+from dxfwrite.util import equals_almost, distance, midpoint
 from dxfwrite.algebra import Ray2D
 
 HALF_PI = math.pi / 2.

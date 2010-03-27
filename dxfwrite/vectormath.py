@@ -2,7 +2,7 @@
 #coding:utf-8
 # Author:  mozman
 # Purpose: 2d vector math
-# module belongs to package: dxfwrite.py
+# module belongs to package dxfwrite
 # Created: 16.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
@@ -13,7 +13,7 @@
 from math import hypot, atan2, sin, cos
 
 def vector2d(vector):
-    """ return a 2d point """
+    """ return a 2d vector """
     return (float(vector[0]), float(vector[1]))
 
 def vector2angle(vector):

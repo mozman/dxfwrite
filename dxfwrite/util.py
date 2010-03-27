@@ -9,6 +9,10 @@
 
 import math
 
+HALF_PI = math.pi / 2.
+THREE_PI_HALF = 1.5 * math.pi
+DOUBLE_PI = math.pi * 2.
+
 def truecolor(color_tuple=(0, 0, 0)):
     red, green, blue = color_tuple
     return ((red&255) << 16) + ((green&255) << 8) + (blue&255)
@@ -53,6 +57,82 @@ def equals_almost(v1, v2, places=7):
        places: significant decimal places
     """
     return round(v1, places) == round(v2, places)
+
+def normalize_angle(angle):
+    """ return an angle between 0 and 2*pi """
+    angle = math.fmod(angle, DOUBLE_PI)
+    if angle < 0:
+        angle += DOUBLE_PI
+    return angle
+
+def is_vertical_angle(angle, places=7):
+    """ returns True for 1/2pi and 3/2pi """
+    angle = normalize_angle(angle)
+    return (equals_almost(angle, HALF_PI, places) or
+            equals_almost(angle, THREE_PI_HALF, places))
+
+def get_angle(p1, p2):
+    """calc angle between the line p1-p2 and the x-axis
+    input: points as tuples
+    result: angle in radians
+    """
+    dx = p1[0] - p2[0]
+    dy = p1[1] - p2[1]
+    return math.atan2(dy, dx)
+
+def distance(p1, p2):
+    """calc distance between p1 and p2
+    """
+    dx = p1[0] - p2[0]
+    dy = p1[1] - p2[1]
+    try:
+        dz = p1[2] - p2[2]
+    except IndexError:
+        dz = 0.
+    return (dx**2 + dy**2 + dz**2) ** .5
+
+def midpoint(p1, p2):
+        """ calculates the middle point between p1 and p2
+        input: point as Point2D
+        return: Point2D
+        """
+        x = (p1[0] + p2[0]) / 2.0
+        y = (p1[1] + p2[1]) / 2.0
+        try:
+            z = (p1[2] + p2[2]) / 2.0
+        except IndexError:
+            z = 0.
+        return (x, y, z)
+
+def right_of_line(point, p1, p2):
+    """ True if the point self is right of the line p1 -> p2
+    """
+    return not left_of_line(point, p1, p2)
+
+def left_of_line(point, p1, p2):
+    """ True if the point self is left of the line p1 -> p2
+    """
+    # check if a and b are on the same vertical line
+    if p1[0] == p2[0]:
+        # compute # on which site of the line self should be
+        should_be_left = p1[1] < p2[1]
+        if should_be_left:
+            return point[0] < p1[0]
+        else:
+            return point[0] > p1[0]
+    else:
+        # get pitch of line
+        pitch = (p2[1] - p1[1]) / (p2[0] - p1[0])
+
+        # get y-value at c's x-position
+        y = pitch * (point[0] - p1[0]) + p1[1]
+
+        # compute if point should be above or below the line
+        should_be_above = p1[0] < p2[0]
+        if should_be_above :
+            return point[1] > y
+        else:
+            return point[1] < y
 
 def magnitude(vector):
     """ get magnitude (length) of vector """

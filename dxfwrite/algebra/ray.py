@@ -16,6 +16,7 @@ y(x) = y0 + x * slope in a cartesian coordinate system
 """
 
 import math
+from dxfwrite.util import equals_almost, normalize_angle, is_vertical_angle
 
 __all__ = ['Ray2D', 'ParallelRaysError']
 
@@ -173,22 +174,3 @@ class Ray2D(object):
         cross_point = self.intersect(other_ray)
         alpha = (self.angle + other_ray.angle) / 2.0
         return Ray2D(cross_point, angle=alpha)
-
-#---- 2d utility functions
-
-def equals_almost(value1, value2, places=7):
-    """ compares two floats with places fraction numbers """
-    return round(value1, places) == round(value2, places)
-
-def normalize_angle(angle):
-    """ return an angle between 0 and 2*pi """
-    angle = math.fmod(angle, DOUBLE_PI)
-    if angle < 0:
-        angle += DOUBLE_PI
-    return angle
-
-def is_vertical_angle(angle, places=7):
-    """ returns True for 1/2pi and 3/2pi """
-    angle = normalize_angle(angle)
-    return (equals_almost(angle, HALF_PI, places) or
-            equals_almost(angle, THREE_PI_HALF, places))

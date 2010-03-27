@@ -31,7 +31,7 @@ from math import radians, degrees, pi
 from vectormath import *
 
 from dxfwrite import DXFList
-from dxfwrite.ray import Ray2D
+from dxfwrite.algebra import Ray2D
 from dxfwrite.entities import Line, Text, Block, Insert, Solid, Arc, Circle
 import dxfwrite.const as const
 

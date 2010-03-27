@@ -5,11 +5,12 @@
 # Created: 27.03.2010
 # License: GPLv3
 
+from dxfwrite.algebra.ray import Ray2D, ParallelRaysError
 from dxfwrite.algebra.clothoid import Clothoid
 from dxfwrite.algebra.circle import Circle
 from dxfwrite.algebra.bezier import CubicBezierCurve
 from dxfwrite.algebra.cspline import CubicSpline
-from dxfwrite.algebra.ray import *
+
 
 __version__ = "v0.2 - 2010.03.27"
 __author__ = "Manfred Moitzi (mozman)"

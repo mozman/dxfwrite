@@ -7,7 +7,8 @@
 
 import unittest
 
-from dxfwrite.cspline import CubicSpline
+from dxfwrite.algebra import CubicSpline
+
 expected = [(0.0, 0.0),
  (0.010310831479728222, 0.32375901937484741),
  (0.030277278274297714, 0.6140977144241333),

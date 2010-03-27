@@ -10,7 +10,7 @@
 import unittest, math
 
 HALF_PI = math.pi / 2.
-from dxfwrite.ray import Ray2D, ParallelRaysError
+from dxfwrite.algebra import Ray2D, ParallelRaysError
 
 class Test_Ray2D(unittest.TestCase):
     def test_init_with_slope(self):

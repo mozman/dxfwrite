@@ -7,8 +7,8 @@
 import unittest, math
 
 from dxfwrite.util import equals_almost
-from dxfwrite.algebra.ray import Ray2D
-from dxfwrite.algebra.circle import Circle
+from dxfwrite.algebra import Ray2D
+from dxfwrite.algebra import Circle
 
 HALF_PI = math.pi / 2.
 

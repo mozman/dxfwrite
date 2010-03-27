@@ -684,7 +684,7 @@ class DXFEngine(object):
     @staticmethod
     def table(insert, nrows, ncols, default_grid=True):
         """
-        Table object like a HTML-Table, buildup with DXF R12 entities.
+        Table object like a HTML-Table, buildup with basic DXF R12 entities.
 
         Cells can contain Multiline-Text or DXF-BLOCKs, or you can create your own
         cell-type by extending the CustomCell object.
@@ -779,3 +779,28 @@ class DXFEngine(object):
         linetype, color, layer
         """
         return Bezier(**kwargs)
+
+    @staticmethod
+    def clothoid(start=(0, 0), rotation=0., length=1., paramA=1.0,
+                 mirrorx=False, mirrory=False, segments=100, **kwargs):
+        """
+        Create a new clothoid-entity, consisting of an approximation with a
+        polyline. see http://en.wikipedia.org/wiki/Euler_spiral
+
+        Arguments
+        ---------
+
+        start -- insert point as 2D points (float-tuples)
+        rotation -- in dregrees (float)
+        length -- length of curve in drawing units (float)
+        paramA -- clothoid parameter A
+        mirrorx -- True or False
+        mirrory -- True or False
+        segments -- count of line segments for polyline approximation
+
+        Common kwargs
+        -------------
+        linetype, color, layer
+        """
+        return Clothoid(start=(0, 0), rotation=0., length=1., paramA=1.0,
+                 mirrorx=False, mirrory=False, segments=100, **kwargs)

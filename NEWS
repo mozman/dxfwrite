@@ -1,5 +1,7 @@
 Version 0.3.0 - ???
-  * new: acadctb.py to read, write and create AutoCAD ctb-files
+  * new: subpackage algebra: circle, ray, clothoid, cspline, bezier (27.03.2010)
+  * new: Spline, Bezier, Clothoid and Ellipse - curves (27.03.2010)
+  * new: acadctb.py to read, write and create AutoCAD ctb-files (25.03.2010)
   * splitted buildups.py into mtext.py and rect.py
 Version 0.2.0 - 21 March 2010
   * Alpha status - api may change

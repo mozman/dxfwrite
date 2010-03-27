@@ -15,6 +15,7 @@ from dxfwrite.util import rotate_2d
 from dxfwrite.algebra import CubicSpline, CubicBezierCurve
 from dxfwrite.algebra import Clothoid as _ClothoidValues
 
+__all__ = ['Ellipse', 'Bezier', 'Spline', 'Clothoid']
 
 class Ellipse(object):
     def __init__(self, center=(0., 0., 0.), radiusx=1.0, radiusy=1.0,

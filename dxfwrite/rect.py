@@ -12,7 +12,7 @@
 
 import math
 from dxfwrite.vector2d import *
-from dxfwrite.util import rotate_2d
+from dxfwrite.algebra import rotate_2d
 
 import dxfwrite.const as const
 from dxfwrite.base import DXFList

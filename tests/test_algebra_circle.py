@@ -4,13 +4,10 @@
 # Purpose: test algebra.circle
 # Created: 27.03.2010
 
-import unittest, math
+import unittest
+import math
 
-from dxfwrite.util import equals_almost
-from dxfwrite.algebra import Ray2D
-from dxfwrite.algebra import Circle
-
-HALF_PI = math.pi / 2.
+from dxfwrite.algebra import equals_almost, Ray2D, Circle, HALF_PI
 
 ## unit tests
 class Test_Circle(unittest.TestCase):

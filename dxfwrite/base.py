@@ -2,13 +2,13 @@
 #coding:utf-8
 # Author:  mozman
 # Purpose: base types
-# module belongs to package: dxfwrite.py
+# module belongs to package dxfwrite
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-
 from itertools import izip
+from dxfwrite.vector3d import cross_product, unit_vector
 
 def dxfstr(obj):
     """call the __dxf__() protocol :
@@ -18,7 +18,6 @@ def dxfstr(obj):
     '  0\nSECTION\n  2\nHEADER\n  0\nENDSEC\n'
     """
     return obj.__dxf__()
-
 
 class DXFValidationError(Exception):
     pass
@@ -289,3 +288,22 @@ class AttribDef(object):
         self.group_code = group_code
         self.factory = factory
         self.priority = priority
+
+_LIMIT = 1./64.
+_WY = (0., 1., 0.)
+_WZ = (0., 0., 1.)
+
+def get_OCS(zvector):
+    """Get the Object-Coordinate-System (a.k.a. ECS Entity-C-S).
+
+    The arbitrary axis algorithm is used by AutoCAD internally to implement
+    the arbitrary but consistent generation of object coordinate systems for all
+    entities which use object coordinates.
+    """
+    az = unit_vector(zvector)
+    if (abs(az[0]) < _LIMIT) and (abs(az[1]) < _LIMIT):
+        ax = unit_vector(cross_product(_WY, az))
+    else:
+        ax = unit_vector(cross_product(_WZ, az))
+    ay = unit_vector(cross_product(az, ax))
+    return (ax, ay, az) # 3 unit-vectors!

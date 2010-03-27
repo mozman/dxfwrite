@@ -46,6 +46,10 @@ consisting of basic R12 DXF-entities.
  * ArcDimension
  * RadialDimension
  * Table (like a HTML table)
+ * Ellipse (as POLYLINE)
+ * Spline (cubic spline curve as POLYLINE)
+ * Bezier (cubic bezier curve as POLYLINE)
+ * Clothoid (as POLYLINE)
 
 Native DXF dimensions are not supported, because I don't know how this works,
 hints are welcome.
@@ -59,16 +63,18 @@ like solid models are binary encoded and not documented by Autodesk.
 My focus now lies in creating composite elements like MText, Table and various
 dimension lines.
 
+Emulated entities from R13 and later:
+ * MTEXT (R13) ... emulated as composite entity MText
+ * ELLIPSE (R13) ... approximated by Ellipse (as POLYLINE)
+ * SPLINE (R13) ... approximated by Spline (as POLYLINE)
+ * LWPOLYLINE (R13) ... use POLYLINE
+ * TABLE (R2005) ... emulated as composite entity Table
+
 Missing from R13 and later:
- * MTEXT (R13) ... emulated as MText buildup
- * ELLIPSE (R13) ... approximated by POLYLINE
- * SPLINE (R13) ... approximated by POLYLINE
- * LWPOLYLINE ... POLYLINE
  * BODY, REGION, 3DSOLID (R13) binary encoded and not documented
  * IMAGE, HATCH, MLINE, TOLERANCE, LEADER, XLINE, RAY (R13)
  * OLEFRAME and PROXY entities (R13)
  * WIPEOUT (R2000)
- * TABLE (R2005) ... emulated as Table buildup
  * HELIX, LIGHT, MLEADER, SECTION, UNDERLAY (R2008)
  * SURFACE (R2008) binary encoded and not documented
  * SUN (R2009)

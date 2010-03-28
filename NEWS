@@ -1,4 +1,4 @@
-Version 0.3.0 - ???
+Version 0.3.0b1 - 28 March 2010
   * new: subpackage algebra: circle, ray, clothoid, cspline, bezier (27.03.2010)
   * new: Spline, Bezier, Clothoid and Ellipse - curves (27.03.2010)
   * new: acadctb.py to read, write and create AutoCAD ctb-files (25.03.2010)

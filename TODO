@@ -1,8 +1,32 @@
-Goals for release:
-------------------
-Beta1 0.3.0
+Goals for release
+=================
+
+Release v0.5.0
+--------------
+ * Pattern hatch for polygons with more than 4 vertices
+
+Release v0.4.0
+--------------
+ * Solid hatch for polygons with more than 4 vertices
+
+Release v0.3.0
+--------------
+
+Release candidate v0.3.0rc
+--------------------------
+ * bug fixes
+
+Beta2 v0.3.0b2
+--------------
+ * documentation
+ * freeze api
+ * create allplan cfg files (allplancfg.py)
+
+Beta1 v0.3.0b1
+--------------
  * Spline (polyline)
  * Bezier (polyline)
+ * Clothoid (Euler spiral as polyline)
  * Ellipse (polyline)
  * create acad ctb files (acadctb.py) to exactly define colors and lineweights
  * create allplan cfg files (allplancfg.py) to exactly define colors and lineweights

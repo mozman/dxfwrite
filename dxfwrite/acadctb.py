@@ -296,6 +296,11 @@ class UserStyles(object):
         """
         return self.lineweights[index]
 
+    def save(self, filename):
+        """Save ctb-file to <filename>."""
+        with open(filename, 'wb') as fileobj:
+            self.write(fileobj)
+
     def write(self, fileobj):
         """Create and compress the ctb-file to <fileobj>."""
         memfile = StringIO()
@@ -383,6 +388,11 @@ def read(fileobj):
     styles = UserStyles()
     styles.parse(content)
     return styles
+
+def load(filename):
+    """Load the ctb-file <filename>."""
+    with open(filename, 'rb') as fileobj:
+        return read(fileobj)
 
 def _decompress(fileobj):
     """Read and decompress the file content of the file-like object <fileobj>."""

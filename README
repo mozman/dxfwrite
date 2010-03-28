@@ -1,4 +1,4 @@
-========
+
 dxfwrite
 ========
 
@@ -40,24 +40,40 @@ not supported DXF R12 entities
 emulated entities from DXF R13 and later
 ----------------------------------------
  * MTEXT (R13) ... emulated as composite entity MText
- * ELLIPSE (R13) ... approximated by Ellipse (as POLYLINE)
- * SPLINE (R13) ... approximated by Spline (as POLYLINE)
+ * ELLIPSE (R13) ... approximated by Ellipse
+ * SPLINE (R13) ... approximated by Spline
  * LWPOLYLINE (R13) ... use POLYLINE
  * TABLE (R2005) ... emulated as composite entity Table
 
 composite entities
 ------------------
-consisting of basic R12 DXF-entities.
- * MText
+ * MText -- multi line text
  * LinearDimension
  * AngularDimension
  * ArcDimension
  * RadialDimension
- * Table (like a HTML table)
- * Ellipse (as POLYLINE)
- * Spline (cubic spline curve as POLYLINE)
- * Bezier (cubic bezier curve as POLYLINE)
- * Clothoid (Euler spiral as POLYLINE)
+ * Table -- text and blockrefs containing table like a HTML-table
+ * Ellipse -- approximated as POLYLINE
+ * Spline -- cubic spline curve through breakpoints **without** additional control
+   points, approximated as POLYLINE
+ * Bezier -- cubic bezier curve through breakpoints **with** additional control
+   points, approximated as POLYLINE
+ * Clothoid -- Euler spiral, approximated as POLYLINE
+
+read/write AutoCAD ctb-files
+----------------------------
+The module ``acadctb`` provides the ability to read and write AutoCAD ctb-files.
+With ctb-files you can assign a new color or lineweight to a dxf-color-index for
+plotting or printing, but this has to be supported by the used application.
+
+a simple example::
+
+    from dxfwrite import acadctb
+    ctb = acadctb.load('test.ctb')
+    style1 = ctb.get_style(1) # dxf color index (1 .. 255)
+    style1.set_color(23, 177, 68) # set rgb values (0..255)
+    style1.set_lineweight(0.7)
+    ctb.save('new.ctb')
 
 Installation
 ============

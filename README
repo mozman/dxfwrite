@@ -15,8 +15,8 @@ a simple example::
     drawing.add(dxf.text('Test', insert=(0, 0.2), layer='TEXTLAYER')
     drawing.save()
 
-supported R12 entities
-----------------------
+supported DXF R12 entities
+--------------------------
  * ARC
  * ATTDEF
  * ATTRIB
@@ -33,9 +33,17 @@ supported R12 entities
  * TEXT
  * VERTEX (only for internal use, see Polyline, Polyface and Polymesh objects)
 
-not supported R12 entities
---------------------------
+not supported DXF R12 entities
+------------------------------
  * DIMENSION
+
+emulated entities from DXF R13 and later
+----------------------------------------
+ * MTEXT (R13) ... emulated as composite entity MText
+ * ELLIPSE (R13) ... approximated by Ellipse (as POLYLINE)
+ * SPLINE (R13) ... approximated by Spline (as POLYLINE)
+ * LWPOLYLINE (R13) ... use POLYLINE
+ * TABLE (R2005) ... emulated as composite entity Table
 
 composite entities
 ------------------
@@ -50,35 +58,6 @@ consisting of basic R12 DXF-entities.
  * Spline (cubic spline curve as POLYLINE)
  * Bezier (cubic bezier curve as POLYLINE)
  * Clothoid (Euler spiral as POLYLINE)
-
-Native DXF dimensions are not supported, because I don't know how this works,
-hints are welcome.
-
-My first goal was to support newer DXF-Versions as R12, because R12 is well
-supported by SDXF (stani). But this trail ends with the result that AutoCAD
-crashes on opening the dxf drawings (error messages were useless). So I decided
-to stay at DXF R12, and there are not enough usefull new DXF-Entities since R13
-to waste my time for supporting newer DXF versions. The most interesting objects
-like solid models are binary encoded and not documented by Autodesk.
-My focus now lies in creating composite elements like MText, Table and various
-dimension lines.
-
-Emulated entities from R13 and later:
- * MTEXT (R13) ... emulated as composite entity MText
- * ELLIPSE (R13) ... approximated by Ellipse (as POLYLINE)
- * SPLINE (R13) ... approximated by Spline (as POLYLINE)
- * LWPOLYLINE (R13) ... use POLYLINE
- * TABLE (R2005) ... emulated as composite entity Table
-
-Missing from R13 and later:
- * BODY, REGION, 3DSOLID (R13) binary encoded and not documented
- * IMAGE, HATCH, MLINE, TOLERANCE, LEADER, XLINE, RAY (R13)
- * OLEFRAME and PROXY entities (R13)
- * WIPEOUT (R2000)
- * HELIX, LIGHT, MLEADER, SECTION, UNDERLAY (R2008)
- * SURFACE (R2008) binary encoded and not documented
- * SUN (R2009)
- * SUBDIVISION (R2010)
 
 Installation
 ============

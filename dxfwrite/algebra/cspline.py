@@ -20,10 +20,13 @@ class CubicSpline(object):
         self.count = len(points)
         self.t = self._get_t_array(points)
 
-    def approximate(self, count):
-        """Get <count> points on curve as list of xy-tuples."""
-        return izip(self._cubic_spline(_coords(self.breakpoints, 0), count), # x-coords
-                    self._cubic_spline(_coords(self.breakpoints, 1), count)) # y-coords
+    def approximate(self, segments):
+        """Approximate spline curve with  <segments> line-segments.
+
+        Generates <segments>+1 2D points (float, float).
+        """
+        return izip(self._cubic_spline(_coords(self.breakpoints, 0), segments), # x-coords
+                    self._cubic_spline(_coords(self.breakpoints, 1), segments)) # y-coords
 
     def _create_array(self):
         return array('f', (0.0 for i in xrange(self.count)))

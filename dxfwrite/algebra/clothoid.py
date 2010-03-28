@@ -9,8 +9,8 @@
 import math
 
 class Clothoid(object):
-    """This object represents a clothoid for parameter <paramA>.
-    It always starts at the coordinate sys origin=0, 0.
+    """This object represents a clothoid (a.k.a. Euler spiral) for parameter
+    <paramA>. The curve always starts at the coordinate system origin = (0, 0).
     """
     def __init__(self, paramA=1.0):
         self.A = paramA # Clothiod Parameter A
@@ -39,6 +39,16 @@ class Clothoid(object):
                 term(17, 16, 175472640.)
             self.coords[L] = (x, y)
         return self.coords[L]
+
+    def approximate(self, length, segments):
+        """Approximate curve of <length> with <segments> line-segments.
+
+        Generates <segments>+1 2D points (float, float).
+        """
+        delta_l = float(length) / float(segments)
+        yield (0., 0.)
+        for index in xrange(1, segments+1):
+            yield self.get_xy(delta_l * index)
 
     def get_center(self, L):
         """Get center point of circle at point L."""

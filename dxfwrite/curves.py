@@ -9,7 +9,7 @@ from math import sin, cos, radians, fmod
 
 from dxfwrite.vector2d import vadd
 import dxfwrite.const as const
-from dxfwrite.base import DXFList
+#from dxfwrite.base import DXFList
 from dxfwrite.entities import Polyline
 from dxfwrite.algebra import rotate_2d, equals_almost
 from dxfwrite.algebra import CubicSpline, CubicBezierCurve
@@ -79,11 +79,7 @@ class Bezier(object):
                 vadd(self.end, self.end_tangent),
                 self.end ]
             bezier = CubicBezierCurve(control_points)
-            bezier_points = []
-            delta = 1. / self.segments
-            for param in xrange(self.segments+1): # [0 .. 1]
-                bezier_points.append(bezier.get_point(param * delta))
-            return Polyline(bezier_points)
+            return bezier.approximate(self.segments)
 
     def __init__(self, color=const.BYLAYER, layer='0', linetype=None):
         self.color = color
@@ -91,7 +87,7 @@ class Bezier(object):
         self.linetype = linetype
         self.points = []
 
-    def start_point(self, point, tangent):
+    def start(self, point, tangent):
         """Defines the start point and the start tangent.
 
         point -- 2D start point
@@ -100,7 +96,7 @@ class Bezier(object):
         """
         self.points.append( (point, None, tangent, None) )
 
-    def append_point(self, point, tangent1, tangent2=None, segments=20):
+    def append(self, point, tangent1, tangent2=None, segments=20):
         """Append a control point with two control tangents.
 
         point -- the control point as 2D point
@@ -128,14 +124,12 @@ class Bezier(object):
             raise ValueError('Tow or more points needed!')
 
     def _build_curve(self):
-        polylines = DXFList()
+        polyline = Polyline(layer=self.layer, color=self.color,
+                            linetype=self.linetype)
         for segment in self._build_bezier_segments():
-            polyline = segment.approximate()
-            polyline['layer'] = self.layer
-            polyline['color'] = self.color
-            polyline['linetype'] = self.linetype
-            polylines.append(polyline)
-        return polylines
+            points = segment.approximate()
+            polyline.add_vertices(points)
+        return polyline
 
     def __dxf__(self):
         return self._build_curve().__dxf__()
@@ -176,24 +170,21 @@ class Clothoid(object):
         self.segments = int(segments)
 
     def _build_curve(self):
-        def cpoint(distance):
-            point = clothoid.get_xy(distance)
-            if self.mirrorx:
-                point[1] = -point[1]
-            if self.mirrory:
-                point[0] = -point[0]
-            point = rotate_2d(point, rotation)
-            x, y = vadd(self.start, point)
-            return (x, y, zaxis)
+        def transform(points):
+            for point in points:
+                if self.mirrorx:
+                    point = (point[0], -point[1])
+                if self.mirrory:
+                    point = (-point[0], point[1])
+                point = rotate_2d(point, rotation)
+                x, y = vadd(self.start, point)
+                yield (x, y, zaxis)
 
         zaxis = 0. if len(self.start)<3 else self.start[2]
         rotation = radians(self.rotation)
         clothoid = _ClothoidValues(self.paramA)
-        points = []
-        seg_length = self.length / self.segments
-        for segment in xrange(self.segments+1):
-            points.append(cpoint(seg_length * segment))
-        return Polyline(points, color=self.color, layer=self.layer,
+        points = clothoid.approximate(self.length, self.segments)
+        return Polyline(transform(points), color=self.color, layer=self.layer,
                         linetype=self.linetype)
 
     def __dxf__(self):

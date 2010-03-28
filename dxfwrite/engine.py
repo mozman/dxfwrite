@@ -802,5 +802,6 @@ class DXFEngine(object):
         -------------
         linetype, color, layer
         """
-        return Clothoid(start=(0, 0), rotation=0., length=1., paramA=1.0,
-                 mirrorx=False, mirrory=False, segments=100, **kwargs)
+        return Clothoid(start=start, rotation=rotation, length=length,
+                        paramA=paramA, mirrorx=mirrorx, mirrory=mirrory,
+                        segments=segments, **kwargs)

@@ -32,6 +32,13 @@ class CubicBezierCurve(object):
             self._points[position] = self._get_curve_point(position)
         return self._points[position]
 
+    def approximate(self, segments):
+        delta_t = 1. / segments
+        yield self._cpoints[0]
+        for segment in xrange(1, segments):
+            yield self.get_point(delta_t*segment)
+        yield self._cpoints[3]
+
     def _check(self, position):
         if not(0 <= position <= 1.):
             raise ValueError("position not in range [0 to 1]")

@@ -537,15 +537,33 @@ def bezier_dxf(dxf, name):
     dwg = dxf.drawing(name)
     bezier = dxf.bezier(color=4)
     dwg.add(bezier)
-    bezier.start_point((2, 4), tangent=(0, 2))
+    bezier.start((2, 4), tangent=(0, 2))
     draw_control_point((2, 4), (0, 2))
-    bezier.append_point((6, 7), tangent1=(-2, 0), tangent2=(1, 2))
+    bezier.append((6, 7), tangent1=(-2, 0), tangent2=(1, 2))
     draw_control_point((6, 7), (-2, 0), (1, 2))
-    bezier.append_point((12, 5), tangent1=(-2, 0)) # tangent2 = -tangent1 = (+2, 0)
+    bezier.append((12, 5), tangent1=(-2, 0)) # tangent2 = -tangent1 = (+2, 0)
     draw_control_point((12, 5), (-2, 0), (2, 0))
     # for last point tangent2 is meaningless
-    bezier.append_point((16, 9), tangent1=(-0.5, -3))
+    bezier.append((16, 9), tangent1=(-0.5, -3))
     draw_control_point((16, 9), (-0.5, -3))
+    dwg.save()
+
+def clothoid_dxf(dxf, name):
+    def four_c(A, length, rotation):
+        dwg.add(dxf.clothoid(start=(2, 2), length=length, paramA=A,
+                             rotation=rotation, color=1))
+        dwg.add(dxf.clothoid(start=(2, 2), mirrorx=True, length=length, paramA=A,
+                             rotation=rotation, color=2))
+        dwg.add(dxf.clothoid(start=(2, 2),mirrory=True, length=length, paramA=A,
+                             rotation=rotation, color=3))
+        dwg.add(dxf.clothoid(start=(2, 2),mirrorx=True, mirrory=True, length=length, paramA=A,
+                             rotation=rotation,color=4))
+
+    dwg = dxf.drawing(name)
+    dwg.add(dxf.line((-20,0), (20, 0), linetype="DASHDOT2"))
+    dwg.add(dxf.line((0, -20), (0, 20), linetype="DASHDOT"))
+    for rotation in [0, 30, 45, 60, 75, 90]:
+        four_c(10., 25, rotation)
     dwg.save()
 
 def main():
@@ -561,6 +579,7 @@ def main():
     ellipse_dxf(dxfwrite.DXFEngine, "example_ellipse.dxf")
     spline_dxf(dxfwrite.DXFEngine, "example_spline.dxf")
     bezier_dxf(dxfwrite.DXFEngine, "example_bezier.dxf")
+    clothoid_dxf(dxfwrite.DXFEngine, "example_clothoid.dxf")
 
 if __name__=='__main__':
     main()

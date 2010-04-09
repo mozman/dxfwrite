@@ -425,7 +425,7 @@ class DXFEngine(object):
         return Insert(blockname=blockname, insert=insert, **kwargs)
 
     @staticmethod
-    def attdef(text, insert=(0., 0.), **kwargs):
+    def attdef(tag, insert=(0., 0.), **kwargs):
         """
         Create a new attribute definition, used in block-definitions.
 
@@ -456,7 +456,7 @@ class DXFEngine(object):
         linetype, color, layer, elevation, thickness, paper_space,
         extrusion_direction (see doc-string DXFEngine)
         """
-        return Attdef(text=text, insert=insert, **kwargs)
+        return Attdef(tag=tag, insert=insert, **kwargs)
 
     @staticmethod
     def attrib(text, insert=(0., 0.), **kwargs):

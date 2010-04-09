@@ -380,7 +380,7 @@ class Insert(_Entity):
     def name(self):
         return 'INSERT'
 
-    def add(self, attrib, relative=False):
+    def add(self, attrib, relative=True):
         """ add attributes to a block reference. The position in attrib is
         absolute in WCS, or relative to the block origin (rotation is relative
         to the block x-axis).
@@ -392,7 +392,7 @@ class Insert(_Entity):
             the dxf attrib object
 
         relative
-            Insert attrib relative to the block origin (0,0,0), this is perhaps
+            Insert attrib relative to the block origin (0, 0, 0), this is perhaps
             not the insert point of the block!
             The relative position will be taken from the attrib.
         """

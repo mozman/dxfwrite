@@ -18,18 +18,22 @@ class Clothoid(object):
         self.coords = {} # coordinates cache
 
     def get_radius(self, L):
-        """Get radius of circle at distance L."""
+        """Get radius of circle at distance <L>."""
         if L > 0.:
             return self.powersA[2] / L
         else :
             return 0. # radius = infinite
 
     def get_tau(self, L):
-        """Get tangent angle at distance L in radians."""
+        """Get tangent angle at distance <L> in radians."""
         return L**2 / (2. * self.powersA[2])
 
+    def get_L(self, radius):
+        """Get distance L from origin for <radius>."""
+        return self.powersA[2] / float(radius)
+
     def get_xy(self, L):
-        """Get xy-coordinates of curve point at distance L."""
+        """Get xy-coordinates of curve point at distance <L>."""
         def term(powerL, powerA, const):
             return L**powerL/(const * self.powersA[powerA])
         if L not in self.coords:

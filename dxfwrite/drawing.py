@@ -6,7 +6,13 @@
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+"""
+Provides the Drawing-Object.
 
+The Drawing-object manages all the necessary sections, like header, tables and
+blocks. The tables-attribute contains the layers, styles, linetypes and other
+tables.
+"""
 from cStringIO import StringIO
 
 from dxfwrite import DXFEngine

@@ -7,6 +7,8 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 """
+MText -- MultiLine-Text-Entity, composite with simple TEXT-Entities.
+
 MTEXT was introduced in R13, so this is a replacement with multiple simple
 TEXT entities. Supports valign (TOP, MIDDLE, BOTTOM), halign (LEFT, CENTER,
 RIGHT), rotation for an arbitrary (!) angle and mirror.

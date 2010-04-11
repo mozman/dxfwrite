@@ -14,6 +14,7 @@ from dxfwrite.entities import Line, Point, Solid, Face3D, Text, Arc, Circle
 from dxfwrite.entities import Trace, Polyline, Polymesh, Polyface
 from dxfwrite.entities import Insert, Block, Attdef, Attrib, Shape
 from dxfwrite.mtext import MText
+from dxfwrite.insert2 import Insert2
 from dxfwrite.rect import Rectangle
 from dxfwrite.table import Table
 from dxfwrite.curves import Ellipse, Spline, Bezier, Clothoid
@@ -411,7 +412,7 @@ class DXFEngine(object):
         xscale -- x-scale factor (float), default=1.
         yscale -- y-scale factor (float), default=1.
         zscale -- z-scale factor (float), default=1.
-        rotation -- rotiation angle in degree (float), default=0.
+        rotation -- rotation angle in degree (float), default=0.
         columns -- column count (int), default=1
         rows -- row count (int), default=1
         colspacing -- column spacing (float), default=0.
@@ -805,3 +806,32 @@ class DXFEngine(object):
         return Clothoid(start=start, rotation=rotation, length=length,
                         paramA=paramA, mirrorx=mirrorx, mirrory=mirrory,
                         segments=segments, **kwargs)
+
+    @staticmethod
+    def insert2(blockdef, insert=(0., 0.), attribs={}, **kwargs):
+        """
+        Insert a new block-reference with auto-creating of attribs from attdefs,
+        and setting attrib-text by the attribs-dict.
+
+        Arguments
+        ---------
+
+        blockdef -- the block definition itself
+        insert -- insert point (xy- or xyz-tuple), z-axis is 0 by default
+        xscale -- x-scale factor (float), default=1.
+        yscale -- y-scale factor (float), default=1.
+        zscale -- z-scale factor (float), default=1.
+        rotation -- rotation angle in degree (float), default=0.
+        attribs -- dict with tag:value pairs, to fill the the attdefs in the
+            block-definition. example: {'TAG1': 'TextOfTAG1'}, create and insert
+            an attrib from an attdef (with tag-value == 'TAG1'), and set
+            text-value of the attrib to value 'TextOfTAG1'.
+
+        multi-insert is not supported.
+
+        Common kwargs
+        -------------
+        linetype, color, layer
+        """
+        return Insert2(blockdef=blockdef, insert=insert, attribs=attribs,
+                       **kwargs)

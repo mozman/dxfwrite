@@ -722,7 +722,7 @@ class DXFEngine(object):
         startangle -- in degree (float)
         endangle -- in degree (float)
         rotation -- angle between x-axis and ellipse-main-axis in degree (float)
-        segments -- count of line segments for polyline approximation
+        segments -- count of line segments for polyline approximation (int)
 
         Common kwargs
         -------------

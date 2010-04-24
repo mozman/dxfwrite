@@ -1,3 +1,6 @@
+Version 0.3.1 - 24 April 2010
+  * new: insert2, insert block reference with automatic attrib filling
+  * changed interface for DXFEngine.attrib()
 Version 0.3.0b1 - 28 March 2010
   * new: subpackage algebra: circle, ray, clothoid, cspline, bezier (27.03.2010)
   * new: Spline, Bezier, Clothoid and Ellipse - curves (27.03.2010)

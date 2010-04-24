@@ -29,6 +29,6 @@ setup(name='dxfwrite',
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 2.6",
     "Intended Audience :: Developers",
-    "Topic :: Multimedia :: Graphics :: Editors :: Vector-Based",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     ]
      )

@@ -48,9 +48,11 @@ class Drawing(object):
     def ucs(self): return self.tables.ucs
 
     def __dxf__(self):
-        with StringIO() as fp:
-            self._write_dxf(fp)
-            return fp.getvalue()
+        fp = StringIO()
+        self._write_dxf(fp)
+        result = fp.getvalue()
+        fp.close()
+        return result
 
     def _write_dxf(self, fp):
         fp.write(dxfstr(self.header).encode(ENCODING))

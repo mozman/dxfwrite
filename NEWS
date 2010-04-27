@@ -1,3 +1,4 @@
+Version 0.3.3 - 27 April 2010
   * BUGFIX: makedxfexamples.py - attdef keyword error
 Version 0.3.2 - 27 April 2010
   * BUGFIX: Drawing.__dxf__() - StringIO() does not support 'with' statement

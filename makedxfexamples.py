@@ -366,7 +366,7 @@ def table_dxf(dxf, name):
                   (-p2, -p1), (p2, -p1), (p1, -p2)]
         polygon = dxf.polyline(points, color=2)
         polygon.close()
-        attdef = dxf.attdef('0', tag='num', height=0.7, color=1,
+        attdef = dxf.attdef(text='0', tag='num', height=0.7, color=1,
                             halign=dxfwrite.CENTER, valign=dxfwrite.MIDDLE
                             )
         symbolblock = dxf.block('matsymbol')

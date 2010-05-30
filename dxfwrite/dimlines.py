@@ -363,6 +363,7 @@ class LinearDimension(_DimensionBase):
                 text=dimvalue_text,
                 insert=insert_point,
                 height=self.prop('height'),
+                color=self.prop('textcolor'),
                 halign=const.CENTER,
                 valign=const.MIDDLE,
                 layer= self.prop('layer'),

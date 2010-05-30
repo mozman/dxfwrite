@@ -43,7 +43,7 @@ class TestLinearDimensionImplementation(unittest.TestCase):
                  "0.0\n 20\n5.0\n 30\n0.0\n 11\n0.0\n 21\n0.3\n" \
                  " 31\n0.0\n  0\nLINE\n 62\n5\n  8\nDIMENSIONS\n" \
                  " 10\n10.0\n 20\n5.0\n 30\n0.0\n 11\n10.0\n 21\n" \
-                 "0.3\n 31\n0.0\n  0\nTEXT\n  8\nDIMENSIONS\n 10\n" \
+                 "0.3\n 31\n0.0\n  0\nTEXT\n 62\n7\n  8\nDIMENSIONS\n 10\n" \
                  "5.0\n 20\n5.45\n 30\n0.0\n 40\n0.5\n  1\n1000\n" \
                  " 50\n0.0\n  7\nISOCPEUR\n 72\n1\n 73\n2\n" \
                  " 11\n5.0\n 21\n5.45\n 31\n0.0\n  0\nINSERT\n" \
@@ -62,7 +62,7 @@ class TestLinearDimensionImplementation(unittest.TestCase):
                  "5.21213203436\n 31\n0.0\n  0\nLINE\n 62\n5\n  8\n" \
                  "DIMENSIONS\n 10\n5.0\n 20\n5.0\n 30\n0.0\n 11\n" \
                  "9.78786796564\n 21\n0.212132034356\n 31\n0.0\n" \
-                 "  0\nTEXT\n  8\nDIMENSIONS\n 10\n2.18180194847\n" \
+                 "  0\nTEXT\n 62\n7\n  8\nDIMENSIONS\n 10\n2.18180194847\n" \
                  " 20\n2.81819805153\n 30\n0.0\n 40\n0.5\n  1\n" \
                  "707\n 50\n45.0\n  7\nISOCPEUR\n 72\n1\n 73\n" \
                  "2\n 11\n2.18180194847\n 21\n2.81819805153\n" \

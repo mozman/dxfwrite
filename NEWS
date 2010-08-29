@@ -1,3 +1,6 @@
+Version 0.3.4 - 29 August 2010
+  * status: 5 - Production/Stable
+  * new: runs with Python 2.5
 Version 0.3.3 - 27 April 2010
   * BUGFIX: makedxfexamples.py - attdef keyword error
 Version 0.3.2 - 27 April 2010

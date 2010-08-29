@@ -13,7 +13,7 @@ from dxfwrite import DXFEngine, dxfstr
 
 class TestLinetypeTableEntry(unittest.TestCase):
     pattern = LinePatternDef([0.6, 0.5, -0.1])
-    expected = "  0\nLTYPE\n  2\nDASHED\n 70\n0\n  3\nstrichliert\n{0}".format(dxfstr(pattern))
+    expected = "  0\nLTYPE\n  2\nDASHED\n 70\n0\n  3\nstrichliert\n%s" % dxfstr(pattern)
     def test_linepattern(self):
         expected = " 72\n65\n 73\n2\n 40\n0.6\n" \
                    " 49\n0.5\n 49\n-0.1\n"

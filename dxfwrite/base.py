@@ -70,7 +70,7 @@ class _DXFType(object):
             return isinstance(value, float)
         elif typestr == 'int':
             return isinstance(value, int)
-        raise ValueError("Unknown format '{0}'".format(code))
+        raise ValueError(u"Unknown format '%s'" % unicode(code))
 
 
     def cast(self, value, code):
@@ -84,7 +84,7 @@ class _DXFType(object):
             return float(value)
         elif typestr == 'int':
             return int(value)
-        raise ValueError("Unknown format '{0}'".format(code))
+        raise ValueError(u"Unknown format '%s'" % unicode(code))
 
     def group_code_type(self, group_code):
         return self._group_code_types[group_code]
@@ -107,7 +107,7 @@ class DXFAtom(object):
         self._value = self._typecast(value, self._group_code)
 
     def __dxf__(self):
-        return u"{0._group_code:3d}\n{0._value}\n".format(self)
+        return u"%3d\n%s\n" % (self._group_code, unicode(self._value))
 
     def _typecast(self, value, group_code):
         return self._dxftype.cast(value, group_code)
@@ -125,7 +125,7 @@ class DXFAtom(object):
         if self.is_3d_point_coord():
             return int(self.group_code % 10)
         else:
-            raise TypeError("Not a 3D point value")
+            raise TypeError(u"Not a 3D point value")
 
     def get_axis_index(self):
         """ returns 0 for 'x', 1 for 'y' and 2 for 'z'.
@@ -135,7 +135,7 @@ class DXFAtom(object):
         if self.is_3d_point_coord():
             return (self.group_code / 10) - 1
         else:
-            raise TypeError("Not a 3D point value")
+            raise TypeError(u"Not a 3D point value")
 
     @property
     def value(self): return self._value
@@ -209,7 +209,7 @@ class DXFPoint(object):
             self.point = [DXFFloat(value, (pos+1)*10+index_shift)
                             for pos, value in enumerate(coords)]
         else:
-            raise ValueError('only 2 or 3 coord-values allowed.')
+            raise ValueError(u"only 2 or 3 coord-values allowed.")
 
     def __getitem__(self, axis):
         """ Get coordinate for 'axis'.
@@ -223,20 +223,20 @@ class DXFPoint(object):
             try:
                 return self.point[axis].value
             except IndexError:
-                raise IndexError("DXF-Point has no '{0}'-coordinate!".format(('x', 'y', 'z')[axis]))
+                raise IndexError(u"DXF-Point has no '%s'-coordinate!" % ('x', 'y', 'z')[axis])
         elif isinstance(axis, basestring):
             if axis in ('x', 'y', 'z'):
                 try:
                     index = ord(axis) - ord('x')
                     return self.point[index].value
                 except IndexError:
-                    raise IndexError("DXF-Point has no '{0}'-coordinate!".format(axis))
+                    raise IndexError(u"DXF-Point has no '%s'-coordinate!" % axis)
             elif len(axis) > 1: # 'xy' or 'zx' get coords in letter order
                 return [ self.__getitem__(index) for index in axis ]
             else:
-                raise IndexError("Invalid axis name '{0}'".format(axis))
+                raise IndexError(u"Invalid axis name '%s'" % axis)
         else:
-            raise IndexError("Invalid axis name '{0}'".format(axis))
+            raise IndexError(u"Invalid axis name '%s'" % axis)
 
     def __dxf__(self):
         return u"".join([coord.__dxf__() for coord in self.point])

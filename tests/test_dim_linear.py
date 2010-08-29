@@ -7,6 +7,7 @@
 # License: GPLv3
 
 import unittest2 as unittest
+import sys
 
 from dxfwrite.dimlines import LinearDimension
 class TestLinearDimAPI(unittest.TestCase):
@@ -34,6 +35,12 @@ class TestLinearDimAPI(unittest.TestCase):
             (5, 5), [(0, 0), (5, 0), (10, 0), (15, 0), (20, 0)])
         self.assertEqual(dimline.point_count, 5)
         self.assertEqual(dimline.section_count, 4)
+
+# problem with floating-point representation
+if sys.version[:3] < '2.6' :
+    _float_exp = "e-016"
+else:
+    _float_exp = "e-16"
 
 class TestLinearDimensionImplementation(unittest.TestCase):
     def test_horiz(self):
@@ -67,13 +74,13 @@ class TestLinearDimensionImplementation(unittest.TestCase):
                  "707\n 50\n45.0\n  7\nISOCPEUR\n 72\n1\n 73\n" \
                  "2\n 11\n2.18180194847\n 21\n2.81819805153\n" \
                  " 31\n0.0\n  0\nINSERT\n  8\nDIMENSIONS\n" \
-                 "  2\nDIMTICK_ARCH\n 10\n-4.4408920985e-16\n" \
-                 " 20\n4.4408920985e-16\n 30\n0.0\n 41\n" \
+                 "  2\nDIMTICK_ARCH\n 10\n-4.4408920985%s\n" \
+                 " 20\n4.4408920985%s\n 30\n0.0\n 41\n" \
                  "1.0\n 42\n1.0\n 50\n45.0\n  0\nINSERT\n" \
                  "  8\nDIMENSIONS\n  2\nDIMTICK_ARCH\n" \
                  " 10\n5.0\n 20\n5.0\n 30\n0.0\n 41\n1.0\n" \
-                 " 42\n1.0\n 50\n45.0\n"
-
+                 " 42\n1.0\n 50\n45.0\n" % (_float_exp, _float_exp)
+        self.maxDiff = None
         dimline = LinearDimension(pos=(5,5),measure_points=[(0,0),(10,0)],
                                   angle=45)
         self.assertEqual(dimline.__dxf__(), expected)

@@ -77,7 +77,7 @@ class Drawing(object):
             A = *A### anonymous groups
         """
         self._anonymous_counter += 1
-        return "*{0}{1}".format(typechar, self._anonymous_counter)
+        return u"*%s%s" % (unicode(typechar), unicode(self._anonymous_counter))
 
     def add_anonymous_block(self, entity, layer="0", typechar='U',
                             basepoint=(0, 0), insert=(0, 0)):
@@ -111,10 +111,17 @@ class Drawing(object):
         self.add_layer('TABLEGRID')
 
     def save(self):
-        with open(self.filename, 'w') as fp:
-            self._write_dxf(fp)
+        """Write DXF data to file-system."""
+        fileobj = open(self.filename, 'w')
+        self.save_to_fileobj(fileobj)
+        fileobj.close()
+
+    def save_to_fileobj(self, fileobj):
+        """Write DXF data to a file-like object. (i.e. StringIO)"""
+        self._write_dxf(fileobj)
 
     def saveas(self, name):
+        """Set new filename and write DXF data to file-system."""
         self.filename = name
         self.save()
 

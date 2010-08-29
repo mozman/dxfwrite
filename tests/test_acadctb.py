@@ -158,7 +158,7 @@ class TestUserStylesImplementation(unittest.TestCase):
 
     def test_write_aci_table(self):
         expected = 'aci_table{\n' + '\n'.join(
-                     (' {0}="Color_{1}'.format(index, index+1)
+                     (' %s="Color_%d' % (index, index+1)
                       for index in xrange(255))) + '\n}\n'
         styles = UserStyles()
         fp = StringIO()
@@ -185,8 +185,9 @@ class TestCtbImport(unittest.TestCase):
     def setUp(self):
         path, name = os.path.split(__file__)
         ctbfile = os.path.join(path, 'ctbtest.ctb')
-        with open(ctbfile, 'rb') as fileobj:
-            self.ctb = read(fileobj)
+        fileobj = open(ctbfile, 'rb')
+        self.ctb = read(fileobj)
+        fileobj.close()
 
     def test_ctb_attribs(self):
         styles = self.ctb

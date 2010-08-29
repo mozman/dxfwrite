@@ -195,7 +195,7 @@ class _Entity(object):
         if self.is_valid_attribute_name(key):
             self.attribs[key] = self._get_dxf_atom(key, value) # factory is called
         else:
-            raise KeyError("Invalid attribute '{0}' for Entity '{1}'.".format(key, self.__class__.__name__))
+            raise KeyError(u"Invalid attribute '%s' for Entity '%s'." % (unicode(key), self.__class__.__name__))
 
     def __getitem__(self, key):
         if self.is_valid_attribute_name(key):
@@ -205,7 +205,7 @@ class _Entity(object):
             except AttributeError:
                 return element # DXFList or list or tuple or DXFPoint
         else:
-            raise KeyError("Invalid attribute '{0}' for Entity '{1}'.".format(key, self.__class__.__name__))
+            raise KeyError(u"Invalid attribute '%s' for Entity '%s'." % (unicode(key), self.__class__.__name__))
 
     def _get_dxf_atom(self, attribname, value):
         """ create an object for attribname by factory from attribute_definition """
@@ -245,7 +245,7 @@ class _Entity(object):
             dxf.extend(self.get_data()) # example: block->content, polyline->vertices, faces, insert->attribs
             return dxfstr(dxf)
         else:
-            raise DXFValidationError("invalid or missing attributs in object '{0}'.".format(self.__class__.__name__))
+            raise DXFValidationError(u"invalid or missing attributs in object '%s'." % self.__class__.__name__)
 
 class Line(_Entity):
     def __init__(self, **kwargs):
@@ -500,7 +500,7 @@ class Block(_Entity):
                 (entity.name == 'ATTDEF') and \
                 (entity['tag'] == tag):
                 return entity
-        raise KeyError("no attdef with tag '{0}' found!".format(tag))
+        raise KeyError(u"no attdef with tag '%s' found!" % unicode(tag))
 
     def add(self, entity):
         self.data.append(entity)

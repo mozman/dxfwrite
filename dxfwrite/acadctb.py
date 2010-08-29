@@ -77,7 +77,7 @@ DEFAULT_LINE_WEIGHTS = [
 ]
 
 def color_name(index):
-    return 'Color_{0}'.format(index+1)
+    return 'Color_%d' % (index+1)
 
 def get_bool(value):
     if isinstance(value, basestring):
@@ -87,8 +87,8 @@ def get_bool(value):
         elif upperstr == 'FALSE':
             value = False
         else:
-            raise ValueError("Unknown bool value '{0}'.".format(value))
-    return bool(value)
+            raise ValueError("Unknown bool value '%s'." % str(value))
+    return value
 
 class UserStyle(object):
     def __init__(self, index, init_dict={}, parent=None):
@@ -156,47 +156,48 @@ class UserStyle(object):
     def get_dxf_color_index(self):
         return self.index+1
 
-    @property
-    def dithering(self):
+
+    def get_dithering(self):
         return bool(self._color_policy & DITHERING_ON)
-    @dithering.setter # pylint: disable-msg=E1101
-    def dithering(self, status): # pylint: disable-msg=E0102
+
+    def set_dithering(self, status):
         if status :
             self._color_policy |= DITHERING_ON
         else:
             self._color_policy &= ~DITHERING_ON
+    dithering = property(get_dithering, set_dithering)
 
-    @property
-    def grayscale(self):
+    def get_grayscale(self):
         return bool(self._color_policy & GRAYSCALE_ON)
-    @grayscale.setter # pylint: disable-msg=E1101
-    def grayscale(self, status): # pylint: disable-msg=E0102
+
+    def set_grayscale(self, status):
         if status :
             self._color_policy |= GRAYSCALE_ON
         else:
             self._color_policy &= ~GRAYSCALE_ON
+    grayscale = property(get_grayscale, set_grayscale)
 
     def write(self, fileobj):
         """Write style data to file-like object <fileobj>."""
         index = self.index
-        fileobj.write(' {0}{{\n'.format(index))
-        fileobj.write('  name="{0}\n'.format(color_name(index)))
-        fileobj.write('  localized_name="{0}\n'.format(color_name(index)))
-        fileobj.write('  description="{0}\n'.format(self.description))
-        fileobj.write('  color={0}\n'.format(self._color))
+        fileobj.write(' %d{\n' % index)
+        fileobj.write('  name="%s\n' % color_name(index))
+        fileobj.write('  localized_name="%s\n' % color_name(index))
+        fileobj.write('  description="%s\n' % self.description)
+        fileobj.write('  color=%d\n' % self._color)
         if self._color != OBJECT_COLOR:
-            fileobj.write('  mode_color={0}\n'.format(self._mode_color))
-        fileobj.write('  color_policy={0}\n'.format(self._color_policy))
-        fileobj.write('  physical_pen_number={0}\n'.format(self.physical_pen_number))
-        fileobj.write('  virtual_pen_number={0}\n'.format(self.virtual_pen_number))
-        fileobj.write('  screen={0}\n'.format(self.screen))
-        fileobj.write('  linepattern_size={0}\n'.format(self.linepattern_size))
-        fileobj.write('  linetype={0}\n'.format(self.linetype))
-        fileobj.write('  adaptive_linetype={0}\n'.format(unicode(bool(self.adaptive_linetype)).upper()))
-        fileobj.write('  lineweight={0}\n'.format(self.lineweight))
-        fileobj.write('  fill_style={0}\n'.format(self.fill_style))
-        fileobj.write('  end_style={0}\n'.format(self.end_style))
-        fileobj.write('  join_style={0}\n'.format(self.join_style))
+            fileobj.write('  mode_color=%d\n' % self._mode_color)
+        fileobj.write('  color_policy=%d\n' % self._color_policy)
+        fileobj.write('  physical_pen_number=%d\n' % self.physical_pen_number)
+        fileobj.write('  virtual_pen_number=%d\n' % self.virtual_pen_number)
+        fileobj.write('  screen=%d\n' % self.screen)
+        fileobj.write('  linepattern_size=%s\n' % str(self.linepattern_size))
+        fileobj.write('  linetype=%d\n' % self.linetype)
+        fileobj.write('  adaptive_linetype=%s\n' % str(bool(self.adaptive_linetype)).upper())
+        fileobj.write('  lineweight=%s\n' % str(self.lineweight))
+        fileobj.write('  fill_style=%d\n' % self.fill_style)
+        fileobj.write('  end_style=%d\n' % self.end_style)
+        fileobj.write('  join_style=%d\n' % self.join_style)
         fileobj.write(' }\n')
 
 class UserStyles(object):
@@ -298,8 +299,9 @@ class UserStyles(object):
 
     def save(self, filename):
         """Save ctb-file to <filename>."""
-        with open(filename, 'wb') as fileobj:
-            self.write(fileobj)
+        fileobj = open(filename, 'wb')
+        self.write(fileobj)
+        fileobj.close()
 
     def write(self, fileobj):
         """Create and compress the ctb-file to <fileobj>."""
@@ -319,11 +321,11 @@ class UserStyles(object):
 
     def _write_header(self, fileobj):
         """Write header values of ctb-file to <fileobj>."""
-        fileobj.write('description="{0}\n'.format(self.description))
+        fileobj.write('description="%s\n' % self.description)
         fileobj.write('aci_table_available=TRUE\n')
-        fileobj.write('scale_factor={0:.1f}\n'.format(self.scale_factor))
-        fileobj.write('apply_factor={0}\n'.format(unicode(self.apply_factor).upper()))
-        fileobj.write('custom_lineweight_display_units={0}\n'.format(
+        fileobj.write('scale_factor=%.1f\n' % self.scale_factor)
+        fileobj.write('apply_factor=%s\n' % str(self.apply_factor).upper())
+        fileobj.write('custom_lineweight_display_units=%s\n' % str(
             self.custom_lineweight_display_units))
 
     def _write_aci_table(self, fileobj):
@@ -331,7 +333,7 @@ class UserStyles(object):
         fileobj.write('aci_table{\n')
         for style in self.iter_styles():
             index = style.index
-            fileobj.write(' {0}="{1}\n'.format(index, color_name(index)))
+            fileobj.write(' %d="%s\n' % (index, color_name(index)))
         fileobj.write('}\n')
 
     def _write_ctb_plot_styles(self, fileobj):
@@ -345,7 +347,7 @@ class UserStyles(object):
         """Write custom lineweights table to ctb-file <fileobj>."""
         fileobj.write('custom_lineweight_table{\n')
         for index, weight in enumerate(self.lineweights):
-            fileobj.write(' {0}={1:.2f}\n'.format(index, weight))
+            fileobj.write(' %d=%.2f\n' % (index, weight))
         fileobj.write('}\n')
 
     def parse(self, text):
@@ -391,8 +393,9 @@ def read(fileobj):
 
 def load(filename):
     """Load the ctb-file <filename>."""
-    with open(filename, 'rb') as fileobj:
-        return read(fileobj)
+    fileobj = open(filename, 'rb')
+    read(fileobj)
+    fileobj.close()
 
 def _decompress(fileobj):
     """Read and decompress the file content of the file-like object <fileobj>."""

@@ -60,7 +60,6 @@ class Test_Circle(unittest.TestCase):
                 result = False
             else:
                 point = points[0]
-                # print ("{0}: x= {1:.{places}f} y= {2:.{places}f} : x'= {3:.{places}f} y' = {4:.{places}f}".format(testnum, x, y, point[0], point[1], places=places))
                 if not equals_almost(point[0], x, 4) : result = False
                 if not equals_almost(point[1], y, 4) : result = False
             return result

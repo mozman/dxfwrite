@@ -18,7 +18,7 @@ class Tables(object):
         elif name in ['LTYPE', 'LAYER', 'STYLE', 'VIEW', 'APPID', 'UCS']:
             return _Table(name)
         else:
-            raise ValueError("unknown table '{0}'".format(name))
+            raise ValueError(u"unknown table '%s'" % unicode(name))
 
 class _Table(object):
     """ Base table class.

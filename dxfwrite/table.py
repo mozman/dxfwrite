@@ -610,13 +610,13 @@ class Frame(object):
 
 class Cell(object):
     """Cell represents the table cell data."""
-    @property
-    def span(self): # pylint: disable-msg=E0202
+
+    def get_span(self):
         return self._span
-    @span.setter # pylint: disable-msg=E1101
-    def span(self, value): # pylint: disable-msg=E0102,E0202
+    def set_span(self, value):
         """Ensures that span values are >= 1 in each direction."""
-        self._span = (max(1, value[0]), max(1, value[1])) # pylint: disable-msg=W0201
+        self._span = (max(1, value[0]), max(1, value[1]))
+    span = property(get_span, set_span)
 
     def __init__(self, table, style='default', span=(1, 1)):
         """Constructor

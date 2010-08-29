@@ -210,7 +210,8 @@ class _DimensionBase(object):
     def format_dimtext(self, dimvalue):
         """ string format the dimension text """
         ## TODO: concider roundhalf property
-        dimtext = "{0:.{1}f}".format(dimvalue, self.prop('roundval'))
+        dimtextfmt = "%." + str(self.prop('roundval')) + "f"
+        dimtext = dimtextfmt % dimvalue
         if DIMENSIONS_FLOATINGPOINT in dimtext:
             # remove successional zeros
             dimtext.rstrip('0')

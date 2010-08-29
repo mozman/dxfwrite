@@ -112,7 +112,7 @@ def simple_dxf(dxf, name):
         # create an ATTRIB-entity from an ATTDEF-entity
         attrib = attdef.new_attrib(
             height=0.18,
-            text='attrib:{0}'.format(x),
+            text='attrib:%d' % x,
         )
 
         # add ATTRIB-entity to the block refernce
@@ -462,7 +462,7 @@ def colors_dxf(dxf, name):
                 return 'BLACK/WHITE'
             else:
                 rgb = colors.get_rgb(dxf_index)
-                return "{0}: ({1[0]}, {1[1]}, {1[2]})".format(dxf_index, rgb)
+                return "%d: (%d, %d, %d)" % (dxf_index, rgb[0], rgb[1], rgb[2])
         except IndexError:
             return "BYLAYER"
 

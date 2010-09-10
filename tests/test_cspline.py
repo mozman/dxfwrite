@@ -4,8 +4,11 @@
 # Purpose: test spline module
 # Created: 26.03.2010
 
-
-import unittest2 as unittest
+import sys
+if sys.version_info[:2]> (2, 6):
+    import unittest
+else: # python 2.6 and prior needs the unittest2 package
+    import unittest2 as unittest
 
 from dxfwrite.algebra import CubicSpline
 from dxfwrite.curves import Spline

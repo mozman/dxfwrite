@@ -4,8 +4,11 @@
 # Purpose: test ellipse curve
 # Created: 27.03.2010
 
-
-import unittest2 as unittest
+import sys
+if sys.version_info[:2]> (2, 6):
+    import unittest
+else: # python 2.6 and prior needs the unittest2 package
+    import unittest2 as unittest
 
 from dxfwrite.curves import Ellipse
 

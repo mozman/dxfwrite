@@ -7,7 +7,10 @@
 # License: GPLv3
 
 import sys
-import unittest2 as unittest
+if sys.version_info[:2]> (2, 6):
+    import unittest
+else: # python 2.6 and prior needs the unittest2 package
+    import unittest2 as unittest
 
 from dxfwrite.std import *
 

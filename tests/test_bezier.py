@@ -4,7 +4,11 @@
 # Purpose: test bezier module
 # Created: 28.03.2010
 
-import unittest2 as unittest
+import sys
+if sys.version_info[:2]> (2, 6):
+    import unittest
+else: # python 2.6 and prior needs the unittest2 package
+    import unittest2 as unittest
 
 from dxfwrite.algebra.bezier import CubicBezierCurve
 from dxfwrite.curves import Bezier

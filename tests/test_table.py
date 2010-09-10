@@ -7,7 +7,12 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import unittest2 as unittest
+import sys
+if sys.version_info[:2]> (2, 6):
+    import unittest
+else: # python 2.6 and prior needs the unittest2 package
+    import unittest2 as unittest
+
 from itertools import izip
 
 from dxfwrite.table import Table, DEFAULT_CELL_TEXTCOLOR, CustomCell

@@ -1,7 +1,8 @@
 
 News
 ====
-
+Version 0.3.6 - ???
+  * moved dxfwrite.drawing.ENCODING to class Drawing
 Version 0.3.5 - 10 September 2010
   * new: package and tests run with Python 2.7
 Version 0.3.4 - 29 August 2010

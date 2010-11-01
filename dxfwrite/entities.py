@@ -453,7 +453,8 @@ class Attdef(_Entity):
     def new_attrib(self, **kwargs):
         """ Create a new ATTRIB with attdef's attributs as default values.
 
-        **kwargs override the attdef default values.
+        :param kwargs: override the attdef default values.
+
         """
         for key in self.attribs.keys():
             if key not in ('prompt', 'tag', 'insert', 'alignpoint'): # insert here attribs to ignore

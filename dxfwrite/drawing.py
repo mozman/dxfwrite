@@ -6,13 +6,6 @@
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
-"""
-Provides the Drawing-Object.
-
-The Drawing-object manages all the necessary sections, like header, tables and
-blocks. The tables-attribute contains the layers, styles, linetypes and other
-tables.
-"""
 from cStringIO import StringIO
 
 from dxfwrite import DXFEngine
@@ -22,9 +15,16 @@ import dxfwrite.const as const
 import dxfwrite.std as std
 
 class Drawing(object):
-    """ Collection of dxf entities. """
+    """
+    The Drawing object manages all the necessary sections, like header, tables
+    and blocks. The tables-attribute contains the layers, styles, linetypes and
+    other tables.
+    """
     ENCODING = 'cp1252'
     def __init__(self, name='noname.dxf'):
+        """
+        :param string name: filename of the drawing
+        """
         self.filename = name
         self.header = Sections.get('HEADER')
         self.tables = Sections.get('TABLES')

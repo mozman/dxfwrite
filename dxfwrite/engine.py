@@ -324,18 +324,10 @@ class DXFEngine(object):
         """
         Create a new arc-entity.
 
-        Arguments
-        ---------
-
-        radius -- arc radius (float)
-        center -- center point (xy- or xyz-tuple), z-axis is 0 by default
-        startangle -- start angle in degree (float)
-        endangle -- end angle in degree (float)
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
+        :param float radius: arc radius
+        :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
+        :param float startangle: start angle in degree
+        :param float endangle: end angle in degree
         """
         return Arc(radius=radius, center=center, startangle=startangle,
                    endangle=endangle, **kwargs)
@@ -430,32 +422,27 @@ class DXFEngine(object):
         """
         Create a new attribute definition, used in block-definitions.
 
-        Arguments
-        ---------
+        :param string text: attribute default text
+        :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+        :param string prompt: prompt text, like "insert a value:"
+        :param string tag: attribute tag string
+        :param int flags: attribute flags, bit-coded, default=0
+        :param int length: field length ??? see dxf-documentation
+        :param float height: textheight in drawing units (default=1)
+        :param float rotation: text rotation (default=0) (all DXF angles in degrees)
+        :param float oblique: text oblique angle in degree, default=0
+        :param float xscale: width factor (default=1)
+        :param string style: textstyle (default=STANDARD)
+        :param int mirror: bit coded flags
+        :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
+          ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
+        :param int valign: vertical justification type, TOP, MIDDLE, BOTTOM,
+          BASELINE (default BASELINE)
+        :param alignpoint: align point (xy- or xyz-tuple), z-axis is 0 by
+          default, if the justification is anything other than BASELINE/LEFT,
+          alignpoint specify the alignment point (or the second alignment
+          point for ALIGN or FIT).
 
-        text -- attribute default text (string)
-        insert -- insert point (xy- or xyz-tuple), z-axis is 0 by default
-        prompt -- prompt text (string), like "insert a value:"
-        tag -- attribute tag string (string)
-        flags -- attribute flags (int), bit-coded, default=0
-        ===========================  ===============================
-        Flags                        Description
-        ===========================  ===============================
-        ATTRIB_IS_INVISIBLE          Attribute is invisible (does not display)
-        ATTRIB_IS_CONST              This is a constant Attribute
-        ATTRIB_REQUIRE_VERIFICATION  Verification is required on input of
-                                     this Attribute
-        ATTRIB_IS_PRESET             Verification is required on input of this
-                                     Attribute
-        ===========================  ===============================
-        length -- field length (int) ??? see dxf-documentation
-        rotation, xscale, oblique, style -- see text method
-        mirror, halign , valign, alignpoint -- see text method
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
         """
         return Attdef(tag=tag, insert=insert, **kwargs)
 

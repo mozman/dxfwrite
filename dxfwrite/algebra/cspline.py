@@ -7,13 +7,11 @@
 # License: GPL
 # Source: http://www-lehre.informatik.uni-osnabrueck.de/~cg/2000/skript/7_2_Splines.html
 
-import sys
-if sys.version_info[0] > 2:
-    xrange = range
-
 import math
-from dxfwrite.util import izip
 from array import array
+from itertools import repeat
+
+from dxfwrite.util import izip
 
 def _coords(points, index=0):
     return array('f' , (point[index] for point in points))
@@ -33,7 +31,7 @@ class CubicSpline(object):
                     self._cubic_spline(_coords(self.breakpoints, 1), segments)) # y-coords
 
     def _create_array(self):
-        return array('f', (0.0 for i in xrange(self.count)))
+        return array('f', repeat(0.0, self.count))
 
     def _get_t_array(self, points):
         t = array('f')
@@ -102,7 +100,7 @@ class CubicSpline(object):
         wt = 0.0
         j = 0
         dt = t[n-1] / float(spline_size - 1)
-        for i in xrange(spline_size-1):
+        for i in range(spline_size-1):
             while (j < (n-1)) and (t[j+1] < wt):
                 j += 1
             h = wt - t[j]

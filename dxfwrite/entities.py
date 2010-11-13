@@ -162,11 +162,14 @@ def _add_common_attribs():
         'paper_space': AttribDef(DXFInt, 67, priority=50),
         'extrusion_direction': AttribDef(DXFPoint, 200, priority=55),
     }
-    for key in _DXF12_EntityAttributeDefinition.keys(): # loop over entities
-        _DXF12_EntityAttributeDefinition[key].update(common_attribs)
+    for entry in _DXF12_EntityAttributeDefinition.values():
+        entry.update(common_attribs)
 _add_common_attribs()
 
 class _Entity(object):
+    """ name is the key to the attribute definitions, example: 'CIRCLE' """
+    name = 'ABSTRACT'
+
     def __init__(self, **kwargs):
         self.attribs = {}
         self['layer'] = '0' # set default layer
@@ -181,11 +184,6 @@ class _Entity(object):
     def attribute_definition(self):
         """ get its own attribute definitions """
         return _DXF12_EntityAttributeDefinition[self.name]
-
-    @property
-    def name(self):
-        """ key to attribute definitions, example: 'CIRCLE' """
-        return 'ABSTRACT'
 
     def is_valid_attribute_name(self, key):
         """ True if an AttribDef for key exists. """
@@ -248,6 +246,8 @@ class _Entity(object):
             raise DXFValidationError("invalid or missing attributs in object '%s'." % self.__class__.__name__)
 
 class Line(_Entity):
+    name = 'LINE'
+
     def __init__(self, **kwargs):
         default = {
             'start': (0,0),
@@ -256,11 +256,10 @@ class Line(_Entity):
         default.update(kwargs)
         super(Line, self).__init__(**default)
 
-    @property
-    def name(self):
-        return 'LINE'
 
 class Point(_Entity):
+    name = 'POINT'
+
     def __init__(self, **kwargs):
         default = {
             'point': (0,0),
@@ -268,11 +267,9 @@ class Point(_Entity):
         default.update(kwargs)
         super(Point, self).__init__(**default)
 
-    @property
-    def name(self):
-        return 'POINT'
-
 class Solid(_Entity):
+    name = 'SOLID'
+
     def __init__(self, points=[], **kwargs):
         super(Solid, self).__init__(**kwargs)
         self.set_points(points)
@@ -281,34 +278,28 @@ class Solid(_Entity):
         for key, point in enumerate( points):
             self[key] = point
 
-    @property
-    def name(self):
-        return 'SOLID'
-
     def extension_point(self):
         if 3 not in self.attribs:
-            try:
-                self[3] = self[2]['xyz'] # assign a tuple not a DXFPoint3D
-            except KeyError: # validate fails at all
+            try: # set point self[3] equal to point self[2]
+                self[3] = self[2]['xyz'] # assign a 3-tuple not a DXFPoint3D
+            except KeyError: # valid() fails if self[2] does not exist
                 pass
 
     def valid(self):
-        for key in range(4):
+        for key in (0, 1, 2, 3):
             if key not in self.attribs:
                 return False
         return True
 
 class Trace(Solid):
-    @property
-    def name(self):
-        return 'TRACE'
+    name = 'TRACE'
 
 class Face3D(Solid):
-    @property
-    def name(self):
-        return '3DFACE'
+    name = '3DFACE'
 
 class Shape(_Entity):
+    name = 'SHAPE'
+
     def __init__(self, **kwargs):
         default = {
             'insert': (0, 0),
@@ -316,11 +307,9 @@ class Shape(_Entity):
         default.update(kwargs)
         super(Shape, self).__init__(**default)
 
-    @property
-    def name(self):
-        return 'SHAPE'
-
 class Text(_Entity):
+    name = 'TEXT'
+
     def __init__(self, **kwargs):
         default = {
             'insert': (0, 0),
@@ -330,11 +319,9 @@ class Text(_Entity):
         default.update(kwargs)
         super(Text, self).__init__(**default)
 
-    @property
-    def name(self):
-        return 'TEXT'
-
 class Arc(_Entity):
+    name = 'ARC'
+
     def __init__(self, **kwargs):
         default = {
             'center': (0,0),
@@ -345,11 +332,9 @@ class Arc(_Entity):
         default.update(kwargs)
         super(Arc, self).__init__(**default)
 
-    @property
-    def name(self):
-        return 'ARC'
-
 class Circle(_Entity):
+    name = 'CIRCLE'
+
     def __init__(self, **kwargs):
         default = {
             'center': (0,0),
@@ -358,16 +343,14 @@ class Circle(_Entity):
         default.update(kwargs)
         super(Circle, self).__init__(**default)
 
-    @property
-    def name(self):
-        return 'CIRCLE'
-
 class Insert(_Entity):
     """ Insert a block reference, add attributes with add(attribute).
 
     The (Insert) attrib 'attribs_follow' is managed by the object itself, and
     a DXFAtom('SEQEND') will be added to end of the attibs list.
     """
+    name = 'INSERT'
+
     def __init__(self, **kwargs):
         default = {
             'insert': (0,0),
@@ -375,10 +358,6 @@ class Insert(_Entity):
         default.update(kwargs)
         super(Insert, self).__init__(**default)
         self.data = DXFList()
-
-    @property
-    def name(self):
-        return 'INSERT'
 
     def add(self, attrib, relative=True):
         """ add attributes to a block reference. The position in attrib is
@@ -434,6 +413,8 @@ class Insert(_Entity):
         return self.data
 
 class Attdef(_Entity):
+    name = 'ATTDEF'
+
     def __init__(self, **kwargs):
         default = {
             'insert': (0,0),
@@ -445,10 +426,6 @@ class Attdef(_Entity):
         }
         default.update(kwargs)
         super(Attdef, self).__init__(**default)
-
-    @property
-    def name(self):
-        return 'ATTDEF'
 
     def new_attrib(self, **kwargs):
         """ Create a new ATTRIB with attdef's attributs as default values.
@@ -468,6 +445,8 @@ class Attdef(_Entity):
         return Attrib(**kwargs)
 
 class Attrib(_Entity):
+    name = 'ATTRIB'
+
     def __init__(self, **kwargs):
         default = {
             'insert': (0,0),
@@ -479,11 +458,9 @@ class Attrib(_Entity):
         default.update(kwargs)
         super(Attrib, self).__init__(**default)
 
-    @property
-    def name(self):
-        return 'ATTRIB'
-
 class Block(_Entity):
+    name = 'BLOCK'
+
     def __init__(self, **kwargs):
         """ data has to have the __dxf__ interface and an append method. """
         default = {
@@ -523,10 +500,6 @@ class Block(_Entity):
     def get_data(self):
         return self.data
 
-    @property
-    def name(self):
-        return 'BLOCK'
-
 class Polyline(_Entity):
     """ 3D polyline
 
@@ -544,6 +517,8 @@ class Polyline(_Entity):
     close
         set close-status of polyline
     """
+    name = 'POLYLINE'
+
     def __init__(self, points=[], **kwargs):
         """ polyline constructor
 
@@ -559,10 +534,6 @@ class Polyline(_Entity):
         super(Polyline, self).__init__(**default)
         self.vertices = DXFList()
         self.add_vertices(points)
-
-    @property
-    def name(self):
-        return 'POLYLINE'
 
     def close(self, status=True):
         """ closed polyline: first vertex is connected with last vertex.
@@ -612,6 +583,8 @@ class Polymesh(_Entity):
         set vertex at pos(row, col) to point, point is a 2D or 3D point
         z-value of 2D points is 0.
     """
+    name = 'POLYLINE' # a polymesh is also a polyline
+
     def __init__(self, nrows, ncols, **kwargs):
         """ 2 <= nrows <= 256; 2 <= ncols <= 256
         """
@@ -633,9 +606,6 @@ class Polymesh(_Entity):
         flags = self['flags']
         self['flags'] = set_flag(flags, const.POLYLINE_MESH_CLOSED_N_DIRECTION,
                                  status)
-    @property
-    def name(self):
-        return 'POLYLINE' # a polymesh is also a polyline
 
     def _build_vertex(self, point):
         return Vertex(location=point, flags=const.VTX_3D_POLYGON_MESH_VERTEX)
@@ -665,6 +635,8 @@ class Polyface(_Entity):
     add_face(vertices, color)
         add a face with 3 ot 4 points, if points are 2D, z-value is 0.
     """
+    name = 'POLYLINE' # a polyface is also a polyline
+
     def __init__(self, precision=6, **kwargs):
         default = {
             'vertices_follow': 1,
@@ -676,10 +648,6 @@ class Polyface(_Entity):
         self.vertices = DXFList()
         self.faces = DXFList()
         self.point2index = {}
-
-    @property
-    def name(self):
-        return 'POLYLINE' # a polyface is also a polyline
 
     def _build_vertex(self, point):
         return Vertex(location=point,
@@ -739,13 +707,11 @@ class Polyface(_Entity):
         return DXFList( [self.vertices, self.faces, DXFAtom('SEQEND')] )
 
 class Vertex(_Entity):
+    name = 'VERTEX'
+
     def __init__(self, **kwargs):
         default = {
             'location': (0, 0, 0),
         }
         default.update(kwargs)
         super(Vertex, self).__init__(**default)
-
-    @property
-    def name(self):
-        return 'VERTEX'

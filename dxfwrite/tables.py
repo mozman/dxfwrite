@@ -11,6 +11,7 @@
 from dxfwrite.base import *
 
 class Tables(object):
+    """ Table factory. """
     @staticmethod
     def get(name):
         if name == 'VPORT':

@@ -12,7 +12,7 @@ if sys.version_info[0] > 2:
     xrange=range
 
 from dxfwrite.util import int2hex, hex2int
-from dxfwrite.util import iterflatlist
+from dxfwrite.util import iterflatlist, set_flag
 from dxfwrite.base import DXFList, DXFAtom
 
 class TestUtil(unittest.TestCase):
@@ -33,6 +33,12 @@ class TestUtil(unittest.TestCase):
         l2 = [3,4,l1]
         l3 = [l2,7]
         self.assertEqual(list(iterflatlist(l3)), [3,4,1,2,3,7])
+
+    def test_set_flag_on(self):
+        self.assertEqual(set_flag(8, 1 << 2), 12)
+
+    def test_set_flag_off(self):
+        self.assertEqual(set_flag(12, 1 << 2, switch_on=False), 8)
 
 if __name__=='__main__':
     unittest.main()

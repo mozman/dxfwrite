@@ -103,10 +103,6 @@ class _TableEntry(object):
             self[key] = value
 
     @property
-    def table_name(self):
-        return 'OVERRIDE_ME'
-
-    @property
     def attribute_definition(self):
         """ get its own attribute definitions """
         return _DXF12_TableEntryAttributeDefinition[self.table_name]
@@ -146,14 +142,7 @@ class _TableEntry(object):
                  for key, value in self.attribs.items() )
         return ( value for priority, value  in sorted(priority_attribs) )
 
-    def extension_point(self): # abstract
-        """ general extension point
-
-        call here release depended stuff"""
-        pass
-
     def __dxf__(self):
-        self.extension_point()
         dxf = DXFList()
         dxf.append(DXFAtom(self.table_name))
         dxf.extend(self.get_attribs()) # sorted attribs
@@ -173,6 +162,8 @@ class Linetype(_TableEntry):
     pattern
         LinePatternDef object
     """
+    table_name = 'LTYPE'
+
     def __init__(self, name, **kwargs):
         default = {
             'flags': 0,
@@ -180,10 +171,6 @@ class Linetype(_TableEntry):
         }
         default.update(kwargs)
         super(Linetype, self).__init__(name, **default)
-
-    @property
-    def table_name(self):
-        return 'LTYPE'
 
 class Layer(_TableEntry):
     """ DXF LAYER table entry - layer definition
@@ -203,6 +190,8 @@ class Layer(_TableEntry):
     linetype
         name of linetype (string)
     """
+    table_name = 'LAYER'
+
     def __init__(self, name, **kwargs):
         default = {
             'flags': 0,
@@ -211,10 +200,6 @@ class Layer(_TableEntry):
         }
         default.update(kwargs)
         super(Layer, self).__init__(name, **default)
-
-    @property
-    def table_name(self):
-        return 'LAYER'
 
 class Style(_TableEntry):
     """ DXF STYLE table entry - textstyle definition
@@ -242,6 +227,8 @@ class Style(_TableEntry):
     bigfont
         big-font file name(string), default=""
     """
+    table_name = 'STYLE'
+
     def __init__(self, name, **kwargs):
         default = {
             'flags': 0,
@@ -255,10 +242,6 @@ class Style(_TableEntry):
         }
         default.update(kwargs)
         super(Style, self).__init__(name, **default)
-
-    @property
-    def table_name(self):
-        return 'STYLE'
 
 class View(_TableEntry):
     """ DXF VIEW table entry - view definition
@@ -297,6 +280,7 @@ class View(_TableEntry):
         VMODE_UCS_FOLLOW_MODE_ON
         VMODE_FRONT_CLIP_NOT_AT_EYE
     """
+    table_name = 'VIEW'
 
     def __init__(self, name, **kwargs):
         default = {
@@ -315,10 +299,6 @@ class View(_TableEntry):
         }
         default.update(kwargs)
         super(View, self).__init__(name, **default)
-
-    @property
-    def table_name(self):
-        return 'VIEW'
 
 class Viewport(_TableEntry):
     """ DXF VIEWPORT table entry - viewport definition
@@ -384,6 +364,8 @@ class Viewport(_TableEntry):
     snap_isopair
         snap isopair (int), default=0
     """
+    table_name = 'VPORT'
+
     def __init__(self, name, **kwargs):
         default = {
             'flags': 0,
@@ -416,20 +398,15 @@ class Viewport(_TableEntry):
         default.update(kwargs)
         super(Viewport, self).__init__(name, **default)
 
-    @property
-    def table_name(self):
-        return 'VPORT'
-
 class AppID(_TableEntry):
+    table_name = 'APPID'
+
     def __init__(self, name, **kwargs):
         default = {
             'flags': 0,
         }
         default.update(kwargs)
         super(AppID, self).__init__(name, **default)
-    @property
-    def table_name(self):
-        return 'APPID'
 
 class UCS(_TableEntry):
     """ DXF UCS - user coordinate system
@@ -445,6 +422,8 @@ class UCS(_TableEntry):
     yaxis
         yaxis direction in WCS
     """
+    table_name = 'UCS'
+
     def __init__(self, name, **kwargs):
         default = {
             'flags': 0,
@@ -454,7 +433,3 @@ class UCS(_TableEntry):
         }
         default.update(kwargs)
         super(UCS, self).__init__(name, **default)
-
-    @property
-    def table_name(self):
-        return 'UCS'

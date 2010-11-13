@@ -7,10 +7,6 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import sys
-if sys.version_info[0] > 2:
-    xrange = range
-
 from array import array
 
 # dxf default pen assignment:
@@ -108,7 +104,7 @@ class DXFLineweight(object):
         """Add all in <user_styles> defined lineweights."""
         if user_styles is None:
             return
-        for dxf_index in xrange(1, 256):
+        for dxf_index in range(1, 256):
             lw = user_styles.get_lineweight(dxf_index)
             if lw is not None:
                 self.lineweights[dxf_index] = lw
@@ -152,7 +148,7 @@ class DXFColorIndex(object):
             returns for each dxf index a rgb-tuple or None if not defined
             see also dxfwrite.acadctb.PenStyles object
         """
-        for dxf_color_index in xrange(self.start_index, len(self.color_table)):
+        for dxf_color_index in range(self.start_index, len(self.color_table)):
             user_color = pen_styles.get_color(dxf_color_index)
             if user_color is not None:
                 self.color_table[dxf_color_index] = user_color

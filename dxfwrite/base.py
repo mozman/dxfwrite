@@ -277,12 +277,17 @@ class AttribDef(object):
 
     ATTRIBUTES
 
-    group_code
+    .. attribute:: group_code
+
         DXF groupe code
-    factory
+
+    .. attribute:: factory
+
         factory-function to create DXFAtoms, use PassThroughFactory for
         DXFList or list objects like DXFPoint or pattern in class Linetype().
-    priority
+
+    .. attribute:: priority
+
         determines the output order of attributes, not really necessary for
         the DXF-format (if you belief Autodesk), but useful for testing.
         Prints lower values before higher values. (50, 51, 52, 100, 101, 102)

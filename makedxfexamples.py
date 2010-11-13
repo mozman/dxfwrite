@@ -5,6 +5,9 @@
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+import sys
+if sys.version_info[0] > 2:
+    xrange = range
 
 import math
 from random import random

@@ -30,7 +30,7 @@ class TestArcDimAPI(unittest.TestCase):
 
 class TestArcDimImplementation(unittest.TestCase):
     def test_45deg(self):
-        expected = u"  0\nARC\n 62\n7\n  8\nDIMENSIONS\n 10\n0.0\n 20\n0.0\n"\
+        expected = "  0\nARC\n 62\n7\n  8\nDIMENSIONS\n 10\n0.0\n 20\n0.0\n"\
                  " 30\n0.0\n 40\n7.07106781187\n 50\n0.0\n 51\n45.0\n  0\n"\
                  "LINE\n 62\n5\n  8\nDIMENSIONS\n 10\n1.3\n 20\n0.0\n 30\n"\
                  "0.0\n 11\n7.07106781187\n 21\n0.0\n 31\n0.0\n  0\nLINE\n"\

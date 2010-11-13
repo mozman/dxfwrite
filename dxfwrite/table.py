@@ -19,6 +19,10 @@ definition (BLOCK), if the block definition contains attribute definitions
 (ATTDEF-entity), attribs created by Attdef.new_attrib() will be added to the
 block reference (ATTRIB-entity).
 """
+import sys
+if sys.version_info[0] > 2:
+    xrange = range
+
 from array import array
 from copy import deepcopy
 
@@ -767,7 +771,7 @@ class BlockCell(Cell):
                         rotation=style['rotation'],
                         layer=layer)
         # process attribs
-        for key, value in self.attribs.iteritems():
+        for key, value in self.attribs.items():
             try:
                 attdef = self.blockdef.find_attdef(key)
                 attrib = attdef.new_attrib(text=str(value))

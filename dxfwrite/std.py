@@ -7,6 +7,10 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+import sys
+if sys.version_info[0] > 2:
+    xrange = range
+
 from array import array
 
 # dxf default pen assignment:

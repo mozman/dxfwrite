@@ -6,7 +6,16 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-from cStringIO import StringIO
+import sys
+
+PYTHON3 = sys.version_info[0] > 2
+if PYTHON3:
+    from io import StringIO
+    xrange = range
+    unicode = str
+else:
+    from StringIO import StringIO
+
 from array import array
 from struct import pack
 import zlib
@@ -76,11 +85,17 @@ DEFAULT_LINE_WEIGHTS = [
  2.11, # 26
 ]
 
+def is_string(value):
+    if PYTHON3:
+        return isinstance(value, str)
+    else:
+        return isinstance(value, basestring)
+
 def color_name(index):
     return 'Color_%d' % (index+1)
 
 def get_bool(value):
-    if isinstance(value, basestring):
+    if is_string(value):
         upperstr = value.upper()
         if upperstr == 'TRUE':
             value = True
@@ -356,11 +371,11 @@ class UserStyles(object):
             if lineweights is None:
                 return
             self.lineweights = array('f', [0.0] * len(lineweights))
-            for key, value in lineweights.iteritems():
+            for key, value in lineweights.items():
                 self.lineweights[int(key)] = float(value)
 
         def set_styles(styles):
-            for index, style in styles.iteritems():
+            for index, style in styles.items():
                 style = UserStyle(index, style)
                 self._set_style(style)
 
@@ -387,6 +402,8 @@ def read(fileobj):
     Returns a UserStyle object.
     """
     content = _decompress(fileobj)
+    if PYTHON3:
+        content = content.decode()
     styles = UserStyles()
     styles.parse(content)
     return styles

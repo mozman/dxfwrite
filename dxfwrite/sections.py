@@ -24,7 +24,7 @@ class Sections(object):
         elif name == 'TABLES':
             return TablesSection()
         else:
-            raise ValueError(u"unknown section '%s'" % unicode(name))
+            raise ValueError("unknown section '%s'" % str(name))
 
 class _Section(object):
     def __dxf__(self):

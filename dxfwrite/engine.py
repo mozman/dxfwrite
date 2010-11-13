@@ -42,7 +42,7 @@ class DXFEngine(object):
 
         For drawing methods see ``drawing.Drawing`` class.
         """
-        from drawing import Drawing
+        from dxfwrite.drawing import Drawing
         return Drawing(name)
 
 #--- Table Entries

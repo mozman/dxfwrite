@@ -26,7 +26,7 @@ expected_points = [
     (1.8936094203448928, 2.5322897289776636)
 ]
 
-expected_mirror_dxf = u"  0\nPOLYLINE\n 62\n256\n  8\n0\n 66\n1\n 10\n0.0\n 20\n"\
+expected_mirror_dxf = "  0\nPOLYLINE\n 62\n256\n  8\n0\n 66\n1\n 10\n0.0\n 20\n"\
 "0.0\n 30\n0.0\n 70\n8\n  0\nVERTEX\n  8\n0\n 10\n1.0\n 20\n1.0\n 30\n0.0\n  0\n"\
 "VERTEX\n  8\n0\n 10\n0.134107984968\n 20\n0.499769091903\n 30\n0.0\n  0\n"\
 "VERTEX\n  8\n0\n 10\n-0.730982368063\n 20\n-0.00184649551056\n 30\n0.0\n  0\n"\
@@ -39,7 +39,7 @@ expected_mirror_dxf = u"  0\nPOLYLINE\n 62\n256\n  8\n0\n 66\n1\n 10\n0.0\n 20\n
 "VERTEX\n  8\n0\n 10\n-6.6937855919\n 20\n-3.66641564948\n 30\n0.0\n  0\n"\
 "VERTEX\n  8\n0\n 10\n-7.5214407239\n 20\n-4.22763550456\n 30\n0.0\n  0\nSEQEND\n"
 
-expected_dxf = u"  0\nPOLYLINE\n 62\n256\n  8\n0\n 66\n1\n 10\n0.0\n 20\n0.0\n"\
+expected_dxf = "  0\nPOLYLINE\n 62\n256\n  8\n0\n 66\n1\n 10\n0.0\n 20\n0.0\n"\
 " 30\n0.0\n 70\n8\n  0\nVERTEX\n  8\n0\n 10\n1.0\n 20\n1.0\n 30\n0.0\n  0\n"\
 "VERTEX\n  8\n0\n 10\n1.86589201503\n 20\n1.5002309081\n 30\n0.0\n  0\nVERTEX\n"\
 "  8\n0\n 10\n2.73098236806\n 20\n2.00184649551\n 30\n0.0\n  0\nVERTEX\n  8\n0\n"\
@@ -57,7 +57,8 @@ class TestAlgebraClothoid(unittest.TestCase):
         clothoid = AlgebraClothoid(2.0)
         results = clothoid.approximate(5, 10)
         for expected, result in zip(expected_points, results):
-            self.assertAlmostEqual(expected, result)
+            self.assertAlmostEqual(expected[0], result[0])
+            self.assertAlmostEqual(expected[1], result[1])
 
 class TestDXFClothoid(unittest.TestCase):
     def test_api(self):

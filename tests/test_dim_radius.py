@@ -29,7 +29,7 @@ class TestRadialDimAPI(unittest.TestCase):
 
 class TestRadialDimImplementation(unittest.TestCase):
     def test_R3(self):
-        expected = u"  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n2.29289321881\n"\
+        expected = "  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n2.29289321881\n"\
                  " 20\n2.29289321881\n 30\n0.0\n 11\n3.0\n 21\n3.0\n 31\n0.0\n"\
                  "  0\nTEXT\n 62\n7\n  8\nDIMENSIONS\n 10\n2.15147186258\n 20\n"\
                  "2.15147186258\n 30\n0.0\n 40\n0.5\n  1\n424\n 50\n45.0\n  7\n"\

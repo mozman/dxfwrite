@@ -65,8 +65,8 @@ class TestInsert(unittest.TestCase):
         block_ref.add(attrib, relative=True) # result rotation = 45 + 45 = 90
         inserted_attrib = block_ref.data[0]
         self.assertEqual(inserted_attrib['rotation'], 90.)
-        self.assertAlmostEqual(inserted_attrib['insert']['x'], 0, 3)
-        self.assertAlmostEqual(inserted_attrib['insert']['y'], 1.4142, 3) # y = sqrt(2)
+        self.assertAlmostEqual(inserted_attrib['insert']['x'], 0, places=3)
+        self.assertAlmostEqual(inserted_attrib['insert']['y'], 1.4142, places=3) # y = sqrt(2)
 
 
 if __name__=='__main__':

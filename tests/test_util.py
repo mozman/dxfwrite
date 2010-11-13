@@ -7,6 +7,9 @@
 # License: GPLv3
 
 import unittest
+import sys
+if sys.version_info[0] > 2:
+    xrange=range
 
 from dxfwrite.util import int2hex, hex2int
 from dxfwrite.util import iterflatlist

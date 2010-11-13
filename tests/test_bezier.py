@@ -5,7 +5,7 @@
 # Created: 28.03.2010
 
 import sys
-if sys.version_info[:2]> (2, 6):
+if sys.version_info[:2] > (2, 6):
     import unittest
 else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
@@ -36,7 +36,7 @@ expected_points = [
     (6.0, 2.0)
 ]
 
-expected_dxf = u"  0\nPOLYLINE\n 62\n256\n  8\n0\n 66\n1\n 10\n0.0\n 20\n0.0\n"\
+expected_dxf = "  0\nPOLYLINE\n 62\n256\n  8\n0\n 66\n1\n 10\n0.0\n 20\n0.0\n"\
 " 30\n0.0\n 70\n8\n  0\nVERTEX\n  8\n0\n 10\n2.0\n 20\n4.0\n 30\n0.0\n  0\n"\
 "VERTEX\n  8\n0\n 10\n2.224\n 20\n5.08\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
 "2.832\n 20\n5.92\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n3.728\n 20\n6.52\n 30\n"\
@@ -57,7 +57,8 @@ class TestAlgebraCubicBezier(unittest.TestCase):
         bezier = CubicBezierCurve(test_points)
         results = bezier.approximate(20)
         for expected, result in zip(expected_points, results):
-            self.assertAlmostEqual(expected, result)
+            self.assertAlmostEqual(expected[0], result[0])
+            self.assertAlmostEqual(expected[1], result[1])
 
 class TestDXFBezier(unittest.TestCase):
     def test_bezier(self):

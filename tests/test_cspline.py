@@ -70,10 +70,10 @@ class TestAlgebraCubicSpline(unittest.TestCase):
         spline = CubicSpline(test_points)
         result = spline.approximate(50)
         for p1, p2 in zip(result, expected):
-            self.assertAlmostEqual(p1[0], p2[0], 6)
-            self.assertAlmostEqual(p1[1], p2[1], 6)
+            self.assertAlmostEqual(p1[0], p2[0], places=6)
+            self.assertAlmostEqual(p1[1], p2[1], places=6)
 
-expected_dxf = u"  0\nPOLYLINE\n  6\nSOLID\n 62\n1\n  8\n0\n 66\n1\n 10\n0.0\n" \
+expected_dxf = "  0\nPOLYLINE\n  6\nSOLID\n 62\n1\n  8\n0\n 66\n1\n 10\n0.0\n" \
 " 20\n0.0\n 30\n0.0\n 70\n8\n  0\nVERTEX\n  8\n0\n 10\n0.0\n 20\n0.0\n 30\n0.0\n" \
 "  0\nVERTEX\n  8\n0\n 10\n0.068847230952\n 20\n0.936126340936\n 30\n0.0\n  0\n" \
 "VERTEX\n  8\n0\n 10\n0.231724170207\n 20\n1.55032949111\n 30\n0.0\n  0\nVERTEX\n" \

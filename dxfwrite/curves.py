@@ -7,6 +7,10 @@
 # License: GPLv3
 from math import sin, cos, radians, fmod
 
+import sys
+if sys.version_info[0] > 2:
+    xrange = range
+
 from dxfwrite.vector2d import vadd
 import dxfwrite.const as const
 #from dxfwrite.base import DXFList

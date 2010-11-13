@@ -49,7 +49,7 @@ else:
 
 class TestLinearDimensionImplementation(unittest.TestCase):
     def test_horiz(self):
-        expected = u"  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n-0.3\n" \
+        expected = "  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n-0.3\n" \
                  " 20\n5.0\n 30\n0.0\n 11\n10.3\n 21\n5.0\n 31\n" \
                  "0.0\n  0\nLINE\n 62\n5\n  8\nDIMENSIONS\n 10\n" \
                  "0.0\n 20\n5.0\n 30\n0.0\n 11\n0.0\n 21\n0.3\n" \
@@ -69,7 +69,7 @@ class TestLinearDimensionImplementation(unittest.TestCase):
         self.assertEqual(dimline.__dxf__(), expected)
 
     def test_45deg(self):
-        expected = u"  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n-0.212132034356\n" \
+        expected = "  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n-0.212132034356\n" \
                  " 20\n-0.212132034356\n 30\n0.0\n 11\n5.21213203436\n 21\n" \
                  "5.21213203436\n 31\n0.0\n  0\nLINE\n 62\n5\n  8\n" \
                  "DIMENSIONS\n 10\n5.0\n 20\n5.0\n 30\n0.0\n 11\n" \

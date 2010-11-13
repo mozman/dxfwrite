@@ -7,8 +7,12 @@
 # License: GPL
 # Source: http://www-lehre.informatik.uni-osnabrueck.de/~cg/2000/skript/7_2_Splines.html
 
+import sys
+if sys.version_info[0] > 2:
+    xrange = range
+
 import math
-from itertools import izip
+from dxfwrite.util import izip
 from array import array
 
 def _coords(points, index=0):
@@ -88,7 +92,7 @@ class CubicSpline(object):
 
         n = self.count
         t = self.t
-        nrange = range(n)
+        nrange = list(range(n)) # list() is a Python 3 adaption
 
         delta_t, D = get_delta_t_D(f)
         k, m = get_k_m(D, delta_t)

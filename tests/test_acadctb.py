@@ -12,8 +12,12 @@ if sys.version_info[:2]> (2, 6):
 else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
 
+if sys.version_info[0] > 2: # Python 3 adaption
+    from io import StringIO
+else:
+    from StringIO import StringIO
+
 import os
-from StringIO import StringIO
 
 from dxfwrite.acadctb import *
 
@@ -203,7 +207,7 @@ class TestCtbImport(unittest.TestCase):
     def test_lineweight_table(self):
         lineweights = self.ctb.lineweights
         for default_lw, ctb_lw in zip(DEFAULT_LINE_WEIGHTS, lineweights):
-            self.assertAlmostEqual(default_lw, ctb_lw, 6)
+            self.assertAlmostEqual(default_lw, ctb_lw, places=6)
 
     def test_style_1(self):
         """all attribs are user defined."""

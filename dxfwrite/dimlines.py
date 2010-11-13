@@ -28,12 +28,13 @@ dimstyles
 """
 
 from math import radians, degrees, pi
-from vector2d import *
 
+from dxfwrite.vector2d import *
 from dxfwrite import DXFList
 from dxfwrite.algebra import Ray2D
 from dxfwrite.entities import Line, Text, Block, Insert, Solid, Arc, Circle
 import dxfwrite.const as const
+from dxfwrite.util import to_unicode
 
 __all__ = ['LinearDimension', 'AngularDimension', 'ArcDimension',
            'RadialDimension', 'dimstyles']
@@ -106,13 +107,13 @@ class _DimStyles(object):
         self._styles = {}
         self.default = _DimStyle('Default')
 
-        self.new("angle.deg", scale=ANGLE_DEG, suffix=u'°', roundval=0,
+        self.new("angle.deg", scale=ANGLE_DEG, suffix=to_unicode('°'), roundval=0,
                  tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
                  dimextline=False)
-        self.new("angle.grad", scale=ANGLE_GRAD, suffix=u'gon', roundval=0,
+        self.new("angle.grad", scale=ANGLE_GRAD, suffix='gon', roundval=0,
                  tick="DIMTICK_RADIUS",  tick2x=True, dimlineext=0.,
                  dimextline=False)
-        self.new("angle.rad", scale=ANGLE_RAD, suffix=u'rad', roundval=3,
+        self.new("angle.rad", scale=ANGLE_RAD, suffix='rad', roundval=3,
                   tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
                  dimextline=False)
 
@@ -308,7 +309,7 @@ class LinearDimension(_DimensionBase):
     def _indices_of_sorted_points(points):
         """ get indices of points, for points sorted by x, y values """
         indexed_points = [(idx, point) for idx, point in enumerate(points)]
-        indexed_points.sort(_cmp_indexed_points)
+        indexed_points.sort()
         return list([idx for idx, point in indexed_points])
 
     def _build_vectors(self):
@@ -612,18 +613,6 @@ class RadialDimension(_DimensionBase):
             xscale=self.prop('tickfactor'),
             yscale=self.prop('tickfactor'),
             layer=self.prop('layer')))
-
-def _cmp_indexed_points(ipoint1, ipoint2):
-    """ compare indexed points, sorted in order x, y
-
-    element = (index, point-tuple)
-    example: [(0, (1,2)), (2, (5,7)), (1, (9,8))]
-    """
-    point1 = ipoint1[1]
-    point2 = ipoint2[1]
-    if point1[0] == point2[0]:
-        return cmp(point1[1], point2[1])
-    return cmp(point1[0], point2[0])
 
 def center_of_3points_arc(point1, point2, point3):
     """ calc center point of 3 point arc

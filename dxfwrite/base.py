@@ -7,7 +7,10 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-from itertools import izip
+from dxfwrite.util import izip, PYTHON3, to_string, is_string
+if PYTHON3:
+    xrange = range
+
 from dxfwrite.vector3d import cross_product, unit_vector
 
 def dxfstr(obj):
@@ -63,28 +66,28 @@ class _DXFType(object):
     def check(self, value, code):
         typestr = self.group_code_type(code)
         if typestr == 'string':
-            return isinstance(value, basestring)
+            return is_string(value)
         elif typestr == 'bool':
             return value in (0, 1)
         elif typestr == 'float':
             return isinstance(value, float)
         elif typestr == 'int':
             return isinstance(value, int)
-        raise ValueError(u"Unknown format '%s'" % unicode(code))
+        raise ValueError("Unknown format '%s'" % to_string(code))
 
 
     def cast(self, value, code):
         """ Convert value depending on group code """
         typestr = self.group_code_type(code)
         if typestr == 'string':
-            return unicode(value)
+            return to_string(value)
         elif typestr == 'bool':
             return 1 if int(value) else 0
         elif typestr == 'float':
             return float(value)
         elif typestr == 'int':
             return int(value)
-        raise ValueError(u"Unknown format '%s'" % unicode(code))
+        raise ValueError("Unknown format '%s'" % to_string(code))
 
     def group_code_type(self, group_code):
         return self._group_code_types[group_code]
@@ -107,7 +110,7 @@ class DXFAtom(object):
         self._value = self._typecast(value, self._group_code)
 
     def __dxf__(self):
-        return u"%3d\n%s\n" % (self._group_code, unicode(self._value))
+        return "%3d\n%s\n" % (self._group_code, to_string(self._value))
 
     def _typecast(self, value, group_code):
         return self._dxftype.cast(value, group_code)
@@ -125,7 +128,7 @@ class DXFAtom(object):
         if self.is_3d_point_coord():
             return int(self.group_code % 10)
         else:
-            raise TypeError(u"Not a 3D point value")
+            raise TypeError("Not a 3D point value")
 
     def get_axis_index(self):
         """ returns 0 for 'x', 1 for 'y' and 2 for 'z'.
@@ -135,7 +138,7 @@ class DXFAtom(object):
         if self.is_3d_point_coord():
             return (self.group_code / 10) - 1
         else:
-            raise TypeError(u"Not a 3D point value")
+            raise TypeError("Not a 3D point value")
 
     @property
     def value(self): return self._value
@@ -151,7 +154,7 @@ class DXFAtom(object):
 class DXFList(list):
     """ Collection of DXFAtom """
     def __dxf__(self):
-        return u"".join([atom.__dxf__() for atom in self])
+        return "".join([atom.__dxf__() for atom in self])
 
     def __eq__(self, dxflist):
         if len(self) != len(dxflist):
@@ -173,12 +176,12 @@ class DXFList(list):
 class DXFString(DXFAtom):
     """ String with group code 1 """
     def __init__(self, value, group_code=1):
-        super(DXFString, self).__init__(unicode(value), group_code)
+        super(DXFString, self).__init__(to_string(value), group_code)
 
 class DXFName(DXFAtom):
     """ String with group code 2 """
     def __init__(self, value, group_code=2):
-        super(DXFName, self).__init__(unicode(value), group_code)
+        super(DXFName, self).__init__(to_string(value), group_code)
 
 class DXFFloat(DXFAtom):
     """ float with group code 40 """
@@ -209,7 +212,7 @@ class DXFPoint(object):
             self.point = [DXFFloat(value, (pos+1)*10+index_shift)
                             for pos, value in enumerate(coords)]
         else:
-            raise ValueError(u"only 2 or 3 coord-values allowed.")
+            raise ValueError("only 2 or 3 coord-values allowed.")
 
     def __getitem__(self, axis):
         """ Get coordinate for 'axis'.
@@ -223,23 +226,23 @@ class DXFPoint(object):
             try:
                 return self.point[axis].value
             except IndexError:
-                raise IndexError(u"DXF-Point has no '%s'-coordinate!" % ('x', 'y', 'z')[axis])
-        elif isinstance(axis, basestring):
+                raise IndexError("DXF-Point has no '%s'-coordinate!" % ('x', 'y', 'z')[axis])
+        elif is_string(axis):
             if axis in ('x', 'y', 'z'):
                 try:
                     index = ord(axis) - ord('x')
                     return self.point[index].value
                 except IndexError:
-                    raise IndexError(u"DXF-Point has no '%s'-coordinate!" % axis)
+                    raise IndexError("DXF-Point has no '%s'-coordinate!" % axis)
             elif len(axis) > 1: # 'xy' or 'zx' get coords in letter order
                 return [ self.__getitem__(index) for index in axis ]
             else:
-                raise IndexError(u"Invalid axis name '%s'" % axis)
+                raise IndexError("Invalid axis name '%s'" % axis)
         else:
-            raise IndexError(u"Invalid axis name '%s'" % axis)
+            raise IndexError("Invalid axis name '%s'" % axis)
 
     def __dxf__(self):
-        return u"".join([coord.__dxf__() for coord in self.point])
+        return "".join([coord.__dxf__() for coord in self.point])
 
     def get_index_shift(self):
         return self.point[0].group_code - 10

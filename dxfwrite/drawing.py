@@ -6,7 +6,12 @@
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
-from cStringIO import StringIO
+
+from dxfwrite.util import PYTHON3
+if PYTHON3:
+    from io import StringIO
+else:
+    from cStringIO import StringIO
 
 from dxfwrite import DXFEngine
 from dxfwrite.base import *
@@ -54,11 +59,18 @@ class Drawing(object):
         return result
 
     def _write_dxf(self, fp):
-        fp.write(dxfstr(self.header).encode(self.ENCODING))
-        fp.write(dxfstr(self.tables).encode(self.ENCODING))
-        fp.write(dxfstr(self.blocks).encode(self.ENCODING))
-        fp.write(dxfstr(self.entities).encode(self.ENCODING))
-        fp.write(dxfstr(DXFAtom('EOF')).encode(self.ENCODING))
+        if PYTHON3: # set encoding on open(..., encoding=ENCODING)
+            fp.write(dxfstr(self.header))
+            fp.write(dxfstr(self.tables))
+            fp.write(dxfstr(self.blocks))
+            fp.write(dxfstr(self.entities))
+            fp.write(dxfstr(DXFAtom('EOF')))
+        else:
+            fp.write(dxfstr(self.header).encode(self.ENCODING))
+            fp.write(dxfstr(self.tables).encode(self.ENCODING))
+            fp.write(dxfstr(self.blocks).encode(self.ENCODING))
+            fp.write(dxfstr(self.entities).encode(self.ENCODING))
+            fp.write(dxfstr(DXFAtom('EOF')).encode(self.ENCODING))
 
     def add(self, entity): # shortcut for Drawing.entities.add()
         """ add an entity """
@@ -76,7 +88,7 @@ class Drawing(object):
             A = *A### anonymous groups
         """
         self._anonymous_counter += 1
-        return u"*%s%s" % (unicode(typechar), unicode(self._anonymous_counter))
+        return "*%s%s" % (str(typechar), str(self._anonymous_counter))
 
     def add_anonymous_block(self, entity, layer="0", typechar='U',
                             basepoint=(0, 0), insert=(0, 0)):
@@ -111,7 +123,10 @@ class Drawing(object):
 
     def save(self):
         """Write DXF data to file-system."""
-        fileobj = open(self.filename, 'w')
+        if PYTHON3:
+            fileobj = open(self.filename, 'w', encoding=self.ENCODING)
+        else:
+            fileobj = open(self.filename, 'w')
         self.save_to_fileobj(fileobj)
         fileobj.close()
 

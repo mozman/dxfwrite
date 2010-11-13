@@ -13,7 +13,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='dxfwrite',
-    version='0.3.5',
+    version='0.3.6',
     description='A Python library to create DXF R12 drawings.',
     author='mozman',
     url='http://bitbucket.org/mozman/dxfwrite',
@@ -31,6 +31,8 @@ setup(name='dxfwrite',
     "Programming Language :: Python :: 2.5",
     "Programming Language :: Python :: 2.6",
     "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.1",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
     ]

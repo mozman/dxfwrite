@@ -57,7 +57,7 @@ class Insert2(object):
 
     def _build(self):
         def set_tags(insert_entity):
-            for tag, text in self.attribs.iteritems():
+            for tag, text in self.attribs.items():
                 try:
                     attdef = self.blockdef.find_attdef(tag)
                     attrib = attdef.new_attrib(text=text)

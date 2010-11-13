@@ -8,6 +8,10 @@
 
 __all__ = ['CubicBezierCurve']
 
+import sys
+if sys.version_info[0] > 2:
+    xrange = range
+
 class CubicBezierCurve(object):
     """ implements the classic cubic bezier curve with 4 control points
     """

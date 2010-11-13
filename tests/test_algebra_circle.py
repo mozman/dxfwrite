@@ -14,11 +14,11 @@ class Test_Circle(unittest.TestCase):
     def test_init_circle(self):
         circle = Circle((0.,0.), 5)
         point = circle.get_point(HALF_PI)
-        self.assertAlmostEqual(point[0], 0., 3)
-        self.assertAlmostEqual(point[1], 5., 3)
+        self.assertAlmostEqual(point[0], 0., places=3)
+        self.assertAlmostEqual(point[1], 5., places=3)
         point = circle.get_point(HALF_PI/2)
-        self.assertAlmostEquals(point[0], 3.5355, 3)
-        self.assertAlmostEquals(point[1], 3.5355, 3)
+        self.assertAlmostEquals(point[0], 3.5355, places=3)
+        self.assertAlmostEquals(point[1], 3.5355, places=3)
 
     def test_within(self):
         circle = Circle((0.,0.), 5)
@@ -30,9 +30,9 @@ class Test_Circle(unittest.TestCase):
     def test_tangent(self):
         circle = Circle((0.,0.), 5.)
         tangent = circle.tangent(HALF_PI/2)
-        self.assertAlmostEqual(tangent.slope, -1, 4)
+        self.assertAlmostEqual(tangent.slope, -1, places=4)
         tangent = circle.tangent(-HALF_PI/2)
-        self.assertAlmostEqual(tangent.slope, 1, 4)
+        self.assertAlmostEqual(tangent.slope, 1, places=4)
         tangent = circle.tangent(0)
         self.assertTrue(tangent.is_vertical)
         tangent = circle.tangent(HALF_PI)
@@ -171,8 +171,8 @@ class Test_Circle(unittest.TestCase):
             self.assertEqual(len(points), 2)
             a, b = points
 
-            result1 = equal_points_almost(a, p1, 4) and equal_points_almost(b, p2, 4)
-            result2 = equal_points_almost(a, p2, 4) and equal_points_almost(b, p1, 4)
+            result1 = equal_points_almost(a, p1, 3) and equal_points_almost(b, p2, 3)
+            result2 = equal_points_almost(a, p2, 3) and equal_points_almost(b, p1, 3)
             return result1 or result2
 
         circle1 = Circle( (40,20), 5)
@@ -192,9 +192,9 @@ class Test_Circle(unittest.TestCase):
         p2 =  (5., 7.)
         p3 =  (12., 5.)
         circle = Circle.create_3P(p1, p2, p3)
-        self.assertAlmostEqual(circle.center_point[0], 7.6875, 4)
-        self.assertAlmostEqual(circle.center_point[1], 3.15625, 4)
-        self.assertAlmostEqual(circle.radius, 4.6901, 4)
+        self.assertAlmostEqual(circle.center_point[0], 7.6875, places=4)
+        self.assertAlmostEqual(circle.center_point[1], 3.15625, places=4)
+        self.assertAlmostEqual(circle.radius, 4.6901, places=4)
 
     def test_get_y(self):
         def check(x, y1, y2):

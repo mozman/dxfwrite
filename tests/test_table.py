@@ -13,7 +13,11 @@ if sys.version_info[:2]> (2, 6):
 else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
 
-from itertools import izip
+if sys.version_info[0] > 2:
+    izip = zip
+    xrange = range
+else:
+    from itertools import izip
 
 from dxfwrite.table import Table, DEFAULT_CELL_TEXTCOLOR, CustomCell
 from dxfwrite.table import Grid
@@ -170,18 +174,18 @@ class TestGrid(unittest.TestCase):
     def test_grid_coords(self):
         grid = Grid(self.table)
         left, right, top, bottom = grid.cell_coords(1, 1, span=(1, 1))
-        self.assertAlmostEqual(left, 3., 4)
-        self.assertAlmostEqual(right, 6., 4)
-        self.assertAlmostEqual(top, -3., 4)
-        self.assertAlmostEqual(bottom, -6., 4)
+        self.assertAlmostEqual(left, 3., places=4)
+        self.assertAlmostEqual(right, 6., places=4)
+        self.assertAlmostEqual(top, -3., places=4)
+        self.assertAlmostEqual(bottom, -6., places=4)
 
     def test_grid_coords_span(self):
         grid = Grid(self.table)
         left, right, top, bottom = grid.cell_coords(0, 0, span=(2, 2))
-        self.assertAlmostEqual(left, 0., 4)
-        self.assertAlmostEqual(right, 6., 4)
-        self.assertAlmostEqual(top, 0., 4)
-        self.assertAlmostEqual(bottom, -6., 4)
+        self.assertAlmostEqual(left, 0., places=4)
+        self.assertAlmostEqual(right, 6., places=4)
+        self.assertAlmostEqual(top, 0., places=4)
+        self.assertAlmostEqual(bottom, -6., places=4)
 
 if __name__ == '__main__':
     unittest.main()

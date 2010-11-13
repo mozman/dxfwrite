@@ -171,7 +171,7 @@ class _Entity(object):
         self.attribs = {}
         self['layer'] = '0' # set default layer
         # set attribs from kwargs
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             # linetype can be None which means BYLAYER!
             # and BYLAYER is defined as linetype is omitted
             if value is not None:
@@ -195,7 +195,7 @@ class _Entity(object):
         if self.is_valid_attribute_name(key):
             self.attribs[key] = self._get_dxf_atom(key, value) # factory is called
         else:
-            raise KeyError(u"Invalid attribute '%s' for Entity '%s'." % (unicode(key), self.__class__.__name__))
+            raise KeyError("Invalid attribute '%s' for Entity '%s'." % (str(key), self.__class__.__name__))
 
     def __getitem__(self, key):
         if self.is_valid_attribute_name(key):
@@ -205,7 +205,7 @@ class _Entity(object):
             except AttributeError:
                 return element # DXFList or list or tuple or DXFPoint
         else:
-            raise KeyError(u"Invalid attribute '%s' for Entity '%s'." % (unicode(key), self.__class__.__name__))
+            raise KeyError("Invalid attribute '%s' for Entity '%s'." % (str(key), self.__class__.__name__))
 
     def _get_dxf_atom(self, attribname, value):
         """ create an object for attribname by factory from attribute_definition """
@@ -219,7 +219,7 @@ class _Entity(object):
     def get_attribs(self):
         """ get attribs sorted by priority """
         priority_attribs = [ (self._priority(key), value)
-                 for key, value in self.attribs.iteritems() ]
+                 for key, value in self.attribs.items() ]
         return [ value for priority, value  in sorted(priority_attribs) ]
 
     def get_data(self): # abstract
@@ -245,7 +245,7 @@ class _Entity(object):
             dxf.extend(self.get_data()) # example: block->content, polyline->vertices, faces, insert->attribs
             return dxfstr(dxf)
         else:
-            raise DXFValidationError(u"invalid or missing attributs in object '%s'." % self.__class__.__name__)
+            raise DXFValidationError("invalid or missing attributs in object '%s'." % self.__class__.__name__)
 
 class Line(_Entity):
     def __init__(self, **kwargs):
@@ -501,7 +501,7 @@ class Block(_Entity):
                 (entity.name == 'ATTDEF') and \
                 (entity['tag'] == tag):
                 return entity
-        raise KeyError(u"no attdef with tag '%s' found!" % unicode(tag))
+        raise KeyError("no attdef with tag '%s' found!" % str(tag))
 
     def add(self, entity):
         self.data.append(entity)

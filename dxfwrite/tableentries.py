@@ -99,7 +99,7 @@ class _TableEntry(object):
         self.attribs = {}
         # set attribs from kwargs
         self['name'] = name
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             self[key] = value
 
     @property
@@ -119,7 +119,7 @@ class _TableEntry(object):
         if self.is_valid_attribute_name(key):
             self.attribs[key] = self._get_dxf_atom(key, value) # factory is called
         else:
-            raise KeyError(u"Invalid attribute '%s' for TableEntry '%s'." % (unicode(key), self.__class__.__name__))
+            raise KeyError("Invalid attribute '%s' for TableEntry '%s'." % (str(key), self.__class__.__name__))
 
     def __getitem__(self, key):
         if self.is_valid_attribute_name(key):
@@ -129,7 +129,7 @@ class _TableEntry(object):
             except AttributeError:
                 return element # DXFList or list or tuple
         else:
-            raise KeyError(u"Invalid attribute '%s' for TableEntry '%s'." % (unicode(key), self.__class__.__name__))
+            raise KeyError("Invalid attribute '%s' for TableEntry '%s'." % (str(key), self.__class__.__name__))
 
     def _get_dxf_atom(self, attribname, value):
         """ create an object for attribname by factory from attribute_definition """
@@ -143,7 +143,7 @@ class _TableEntry(object):
     def get_attribs(self):
         """ get attribs sorted by priority """
         priority_attribs = ( (self._priority(key), value)
-                 for key, value in self.attribs.iteritems() )
+                 for key, value in self.attribs.items() )
         return ( value for priority, value  in sorted(priority_attribs) )
 
     def extension_point(self): # abstract

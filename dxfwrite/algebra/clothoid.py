@@ -6,6 +6,10 @@
 # Created: 26.03.2010
 # License: GPLv3
 
+import sys
+if sys.version_info[0] > 2:
+    xrange = range
+
 import math
 
 class Clothoid(object):

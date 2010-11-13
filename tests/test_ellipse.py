@@ -12,7 +12,7 @@ else: # python 2.6 and prior needs the unittest2 package
 
 from dxfwrite.curves import Ellipse
 
-expected = u"  0\nPOLYLINE\n  6\nSOLID\n 62\n3\n  8\n0\n 66\n1\n 10\n0.0\n 20\n" \
+expected = "  0\nPOLYLINE\n  6\nSOLID\n 62\n3\n  8\n0\n 66\n1\n 10\n0.0\n 20\n" \
 "0.0\n 30\n0.0\n 70\n8\n  0\nVERTEX\n  8\n0\n 10\n4.33012701892\n 20\n2.5\n 30\n" \
 "0.0\n  0\nVERTEX\n  8\n0\n 10\n4.16225056329\n 20\n2.74261781728\n 30\n0.0\n  0\n" \
 "VERTEX\n  8\n0\n 10\n3.95428935941\n 20\n2.9588227257\n 30\n0.0\n  0\nVERTEX\n" \

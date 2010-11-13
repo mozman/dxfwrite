@@ -9,11 +9,12 @@
 import unittest
 
 from dxfwrite.base import *
+from dxfwrite.util import is_string
 
 class TestAtom(unittest.TestCase):
     def test_atom_cast(self):
         atom = DXFAtom(1.0, 365) # string
-        self.assertTrue(isinstance(atom._value, basestring))
+        self.assertTrue(is_string(atom._value))
         atom = DXFString('', 1) # empty string
         self.assertEqual(atom._value, '')
         atom = DXFAtom('1.0', 210) # float
@@ -46,6 +47,10 @@ class TestAtom(unittest.TestCase):
         self.assertTrue(DXFBool('1')._value)
         self.assertFalse(DXFBool(0)._value)
         self.assertTrue(DXFBool(1)._value)
+
+    def test_none_us_chars(self):
+        atom = DXFAtom('äöü', 1) # dxf string
+        self.assertEqual(atom.__dxf__(), "  1\näöü\n")
 
     def test_Atom_to_string_valid(self):
         # numbers < 100 are formated with leading spaces

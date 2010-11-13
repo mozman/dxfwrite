@@ -34,7 +34,7 @@ class TestRectangleAPI(unittest.TestCase):
 
 class TestRectangleImplementation(unittest.TestCase):
     def test_components(self):
-        expected = u"  0\nPOLYLINE\n 62\n256\n  8\nRECTANGLE\n 66\n1\n 10\n"\
+        expected = "  0\nPOLYLINE\n 62\n256\n  8\nRECTANGLE\n 66\n1\n 10\n"\
                  "0.0\n 20\n0.0\n 30\n0.0\n 70\n9\n  0\nVERTEX\n  8\n0\n 10\n"\
                  "0.0\n 20\n0.0\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
                  "3.53553390593\n 20\n3.53553390593\n 30\n0.0\n  0\nVERTEX\n"\

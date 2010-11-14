@@ -64,7 +64,10 @@ class _DXFType(object):
             self.add_group_code_type(type_str, begin, end)
 
     def check(self, value, code):
-        typestr = self.group_code_type(code)
+        try:
+            typestr = self.group_code_type(code)
+        except KeyError:
+            raise ValueError("Unknown group code '%s'" % str(code))
         if typestr == 'string':
             return is_string(value)
         elif typestr == 'bool':
@@ -73,8 +76,6 @@ class _DXFType(object):
             return isinstance(value, float)
         elif typestr == 'int':
             return isinstance(value, int)
-        raise ValueError("Unknown format '%s'" % to_string(code))
-
 
     def cast(self, value, code):
         """ Convert value depending on group code """
@@ -136,7 +137,7 @@ class DXFAtom(object):
         DXFPoint[axis_index]
         """
         if self.is_3d_point_coord():
-            return (self.group_code / 10) - 1
+            return int(self.group_code / 10) - 1
         else:
             raise TypeError("Not a 3D point value")
 
@@ -307,6 +308,8 @@ def get_OCS(zvector):
     The arbitrary axis algorithm is used by AutoCAD internally to implement
     the arbitrary but consistent generation of object coordinate systems for all
     entities which use object coordinates.
+
+    untested!
     """
     az = unit_vector(zvector)
     if (abs(az[0]) < _LIMIT) and (abs(az[1]) < _LIMIT):

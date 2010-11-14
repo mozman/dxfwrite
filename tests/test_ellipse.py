@@ -11,6 +11,7 @@ else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
 
 from dxfwrite.curves import Ellipse
+from dxfwrite.const import POLYLINE_CLOSED
 
 expected = "  0\nPOLYLINE\n  6\nSOLID\n 62\n3\n  8\n0\n 66\n1\n 10\n0.0\n 20\n" \
 "0.0\n 30\n0.0\n 70\n8\n  0\nVERTEX\n  8\n0\n 10\n4.33012701892\n 20\n2.5\n 30\n" \
@@ -43,6 +44,13 @@ class TestEllipse(unittest.TestCase):
                           segments=16, color=3, layer='0', linetype='SOLID')
         result = ellipse.__dxf__()
         self.assertEqual(result, expected)
+
+    def test_closed_ellipse(self):
+        ellipse = Ellipse(center=(0., 0.), radiusx=5.0, radiusy=3.0,
+                          startangle=0., endangle=360., rotation=30.,
+                          segments=16, color=3, layer='0', linetype='SOLID')
+        polyline = ellipse._build_curve()
+        self.assertTrue(polyline['flags'] & POLYLINE_CLOSED)
 
 if __name__=='__main__':
     unittest.main()

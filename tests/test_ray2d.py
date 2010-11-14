@@ -35,6 +35,14 @@ class Test_Ray2D(unittest.TestCase):
         x = ray1.get_x(y)
         self.assertAlmostEqual(x, 15., places=3)
 
+    def test_Ray2D_get_x_vertical(self):
+        ray1 = Ray2D((0, -5), (0, 5))
+        self.assertAlmostEqual(ray1.get_x(2), 0.)
+
+    def test_Ray2D_get_x_error(self):
+        ray1 = Ray2D((-5, 0), (5, 0))
+        self.assertRaises(ArithmeticError, ray1.get_x, 2)
+
     def test_ray2d_intersect(self):
         ray1 = Ray2D(( 10, 1), (20, 10))
         ray2 = Ray2D((17, -7), (-10, 3))
@@ -118,6 +126,15 @@ class Test_Ray2D(unittest.TestCase):
         self.assertAlmostEqual(a.angle, 1.309, places=4)
         self.assertAlmostEqual(a.get_y(7), 12.80385, places=4)
         self.assertRaises(ParallelRaysError, ray1.bisectrix, ray3)
+
+    def test_goes_through(self):
+        ray = Ray2D((-3, -3), (3, 3))
+        self.assertTrue(ray.goes_through((0,0)))
+
+    def test_goes_through_vertical(self):
+        ray = Ray2D((0, -3), (0, 3))
+        self.assertTrue(ray.goes_through((0,0)))
+
 
 if __name__ == '__main__':
     unittest.main()

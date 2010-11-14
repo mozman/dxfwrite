@@ -40,8 +40,8 @@ def get_angle(p1, p2):
     input: points as tuples
     result: angle in radians
     """
-    dx = p1[0] - p2[0]
-    dy = p1[1] - p2[1]
+    dx = p2[0] - p1[0]
+    dy = p2[1] - p1[1]
     return math.atan2(dy, dx)
 
 def right_of_line(point, p1, p2):

@@ -141,6 +141,11 @@ class TestUserStylesAPI(unittest.TestCase):
         style.set_lineweight(0.70)
         self.assertAlmostEqual(self.styles.get_lineweight(5), 0.70)
 
+    def test_get_lineweight_none(self):
+        style = self.styles.set_style(5, dict(description='TestCase'))
+        style.set_lineweight(0.0)
+        self.assertEqual(self.styles.get_lineweight(5), None)
+
     def test_get_lineweight_index(self):
         self.assertEqual(self.styles.get_lineweight_index(0.50), 13)
 
@@ -150,6 +155,11 @@ class TestUserStylesAPI(unittest.TestCase):
     def test_set_table_lineweight(self):
         self.styles.set_table_lineweight(7, 1.70)
         self.assertAlmostEqual(self.styles.get_table_lineweight(7), 1.70)
+
+    def test_set_table_lineweight_index_error(self):
+        index_out_of_range = len(self.styles.lineweights) + 7
+        index = self.styles.set_table_lineweight(index_out_of_range, 7.77)
+        self.assertAlmostEqual(self.styles.get_table_lineweight(index), 7.77)
 
 class TestUserStylesImplementation(unittest.TestCase):
     def test_write_header(self):
@@ -194,9 +204,7 @@ class TestCtbImport(unittest.TestCase):
     def setUp(self):
         path, name = os.path.split(__file__)
         ctbfile = os.path.join(path, 'ctbtest.ctb')
-        fileobj = open(ctbfile, 'rb')
-        self.ctb = read(fileobj)
-        fileobj.close()
+        self.ctb = load(ctbfile)
 
     def test_ctb_attribs(self):
         styles = self.ctb
@@ -244,6 +252,30 @@ class TestCtbImport(unittest.TestCase):
         should(style.end_style, ENDSTYLE_OBJECT)
         should(style.join_style, JOINSTYLE_OBJECT)
         should(style.fill_style, FILL_STYLE_OBJECT)
+
+class TestCtbExport(unittest.TestCase):
+    def test_create_ctb(self):
+        styles = UserStyles("TestCTB")
+        styles.save('newctb.ctb')
+        self.assertTrue(True)
+
+
+
+class TestFunctions(unittest.TestCase):
+    def test_is_string(self):
+        self.assertTrue(is_string('a string'))
+        self.assertTrue(is_string('üöä'))
+        self.assertFalse(is_string(1))
+
+    def test_color_name(self):
+        self.assertEqual(color_name(0), 'Color_1')
+
+    def test_get_bool(self):
+        self.assertTrue(get_bool(True))
+        self.assertTrue(get_bool('true'))
+        self.assertFalse(get_bool(False))
+        self.assertFalse(get_bool('false'))
+        self.assertRaises(ValueError, get_bool, 'falsch')
 
 if __name__=='__main__':
     unittest.main()

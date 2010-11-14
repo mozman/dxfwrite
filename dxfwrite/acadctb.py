@@ -6,6 +6,8 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+# IMPORTANT: use only standard 7-Bit ascii code
+
 import sys
 
 PYTHON3 = sys.version_info[0] > 2
@@ -217,6 +219,7 @@ class UserStyle(object):
 
 class UserStyles(object):
     """UserStyle container"""
+
     def __init__(self, description="", scale_factor=1.0, apply_factor=False):
         self.description = description
         self.scale_factor = scale_factor
@@ -231,8 +234,7 @@ class UserStyles(object):
 
     def set_default_styles(self):
         for index in xrange(STYLE_COUNT):
-            style = UserStyle(index)
-            self._set_style(style)
+            self._set_style(UserStyle(index))
 
     @staticmethod
     def check_color_index(dxf_color_index):
@@ -293,8 +295,8 @@ class UserStyles(object):
     def set_table_lineweight(self, index, weight):
         """Index is the lineweight table index, not the dxf color index.
 
-        index -- lineweight table index = UserStyle.lineweight
-        weight -- in millimeters
+        :param int index: lineweight table index = UserStyle.lineweight
+        :param float weight: in millimeters
         """
         try:
             self.lineweights[index] = weight
@@ -308,7 +310,7 @@ class UserStyles(object):
 
         returns 0.0 for: use object lineweight
 
-        index -- lineweight table index = UserStyle.lineweight
+        :param int index: lineweight table index = UserStyle.lineweight
         """
         return self.lineweights[index]
 
@@ -388,12 +390,19 @@ class UserStyles(object):
         set_lineweights(parser.get('custom_lineweight_table', None))
         set_styles(parser.get('plot_style', {}))
 
-    @staticmethod
-    def _compress(fileobj, body):
+
+    def _compress(self, fileobj, body):
         """Compress ctb-file-body and write it to <fileobj>."""
+        def writestr(s):
+            if PYTHON3:
+                fileobj.write(s.encode())
+            else:
+                fileobj.write(s)
+        if PYTHON3:
+            body = body.encode()
         comp_body = zlib.compress(body)
         adler_chksum = zlib.adler32(comp_body)
-        fileobj.write('PIAFILEVERSION_2.0,CTBVER1,compress\r\npmzlibcodec')
+        writestr('PIAFILEVERSION_2.0,CTBVER1,compress\r\npmzlibcodec')
         fileobj.write(pack('LLL', adler_chksum, len(body), len(comp_body)))
         fileobj.write(comp_body)
 
@@ -411,8 +420,9 @@ def read(fileobj):
 def load(filename):
     """Load the ctb-file <filename>."""
     fileobj = open(filename, 'rb')
-    read(fileobj)
+    ctbfile = read(fileobj)
     fileobj.close()
+    return ctbfile
 
 def _decompress(fileobj):
     """Read and decompress the file content of the file-like object <fileobj>."""

@@ -60,6 +60,25 @@ class TestAlgebraClothoid(unittest.TestCase):
             self.assertAlmostEqual(expected[0], result[0])
             self.assertAlmostEqual(expected[1], result[1])
 
+    def test_get_radius(self):
+        clothoid = AlgebraClothoid(2.0)
+        self.assertAlmostEqual(clothoid.get_radius(1), 4.)
+        self.assertAlmostEqual(clothoid.get_radius(0), 0.)
+
+    def test_get_tau(self):
+        clothoid = AlgebraClothoid(2.0)
+        self.assertAlmostEqual(clothoid.get_tau(1), 0.125)
+
+    def test_get_L(self):
+        clothoid = AlgebraClothoid(2.0)
+        self.assertAlmostEqual(clothoid.get_L(10), 0.4)
+
+    def test_get_center(self):
+        clothoid = AlgebraClothoid(2.0)
+        xm, ym = clothoid.get_center(2.0)
+        self.assertAlmostEqual(xm, 0.9917243)
+        self.assertAlmostEqual(ym, 2.0825932)
+
 class TestDXFClothoid(unittest.TestCase):
     def test_api(self):
         clothoid = DXFClothoid(start=(1, 1), paramA=20, length=10, rotation=30,

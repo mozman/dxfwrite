@@ -60,6 +60,21 @@ class TestAlgebraCubicBezier(unittest.TestCase):
             self.assertAlmostEqual(expected[0], result[0])
             self.assertAlmostEqual(expected[1], result[1])
 
+    def test_init_three_points(self):
+        test_points = [(0, 0), (1, 4), (4, 5)]
+        self.assertRaises(ValueError, CubicBezierCurve, test_points)
+
+    def test_get_tangent(self):
+        bezier = CubicBezierCurve([(0, 0), (1, 4), (4, 5), (6, 2)])
+        tangent = bezier.get_tangent(0.5)
+        self.assertAlmostEqual(tangent[0], 6.75)
+        self.assertAlmostEqual(tangent[1], 2.25)
+
+    def test_get_tangent_error(self):
+        bezier = CubicBezierCurve([(0, 0), (1, 4), (4, 5), (6, 2)])
+        self.assertRaises(ValueError, bezier.get_tangent, 2.)
+        self.assertRaises(ValueError, bezier.get_tangent, -2.)
+
 class TestDXFBezier(unittest.TestCase):
     def test_bezier(self):
         bezier = Bezier(color=256, layer='0', linetype=None)
@@ -71,6 +86,13 @@ class TestDXFBezier(unittest.TestCase):
         #test implementation
         result = bezier.__dxf__()
         self.assertEqual(expected_dxf, result)
+
+    def test_to_few_points(self):
+        bezier = Bezier(color=256, layer='0', linetype=None)
+        bezier.start(point=(2, 4), tangent=(0, 2))
+        segment_generator = bezier._build_bezier_segments()
+        self.assertRaises(ValueError, next, segment_generator)
+        self.assertRaises(ValueError, bezier._build_curve)
 
 if __name__=='__main__':
     unittest.main()

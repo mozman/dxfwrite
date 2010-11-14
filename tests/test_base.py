@@ -9,6 +9,7 @@
 import unittest
 
 from dxfwrite.base import *
+from dxfwrite.base import _DXFType
 from dxfwrite.util import is_string
 
 class TestAtom(unittest.TestCase):
@@ -42,6 +43,32 @@ class TestAtom(unittest.TestCase):
         atom = DXFAtom('0', 30) # point, float
         self.assertTrue(isinstance(atom._value, float))
 
+    def test_is_3d_point_coord(self):
+        atom = DXFAtom('0', 30)
+        self.assertTrue(atom.is_3d_point_coord())
+        atom = DXFAtom('0', 40)
+        self.assertFalse(atom.is_3d_point_coord())
+
+    def test_get_index_shift(self):
+        atom = DXFAtom('0', 33)
+        self.assertEqual(atom.get_index_shift(), 3)
+
+    def test_get_index_shift_error(self):
+        atom = DXFAtom('0', 43)
+        self.assertRaises(TypeError, atom.get_index_shift)
+
+    def test_get_axis_index(self):
+        atom = DXFAtom('0', 13) # x axis
+        self.assertEqual(atom.get_axis_index(), 0)
+        atom = DXFAtom('0', 23) # y axis
+        self.assertEqual(atom.get_axis_index(), 1)
+        atom = DXFAtom('0', 33) # z axis
+        self.assertEqual(atom.get_axis_index(), 2)
+
+    def test_get_axis_index_error(self):
+        atom = DXFAtom('0', 43)
+        self.assertRaises(TypeError, atom.get_axis_index)
+
     def test_cast_bool(self):
         self.assertFalse(DXFBool('0')._value)
         self.assertTrue(DXFBool('1')._value)
@@ -66,6 +93,31 @@ class TestAtom(unittest.TestCase):
     def test_invalid_Atom_creation(self):
         # None numeric group code
         self.assertRaises(ValueError, DXFAtom, 'HEADER', 'A')
+
+class TestDXFType(unittest.TestCase):
+    def test_check_string(self):
+        dxftype = _DXFType()
+        self.assertTrue(dxftype.check('string', 1))
+        self.assertFalse(dxftype.check(1.0, 1))
+
+    def test_check_bool(self):
+        dxftype = _DXFType()
+        self.assertTrue(dxftype.check(1, 290))
+        self.assertFalse(dxftype.check(2, 290))
+
+    def test_check_float(self):
+        dxftype = _DXFType()
+        self.assertTrue(dxftype.check(1.0, 10))
+        self.assertFalse(dxftype.check('1.0', 10))
+
+    def test_check_int(self):
+        dxftype = _DXFType()
+        self.assertTrue(dxftype.check(1, 60))
+        self.assertFalse(dxftype.check('1', 60))
+
+    def test_check_group_code_error(self):
+        dxftype = _DXFType()
+        self.assertRaises(ValueError, dxftype.check, '0', 7777)
 
 class TestDXFList(unittest.TestCase):
     def test_empty_DXFList(self):

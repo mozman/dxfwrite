@@ -26,7 +26,7 @@ def main(filename):
     # first create a block
     flag = dxf.block(name='flag')
     # add dxf entities to the block (the flag)
-    # use basepont = (x, y) define an other basepoint than (0 ,0)
+    # use basepoint = (x, y) define an other basepoint than (0, 0)
     flag.add( dxf.polyline(flag_symbol) )
     # add block definition to the drawing
     dwg.blocks.add(flag)

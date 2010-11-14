@@ -115,7 +115,7 @@ class Bezier(object):
         self.points.append( (point, tangent1, tangent2, int(segments)) )
 
     def _build_bezier_segments(self):
-        if len(self.points)>1:
+        if len(self.points) > 1:
             for from_point, to_point in zip(self.points[:-1], self.points[1:]):
                 start_point = from_point[0]
                 start_tangent = from_point[2] # tangent2

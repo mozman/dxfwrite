@@ -82,6 +82,10 @@ with easy_install::
 
     easy_install dxfwrite
 
+with pip::
+
+    pip install dxfwrite
+
 or from source::
 
     python setup.py install

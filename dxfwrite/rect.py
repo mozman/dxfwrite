@@ -33,6 +33,8 @@ class Rectangle(object):
     layer -- target layer, default is '0'
     linetype -- linetype name, None = BYLAYER
     """
+    name = 'RECTANGLE'
+
     def __init__(self, insert, width, height, rotation=0.,
                  halign=const.LEFT, valign=const.TOP,
                  color=const.BYLAYER, bgcolor=None,
@@ -49,11 +51,6 @@ class Rectangle(object):
         self.linetype = linetype
         self.points = None
         self.data = DXFList()
-
-    @property
-    def name(self):
-        """ entitiy type name """
-        return 'RECTANGLE'
 
     def _build_rect(self):
         self._calc_corners()

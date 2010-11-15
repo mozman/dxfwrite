@@ -46,5 +46,9 @@ class TestSection(unittest.TestCase):
         self.assertTrue('  9\n$EXTMIN\n 10\n0.0\n 20\n0.0\n 30\n0.0\n' in dxf)
         self.assertTrue('  9\n$EXTMAX\n 10\n99.0\n 20\n117.0\n 30\n0.0\n' in dxf)
 
+    def test_get_section_error(self):
+        self.assertRaises(ValueError, Sections.get, 'MOZMAN')
+
+
 if __name__=='__main__':
     unittest.main()

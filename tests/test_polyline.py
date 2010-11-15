@@ -29,6 +29,11 @@ class TestPolyline(unittest.TestCase):
                  " 70\n8\n" + vt1 + vt2 + "  0\nSEQEND\n"
         self.assertEqual(dxfstr(polyline), expected)
 
+    def test_invalid_polyline(self):
+        polyline = Polyline()
+        self.assertFalse(polyline.valid())
+
+
 
 if __name__=='__main__':
     unittest.main()

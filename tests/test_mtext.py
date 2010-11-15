@@ -18,18 +18,17 @@ from dxfwrite.mtext import MText
 import dxfwrite
 
 class TestMText(unittest.TestCase):
+    expected_line = Template("  0\nTEXT\n 62\n256\n  8\n0\n 10\n${px}\n 20\n${py}\n" \
+                             " 30\n${pz}\n 40\n1.0\n  1\n${text}\n 50\n0.0\n" \
+                             " 41\n1.0\n 51\n0.0\n  7\nSTANDARD\n 71\n0\n 72\n0\n 73\n${valign}\n" \
+                             " 11\n${px}\n 21\n${py}\n 31\n${pz}\n")
+    expected_line_rot = Template("  0\nTEXT\n 62\n256\n  8\n0\n 10\n${px}\n 20\n${py}\n" \
+                                 " 30\n${pz}\n 40\n1.0\n  1\n${text}\n 50\n${rot}\n" \
+                                 " 41\n1.0\n 51\n0.0\n  7\nSTANDARD\n 71\n0\n 72\n0\n 73\n${valign}\n" \
+                                 " 11\n${px}\n 21\n${py}\n 31\n${pz}\n")
 
     def setUp(self):
         self.addTypeEqualityFunc(str, self.assertMultiLineEqual)
-        self.expected_line = Template("  0\nTEXT\n 62\n256\n  8\n0\n 10\n${px}\n 20\n${py}\n" \
-            " 30\n${pz}\n 40\n1.0\n  1\n${text}\n 50\n0.0\n" \
-            " 41\n1.0\n 51\n0.0\n  7\nSTANDARD\n 71\n0\n 72\n0\n 73\n${valign}\n" \
-            " 11\n${px}\n 21\n${py}\n 31\n${pz}\n")
-
-        self.expected_line_rot = Template("  0\nTEXT\n 62\n256\n  8\n0\n 10\n${px}\n 20\n${py}\n" \
-            " 30\n${pz}\n 40\n1.0\n  1\n${text}\n 50\n${rot}\n" \
-            " 41\n1.0\n 51\n0.0\n  7\nSTANDARD\n 71\n0\n 72\n0\n 73\n${valign}\n" \
-            " 11\n${px}\n 21\n${py}\n 31\n${pz}\n")
 
     def test_horiz_top(self):
         text = "lineA\nlineB"
@@ -46,6 +45,10 @@ class TestMText(unittest.TestCase):
         line1 = self.expected_line.substitute(text='lineA', px='0.0', py='1.0', pz='0.0', valign=str(valign))
         line2 = self.expected_line.substitute(text='lineB', px='0.0', py='0.0', pz='0.0', valign=str(valign))
         self.assertEqual(mtext.__dxf__(), line1+line2)
+
+    def test_baseline(self):
+        mtext = MText("lineA\nlineB", (0., 0., 0.), 1.0, valign=dxfwrite.BASELINE)
+        self.assertEqual(mtext.valign, dxfwrite.BOTTOM)
 
     def test_horiz_middle(self):
         text = "lineA\nlineB"

@@ -34,7 +34,7 @@ class _Section(object):
         return "".join( (head, body, tail) )
 
     def _get_body(self):
-        return DXFList()
+        """ abstract """
 
 class Header(_Section):
     def __init__(self, default_vars=None):

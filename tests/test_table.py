@@ -20,7 +20,7 @@ else:
     from itertools import izip
 
 from dxfwrite.table import Table, DEFAULT_CELL_TEXTCOLOR, CustomCell
-from dxfwrite.table import Grid
+from dxfwrite.table import Grid, Style, DEFAULT_BORDER_COLOR
 
 class DXFMock:
     counter = 0
@@ -164,6 +164,7 @@ class TestTableImplementation(unittest.TestCase):
         table.text_cell(2, 0, "ERROR", span=(2, 1))
         self.assertRaises(IndexError, table.__dxf__)
 
+
 class TestGrid(unittest.TestCase):
     def setUp(self):
         self.table = Table((0, 0), 3, 3)
@@ -186,6 +187,35 @@ class TestGrid(unittest.TestCase):
         self.assertAlmostEqual(right, 6., places=4)
         self.assertAlmostEqual(top, 0., places=4)
         self.assertAlmostEqual(bottom, -6., places=4)
+
+    def test_draw_cell_background(self):
+        grid = Grid(self.table)
+        self.table.new_cell_style('fill', bgcolor=17)
+
+        cell = self.table.get_cell(0, 0)
+        cell.stylename='fill'
+
+        self.assertTrue('SOLID' in self.table.__dxf__())
+
+class TestStyle(unittest.TestCase):
+    def test_set_border_status(self):
+        style = Style.get_default_cell_style()
+        style.set_border_status(False, True, False, True)
+        self.assertFalse(style['left']['status'])
+        self.assertTrue(style['right']['status'])
+        self.assertFalse(style['top']['status'])
+        self.assertTrue(style['bottom']['status'])
+
+    def test_set_border_style(self):
+        style = Style.get_default_cell_style()
+        border_style = Style.get_default_border_style()
+        border_style['color'] = 17
+
+        style.set_border_style(border_style, False, True, False, True)
+        self.assertEqual(style['left']['color'], DEFAULT_BORDER_COLOR)
+        self.assertEqual(style['right']['color'], 17)
+        self.assertEqual(style['top']['color'], DEFAULT_BORDER_COLOR)
+        self.assertEqual(style['bottom']['color'], 17)
 
 if __name__ == '__main__':
     unittest.main()

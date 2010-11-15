@@ -655,7 +655,7 @@ class DXFEngine(object):
         """
         2D Rectangle, build with a polyline and a solid as background filling
 
-        insert point --where to place the rantangle
+        insert point -- where to place the rantangle
         width, height -- in drawing units
         rotation -- in degree (circle = 360 degree)
         halign -- LEFT, CENTER, RIGHT

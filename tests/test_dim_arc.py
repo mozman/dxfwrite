@@ -48,5 +48,12 @@ class TestArcDimImplementation(unittest.TestCase):
                                end=(1, 1), )
         self.assertEqual(dimline.__dxf__(), expected)
 
+    def test_setup(self):
+        dimline = ArcDimension((5,5), (4,0), (0,4), (-4,0), arc3points=True)
+        dimline._setup()
+        center = dimline.center
+        self.assertAlmostEqual(center[0], 0)
+        self.assertAlmostEqual(center[1], 0)
+
 if __name__=='__main__':
     unittest.main()

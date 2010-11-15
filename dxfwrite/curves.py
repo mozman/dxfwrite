@@ -47,7 +47,7 @@ class Ellipse(object):
 
         def normalize_angle(angle):
             angle = fmod(angle, 360.)
-            if angle<0:
+            if angle < 0:
                 angle += 360.
             return angle
 

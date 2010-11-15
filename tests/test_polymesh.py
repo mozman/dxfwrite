@@ -13,7 +13,7 @@ else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
 
 from dxfwrite.entities import Polymesh
-from dxfwrite import dxfstr
+from dxfwrite import dxfstr, const
 
 class TestPolymesh(unittest.TestCase):
     def setUp(self):
@@ -33,6 +33,24 @@ class TestPolymesh(unittest.TestCase):
         expected = "  0\nPOLYLINE\n  8\n0\n 66\n1\n" \
                  " 70\n16\n 71\n2\n 72\n2\n" + vt1 + vt2 + vt3 + vt4 + "  0\nSEQEND\n"
         self.assertEqual(dxfstr(mesh), expected)
+
+    def test_set_mclosed(self):
+        mesh = Polymesh(2, 2)
+        mesh.set_mclosed(True)
+        self.assertTrue(mesh['flags'] & const.POLYLINE_MESH_CLOSED_M_DIRECTION)
+
+        mesh.set_mclosed(False)
+        self.assertFalse(mesh['flags'] & const.POLYLINE_MESH_CLOSED_M_DIRECTION)
+
+    def test_set_nclosed(self):
+        mesh = Polymesh(2, 2)
+        mesh.set_nclosed(True)
+        self.assertTrue(mesh['flags'] & const.POLYLINE_MESH_CLOSED_N_DIRECTION)
+
+        mesh.set_nclosed(False)
+        self.assertFalse(mesh['flags'] & const.POLYLINE_MESH_CLOSED_N_DIRECTION)
+
+
 
 if __name__=='__main__':
     unittest.main()

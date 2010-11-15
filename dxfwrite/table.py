@@ -62,6 +62,8 @@ class Table(object):
 
     The table object contains the table data cells.
     """
+    name = 'TABLE'
+
     def __init__(self, insert, nrows, ncols, default_grid=True):
         """Constructor
 
@@ -198,11 +200,6 @@ class Table(object):
             raise Exception("Can only be called at dxf creation.")
         return ((row, col, self.get_cell(row, col))
                 for row, col in self.visibility_map)
-
-    @property
-    def name(self):
-        """ entitiy type name """
-        return 'TABLE'
 
     def __dxf__(self):
         self._build_table()

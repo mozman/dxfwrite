@@ -5,10 +5,18 @@
 # Created: 28.03.2010
 
 import sys
+
 if sys.version_info[:2] > (2, 6):
     import unittest
 else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
+
+PYTHON25 = sys.version_info[:2] < (2, 6)
+def get_next(generator):
+    return generator.next()
+
+if PYTHON25:
+    next = get_next
 
 from dxfwrite.algebra.bezier import CubicBezierCurve
 from dxfwrite.curves import Bezier

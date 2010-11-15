@@ -31,6 +31,8 @@ class MText(object):
 
     linespacing -- linespacing in percent of height, 1.5 = 150% = 1+1/2 lines
     """
+    name = 'MTEXT'
+
     def __init__(self, text, insert, linespacing=1.5, **kwargs):
         self.textlines = text.split('\n')
         self.insert = insert
@@ -54,10 +56,6 @@ class MText(object):
         elif len(self.textlines) == 1: # just a normal text with one line
             kwargs['alignpoint'] = insert # text() needs the align point
             self.data.append(Text(text=text, insert=insert, **kwargs))
-    @property
-    def name(self):
-        """ entitiy type name """
-        return 'MTEXT'
 
     @property
     def lineheight(self):

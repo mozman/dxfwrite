@@ -200,14 +200,12 @@ class DXFEngine(object):
         """
         Create a new user-coordinate-system (UCS).
 
-        Arguments
-        ---------
+        :param string name: ucs name
+        :param int flags: standard flag values, bit-coded
+        :param origin: origin in WCS (xyz-tuple), default=(0, 0, 0)
+        :param xaxis: xaxis direction in WCS (xyz-tuple), default=(1, 0, 0)
+        :param yaxis: yaxis direction in WCS (xyz-tuple), default=(0, 1, 0)
 
-        name -- ucs name (string)
-        flags -- standard flag values, bit-coded
-        origin -- origin in WCS (xyz-tuple), default=(0, 0, 0)
-        xaxis -- xaxis direction in WCS (xyz-tuple), default=(1, 0, 0)
-        yaxis -- yaxis direction in WCS (xyz-tuple), default=(0, 1, 0)
         """
         return UCS(name, **kwargs)
 
@@ -230,16 +228,9 @@ class DXFEngine(object):
         """
         Create a new line-entity of two (3D) points, z-axis is 0 by default.
 
-        Arguments
-        ---------
+        :param start: start point (xy- or xyz-tuple)
+        :param end: end point (xy- or xyz-tuple)
 
-        start -- start point (xy- or xyz-tuple)
-        end -- end point (xy- or xyz-tuple)
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
         """
         return Line(start=start, end=end, **kwargs)
 
@@ -248,17 +239,10 @@ class DXFEngine(object):
         """
         Create a new point-entity of one (3D) point, z-axis is 0 by default.
 
-        Arguments
-        ---------
-
-        point -- start point (xy- or xyz-tuple)
-        orientation -- a 3D vector (xyz-tuple), orientation of PDMODE images ...
+        :param point: start point (xy- or xyz-tuple)
+        :param orientation: a 3D vector (xyz-tuple), orientation of PDMODE images ...
             see dxf documtation
 
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
         """
 
         return Point(point=point, **kwargs)
@@ -269,15 +253,8 @@ class DXFEngine(object):
         Create a solid-entity with 3 or 4 sides of (3D) points, z-axis is 0
         by default.
 
-        Arguments
-        ---------
+        :param list points: three or four 2D- or 3D-points
 
-        points -- list of three or four 2D- or 3D-points
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
         """
         return Solid(points, **kwargs)
 
@@ -287,15 +264,7 @@ class DXFEngine(object):
         Create a trace-entity with 3 or 4 sides of (3D) points, z-axis is 0
         by default.
 
-        Arguments
-        ---------
-
-        points -- list of three or four 2D- or 3D-points
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
+        :param points: list of three or four 2D- or 3D-points
         """
         return Trace(points, **kwargs)
 
@@ -304,18 +273,10 @@ class DXFEngine(object):
         """
         Create a new circle-entity.
 
-        Arguments
-        ---------
+        :param float radius: circle radius
+        :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
 
-        radius -- circle radius (float)
-        center -- center point (xy- or xyz-tuple), z-axis is 0 by default
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
         """
-
         return Circle(radius=radius, center=center, **kwargs)
 
     @staticmethod
@@ -337,36 +298,24 @@ class DXFEngine(object):
         """
         Create a new text entity.
 
-        Arguments
-        ---------
-
-        text -- the text to display (string)
-        insert -- insert point (xy- or xyz-tuple), z-axis is 0 by default
-        height -- text height in drawing-units (float)
-        rotation -- text rotion in dregree (float), default=0
-        xscale -- text width factor (float), default=1
-        oblique -- text oblique angle in degree (float), default=0
-        style -- text style name (string), default=STANDARD
-        mirror -- text generation flags (int), bit-coded, default=0
-        ==============  ===================================
-        const.MIRROR_X  Text is backward (mirrored in X)
-        const.MIRROR_Y  Text is upside down (mirrored in Y)
-        ==============  ===================================
-        halign -- horizontal justification type (int)
-        valign -- vertical justification type (int)
-
-        any combination of valign (TOP, MIDDLE, BOTTOM) and halign(LEFT,
-        CENTER, RIGHT) is valid.
-
-        alignpoint -- align point (xy- or xyz-tuple), z-axis is 0 by default
+        :param string text: the text to display
+        :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+        :param float height: text height in drawing-units
+        :param float rotation: text rotion in dregree, default=0
+        :param float xscale: text width factor, default=1
+        :param float oblique: text oblique angle in degree, default=0
+        :param string style: text style name, default=STANDARD
+        :param int mirror: text generation flags, bit-coded, default=0
+        :param int halign: horizontal justification type
+        :param int valign: vertical justification type
+        :param alignpoint: align point (xy- or xyz-tuple), z-axis is 0 by default
             If the justification is anything other than BASELINE/LEFT,
             alignpoint specify the alignment point (or the second alignment
             point for ALIGN or FIT).
 
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
+        any combination of **valign** (TOP, MIDDLE, BOTTOM) and **halign** (LEFT,
+        CENTER, RIGHT) is valid.
+
         """
         return Text(text=text, insert=insert, height=height, **kwargs)
 
@@ -375,19 +324,12 @@ class DXFEngine(object):
         """
         Insert a shape-reference.
 
-        Arguments
-        ---------
+        :param string name: name of shape
+        :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+        :param float xscale: x-scale factor, default=1.
+        :param float rotation: rotiation angle in degree, default=0
+        :param float oblique: text oblique angle in degree, default=0
 
-        name -- name of shape (string)
-        insert -- insert point (xy- or xyz-tuple), z-axis is 0 by default
-        xscale -- x-scale factor (float), default=1.
-        rotation -- rotiation angle in degree (float), default=0
-        oblique -- text oblique angle in degree (float), default=0
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
         """
         return Shape(name=name, insert=insert, **kwargs)
 
@@ -396,24 +338,17 @@ class DXFEngine(object):
         """
         Insert a new block-reference.
 
-        Arguments
-        ---------
+        :param string blockname: name of block definition
+        :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+        :param float xscale: x-scale factor, default=1.
+        :param float yscale: y-scale factor, default=1.
+        :param float zscale: z-scale factor, default=1.
+        :param float rotation: rotation angle in degree, default=0.
+        :param int columns: column count, default=1
+        :param int rows: row count, default=1
+        :param float colspacing: column spacing, default=0.
+        :param float rowspacing: row spacing, default=0.
 
-        blockname -- name of block definition (string)
-        insert -- insert point (xy- or xyz-tuple), z-axis is 0 by default
-        xscale -- x-scale factor (float), default=1.
-        yscale -- y-scale factor (float), default=1.
-        zscale -- z-scale factor (float), default=1.
-        rotation -- rotation angle in degree (float), default=0.
-        columns -- column count (int), default=1
-        rows -- row count (int), default=1
-        colspacing -- column spacing (float), default=0.
-        rowspacing -- row spacing (float), default=0.
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
         """
         return Insert(blockname=blockname, insert=insert, **kwargs)
 
@@ -451,11 +386,26 @@ class DXFEngine(object):
         """
         Create a new attribute, used in the entities section.
 
-        Arguments
-        ---------
-        like attdef, but without prompt
+        :param string text: attribute text
+        :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+        :param string tag: attribute tag string
+        :param int flags: attribute flags, bit-coded, default=0
+        :param int length: field length ??? see dxf-documentation
+        :param float height: textheight in drawing units (default=1)
+        :param float rotation: text rotation (default=0) (all DXF angles in degrees)
+        :param float oblique: text oblique angle in degree, default=0
+        :param float xscale: width factor (default=1)
+        :param string style: textstyle (default=STANDARD)
+        :param int mirror: bit coded flags
+        :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
+          ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
+        :param int valign: vertical justification type, TOP, MIDDLE, BOTTOM,
+          BASELINE (default BASELINE)
+        :param alignpoint: align point (xy- or xyz-tuple), z-axis is 0 by
+          default, if the justification is anything other than BASELINE/LEFT,
+          alignpoint specify the alignment point (or the second alignment
+          point for ALIGN or FIT).
 
-        text -- attribute text (string)
         """
         return Attrib(text=text, insert=insert, **kwargs)
 
@@ -465,22 +415,9 @@ class DXFEngine(object):
         Create a 3Dface entity with 3 or 4 sides of (3D) points, z-axis is 0
         by default.
 
-        Arguments
-        ---------
+        :param points: list of three or four 2D- or 3D-points
+        :param int flags: edge flags, bit-coded, default=0
 
-        points -- list of three or four 2D- or 3D-points
-        flags -- edge flags (int), bit-coded, default=0
-        ===============================
-        FACE3D_FIRST_EDGE_IS_INVISIBLE
-        FACE3D_SECOND_EDGE_IS_INVISIBLE
-        FACE3D_THIRD_EDGE_IS_INVISIBLE
-        FACE3D_FOURTH_EDGE_IS_INVISIBLE
-        ===============================
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation, thickness, paper_space,
-        extrusion_direction (see doc-string DXFEngine)
         """
         return Face3D(points, **kwargs)
 
@@ -489,43 +426,11 @@ class DXFEngine(object):
         """
         Create a block definition, for the blocks section.
 
-        Add block to a drawing: drawing.blocks.add(block-object)
-        Find block-definitions: drawing.blocks.find(blockname)
+        :param string name: blockname
+        :param basepoint: block base point (xy- or xyz-tuple), z-axis is 0. by default
+        :param int flags: block type flags
+        :param string xref: xref pathname
 
-        Add entities to a block: block.add(entity), where entity can be every
-        drawing entity like circle, line, polyline, attribute, text, ...
-
-        Arguments
-        ---------
-
-        name -- blockname (string)
-        basepoint -- block base point (xy- or xyz-tuple), z-axis is 0. by default
-        flags -- block type flags
-        ===========================  ===========================================
-        BLK_ANONYMOUS                This is an anonymous block generated by
-                                     hatching, associative dimensioning, other
-                                     internal operations, or an application
-        BLK_NON_CONSTANT_ATTRIBUTES  This block has non-constant attribute
-                                     definitions (this bit is not set if the
-                                     block has any attribute definitions that
-                                     are constant, or has no attribute
-                                     definitions at all)
-        BLK_XREF                     This block is an external reference (xref)
-        BLK_XREF_OVERLAY             This block is an xref overlay
-        BLK_EXTERNAL                 This block is externally dependent
-        BLK_RESOLVED                 This is a resolved external reference, or
-                                     dependent of an external reference (ignored
-                                     on input)
-        BLK_REFERENCED               This definition is a referenced external
-                                     reference (ignored on input)
-        xref -- xref pathname (string)
-
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation?, thickness?, paper_space?,
-        extrusion_direction? (see doc-string DXFEngine)
-
-        linetype, color, layer are used by block-elements with BYBLOCK
         """
         return Block(name=name, basepoint=basepoint, **kwargs)
 
@@ -534,81 +439,38 @@ class DXFEngine(object):
         """
         Create a new polyline entity. Polymesh and polyface are also polylines.
 
-        dxfwrite polylines are always 3D-polylines, 2D-polylines are not directly
-        supported, but you can modify the created polylines by clearing the
-        flag ``POLYLINE_3D_POLYLINE`` to get a 2D polyline.
-
-        points -- list of 3D or 2D points (xy- or xyz-tuples), default z-value
-            for 2d points is 0.
-
-        see Polyline object:
-        * polyline.add_vertex(point)
-        * polyline.add_vertices([points])
-        * polyline.close(Bool)
-
-        KWARGS
-
-        polyline_elevation -- polyline elevation (xyz-tuple), z-axis supplies
+        :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
+        :param polyline_elevation: polyline elevation (xyz-tuple), z-axis supplies
             elevation, x- and y-axis has to be 0.)
-        flags -- polyline flags, bit-coded, default=0
-        ==================================  ====================================
-        POLYLINE_CLOSED                     This is a closed Polyline (or a
-                                            polygon mesh closed in the M
-                                            direction)
-        POLYLINE_MESH_CLOSED_M_DIRECTION    equals POLYLINE_CLOSED
-        POLYLINE_CURVE_FIT_VERTICES_ADDED   Curve-fit vertices have been added
-        POLYLINE_SPLINE_FIT_VERTICES_ADDED  Spline-fit vertices have been added
-        POLYLINE_3D_POLYLINE                This is a 3D Polyline
-        POLYLINE_3D_POLYMESH                This is a 3D polygon mesh
-        POLYLINE_MESH_CLOSED_N_DIRECTION    The polygon mesh is closed in the
-                                            N direction
-        POLYLINE_POLYFACE_MESH              This Polyline is a polyface mesh
-        POLYLINE_GENERATE_LINETYPE_PATTERN  The linetype pattern is generated
-                                            continuously around the vertices of
-                                            this Polyline
-
-        startwidth -- default starting width (float), default=0
-        endwidth -- default ending width (float), default=0
-        mcount -- polygon mesh M vertex count (int), default=0
-        ncount -- polygon mesh N vertex count (int), default=0
-        msmooth_density -- (if flags-bit POLYLINE_3D_POLYMESH is set)
-            smooth surface M density (int), default=0
-        ========================  =============================
-        POLYMESH_NO_SMOOTH        no smooth surface fitted
-        POLYMESH_QUADRIC_BSPLINE  quadratic B-spline surface
-        POLYMESH_CUBIC_BSPLINE    cubic B-spline surface
-        POLYMESH_BEZIER_SURFACE   Bezier surface
-        ========================  =============================
-        nsmooth_density -- (if flags-bit POLYLINE_3D_POLYMESH is set)
-            smooth surface N density, (int), default=0
+        :param int flags: polyline flags, bit-coded, default=0
+        :param float startwidth: default starting width, default=0
+        :param float endwidth: default ending width, default=0
+        :param int mcount: polygon mesh M vertex count, default=0
+        :param int ncount: polygon mesh N vertex count, default=0
+        :param int msmooth_density: (if flags-bit POLYLINE_3D_POLYMESH is set)
+            smooth surface M density, default=0
+        :param int nsmooth_density: (if flags-bit POLYLINE_3D_POLYMESH is set)
+            smooth surface N density, default=0
             same values as msmooth_density
-        smooth_surface -- curves and smooth surface type (int), default=0
+        :param int smooth_surface: curves and smooth surface type, default=0
             ??? see dxf-documentation
 
-        Common kwargs
-        -------------
-        linetype, color, layer, elevation?, thickness?, paper_space,
-        extrusion_direction? (see doc-string DXFEngine)
         """
         return Polyline(points, **kwargs)
 
     @staticmethod
     def polymesh(nrows, ncols, **kwargs):
         """
-        Create a new polymesh entity, polymesh is a dxf-polyline entity!
+        Create a new polymesh entity.
 
         nrows and ncols >=2 and <= 256, greater meshes have to be divided into
         smaller meshes.
 
-        flags-bit POLYLINE_3D_POLYMESH is set.
-        see Polymesh object:
-        * polymesh.set_vertex(row, col, xyz-tuple)
-        * polymesh.set_mclosed()
-        * polymesh.set_nclosed()
+        The flags-bit **POLYLINE_3D_POLYMESH** is set.
 
-        Arguments
-        ---------
-        see polyline
+        :param int nrows: count of vertices in m-direction, nrows >=2 and <= 256
+        :param int ncols: count of vertices in n-direction, ncols >=2 and <= 256
+
         """
         return Polymesh(nrows, ncols, **kwargs)
 
@@ -617,20 +479,12 @@ class DXFEngine(object):
         """
         Create a new polyface entity, polyface is a dxf-polyline entity!
 
-        precision --vertex-coords will be rounded to precision places, and if
+        :param precision: vertex-coords will be rounded to precision places, and if
             the vertex is equal to an other vertex, only one vertex will be used,
             this reduces filespace, the coords will be rounded only for the
             comparison of the vertices, the output file has the full float
             resolution.
 
-        flags-bit POLYLINE_POLYFACE is set.
-        see Polyface object:
-        * polyface.add_face(vertices, color)
-        * vertices is a list of 3 or 4 xyz-tuples
-
-        Arguments
-        ---------
-        see polyline
         """
         return Polyface(precision, **kwargs)
 

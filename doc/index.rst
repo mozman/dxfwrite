@@ -11,6 +11,7 @@ Create DXF R12 drawings with python.
 usage::
 
    from dxfwrite import DXFEngine as dxf
+
    drawing = dxf.drawing('test.dxf')
    drawing.add_layer('LINES')
    drawing.add(dxf.line((0, 0), (1, 0), color=7, layer='LINES'))
@@ -41,16 +42,17 @@ DXF R12 Entities
    /entities/attrib
    /entities/block
    /entities/circle
-   /entities/3dface
+   /entities/face3d
    /entities/insert
    /entities/line
    /entities/point
    /entities/polyline
+   /entities/polymesh
+   /entities/polyface
    /entities/shape
    /entities/solid
    /entities/trace
    /entities/text
-   /entities/vertex
 
 Composite Entities
 ==================
@@ -58,17 +60,17 @@ Composite Entities
 .. toctree::
    :maxdepth: 1
 
-   mtext
-   linear_dim
-   angular_dim
-   arc_dim
-   radial_dim
-   rectangle
-   table
-   ellipse
-   spline
-   bezier
-   clothoid
+   /entities/mtext
+   /entities/linear_dim
+   /entities/angular_dim
+   /entities/arc_dim
+   /entities/radial_dim
+   /entities/rectangle
+   /entities/table
+   /entities/ellipse
+   /entities/spline
+   /entities/bezier
+   /entities/clothoid
 
 Indices and tables
 ==================

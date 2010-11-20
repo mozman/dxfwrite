@@ -1,4 +1,4 @@
-.. _`Drawing`:
+.. _Drawing:
 
 Drawing
 =======
@@ -6,6 +6,7 @@ Drawing
 usage::
 
     from dxfwrite import DXFEngine as dxf
+
     drawing = dxf.drawing(name='test.dxf')
     drawing.add_layer('LINES')
     drawing.add(dxf.line((0, 0), (10, 0), layer='LINES')))

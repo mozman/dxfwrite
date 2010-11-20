@@ -522,8 +522,7 @@ class Polyline(_Entity):
     def __init__(self, points=[], **kwargs):
         """ polyline constructor
 
-        points
-            list of points, 2D or 3D points, z-value of 2D points is 0.
+        :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
         """
         default = {
             'vertices_follow': 1,
@@ -536,20 +535,24 @@ class Polyline(_Entity):
         self.add_vertices(points)
 
     def close(self, status=True):
-        """ closed polyline: first vertex is connected with last vertex.
+        """ Close Polyline: first vertex is connected with last vertex.
 
-        status
-            True: polyline is closed
-            False: polyline is open
+        :param bool status:  **True** close polyline; **False** open polyline
         """
         self['flags'] = set_flag(self['flags'], const.POLYLINE_CLOSED, status)
 
     def add_vertex(self, point, **kwargs):
-        """ point is a 2D or 3D point, z-value of a 2D point is 0. """
+        """ Add a point to polyline.
+
+        :param point: is a 2D or 3D point, z-value of a 2D point is 0.
+        """
         self.vertices.append(Vertex(location=point, **kwargs))
 
     def add_vertices(self, points):
-        """ add multiple points """
+        """ Add multiple points.
+
+        :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
+        """
         for point in points:
             self.add_vertex(point)
 
@@ -629,11 +632,6 @@ class Polymesh(_Entity):
 
 class Polyface(_Entity):
     """ freeform polymesh with arbitrary count of faces.
-
-    PUBLIC METHODS
-
-    add_face(vertices, color)
-        add a face with 3 ot 4 points, if points are 2D, z-value is 0.
     """
     name = 'POLYLINE' # a polyface is also a polyline
 
@@ -660,9 +658,10 @@ class Polyface(_Entity):
     # even though it is always (0,0,0), tested with AutoCAD
 
     def add_face(self, vertices, color=0):
-        """ vertices is a list or tuple with 3 or 4 points (x,y,z).
+        """ This is the recommend method for adding faces.
 
-        This is the recommend method for adding faces.
+        :param vertices: is a list or tuple with 3 or 4 points (x,y,z).
+        :patram int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
         """
         # len-check prevents usage of generators!
         # if len(vertices) not in (3, 4): raise ValueError

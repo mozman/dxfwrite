@@ -105,12 +105,11 @@ class Drawing(object):
         return blockname
 
     def default_settings(self):
-        self.header.add_vars([
-            ('$ACADVER', DXFString('AC1009')),
-            ('$INSBASE', DXFPoint()),
-            ('$EXTMIN', DXFPoint()),
-            ('$EXTMAX', DXFPoint(( 100, 100, 0) )),
-            ])
+        self.header['$ACADVER'] = 'AC1009'
+        self.header['$INSBASE'] = (0, 0, 0)
+        self.header['$EXTMIN'] = (0, 0, 0)
+        self.header['$EXTMAX'] = (100, 100, 0)
+
         for ltype in self.std_linetypes():
             self.linetypes.add(ltype)
         for style in self.std_styles():

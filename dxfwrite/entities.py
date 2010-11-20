@@ -661,7 +661,7 @@ class Polyface(_Entity):
         """ This is the recommend method for adding faces.
 
         :param vertices: is a list or tuple with 3 or 4 points (x,y,z).
-        :patram int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+        :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
         """
         # len-check prevents usage of generators!
         # if len(vertices) not in (3, 4): raise ValueError

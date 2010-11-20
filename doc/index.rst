@@ -30,6 +30,7 @@ Contents
    :maxdepth: 1
 
    Drawing
+   headervars
 
 DXF R12 Entities
 ================

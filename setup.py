@@ -16,7 +16,7 @@ def read(fname):
         return "File '%s' not found.\n" % fname
 
 setup(name='dxfwrite',
-    version='0.3.6',
+    version='0.3.7',
     description='A Python library to create DXF R12 drawings.',
     author='mozman',
     url='http://bitbucket.org/mozman/dxfwrite',

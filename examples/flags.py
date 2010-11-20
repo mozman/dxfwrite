@@ -38,15 +38,29 @@ flag = dxf.block(name='flag')
 # add dxf entities to the block (the flag)
 # use basepoint = (x, y) define an other basepoint than (0, 0)
 flag.add( dxf.polyline(flag_symbol) )
+flag.add( dxf.circle(radius=.4, color=2) )
+# define some attributes
+flag.add( dxf.attdef(insert=(0.5, -0.5), tag='NAME', height=0.5, color=3) )
+flag.add( dxf.attdef(insert=(0.5, -1.0), tag='XPOS', height=0.25, color=4) )
+flag.add( dxf.attdef(insert=(0.5, -1.5), tag='YPOS', height=0.25, color=4) )
+
 # add block definition to the drawing
 dwg.blocks.add(flag)
+number = 1
 for point in sample_coords:
     # now insert flag symbols at coordinate 'point'
-    # block are referenced by name, in this case: 'flag'
-    # see https://bitbucket.org/mozman/dxfwrite/wiki/Insert
-    # additional parameters like xscale, yscale, rotation
-    #
-    dwg.add(dxf.insert('flag', insert=point, layer='FLAGS', rotation=-15))
+    # insert2 needs the block definition object as parameter 'flag'
+    # see https://bitbucket.org/mozman/dxfwrite/wiki/Insert2
+    # fill attribtes by creating a dict(), keystr is the 'tag' name of the
+    # attribute
+    values = {
+        'NAME': "P(%d)" % number,
+        'XPOS': "x = %.3f" % point[0],
+        'YPOS': "y = %.3f" % point[1]
+    }
+    dwg.add(dxf.insert2(flag, insert=point, attribs=values, layer='FLAGS',
+                        rotation=-15))
+    number += 1
 
 dwg.save()
 print("drawing '%s' created.\n" % filename)

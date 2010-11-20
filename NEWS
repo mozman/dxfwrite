@@ -2,6 +2,11 @@
 News
 ====
 
+Version 0.3.7 -
+
+  * splitted makedxfexamples.py into several files and moved them into the
+    subdir 'examples'
+
 Version 0.3.6 - 14 Novemeber 2010
 
   * moved dxfwrite.drawing.ENCODING to class Drawing

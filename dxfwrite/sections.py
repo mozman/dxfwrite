@@ -11,6 +11,7 @@ __all__ = ['Sections']
 
 from dxfwrite.base import DXFAtom, DXFList, DXFName, dxfstr
 from dxfwrite.tables import Tables
+from dxfwrite import hdrvars
 
 class Sections(object):
     @staticmethod
@@ -51,34 +52,19 @@ class Header(_Section):
                           DXFList(varlist)
                           ) )
 
-    def get(self, varname):
-        return self.variables[varname]
+    def __getitem__(self, key):
+        return self.variables[key]
 
-    def add(self, name, value):
-        """ Set header variable <name> to <value>.
+    def __setitem__(self, key, value):
+        self.variables[key] = hdrvars.Factory[key](value)
 
-        Arguments
-        ---------
-        name -- variable name
-        value -- dxfwrite.base.DXFAtom() or inherited
-
-        usage:
-            add('$ACADVER', DXFString('AC1018'))
-        """
-        self.variables[name] = value
-
-    def add_vars(self, variables):
-        """Add many vars to header.
-
-        Arguments
-        ---------
-        variables -- list of tuples ('varname', dxfwrite.base.DXFAtom())
-
-        usage:
-            add_vars([('$ACADVER', DXFString('AC1018')), ('$EXTMIN', DXFPoint())])
-        """
-        for name, value in variables:
-            self.add(name, value)
+    # v 0.3.7: changed interface to header variables
+    # def get(self, varname)
+    #     now use: value = dwg.header[varname]
+    # def add(self, name, value)
+    #     now use: dwg.header[name] = value
+    # def add_vars(self, variables)
+    #     removed without replacement
 
 
 class TablesSection(_Section):

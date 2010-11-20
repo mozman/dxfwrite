@@ -34,17 +34,29 @@ class TestSection(unittest.TestCase):
         self.assertTrue(dxf.startswith("  0\nSECTION\n  2\nTABLES\n"))
         self.assertTrue(dxf.endswith("\n  0\nENDSEC\n"))
 
-    def test_header_point_vars(self):
+    def test_header_vars_point_3d(self):
         header = Sections.get('HEADER')
-        header.add('$EXTMIN', DXFPoint())
-        header.add('$EXTMAX', DXFPoint( (99, 117, 0) ))
-        extmax = header.get('$EXTMAX')
+        header['$EXTMIN'] = (0, 0, 0)
+        header['$EXTMAX'] = (99, 117, 0)
+        extmax = header['$EXTMAX']
         self.assertEqual(extmax[0], 99)
         self.assertEqual(extmax[1], 117)
         self.assertEqual(extmax[2], 0)
         dxf = dxfstr(header)
         self.assertTrue('  9\n$EXTMIN\n 10\n0.0\n 20\n0.0\n 30\n0.0\n' in dxf)
         self.assertTrue('  9\n$EXTMAX\n 10\n99.0\n 20\n117.0\n 30\n0.0\n' in dxf)
+
+    def test_header_vars_string(self):
+        header = Sections.get('HEADER')
+        header['$ACADVER'] = 'AC1009'
+        dxf = dxfstr(header)
+        self.assertTrue('  9\n$ACADVER\n  1\nAC1009\n' in dxf)
+
+    def test_header_vars_float(self):
+        header = Sections.get('HEADER')
+        header['$ANGBASE'] = 30
+        dxf = dxfstr(header)
+        self.assertTrue('  9\n$ANGBASE\n 50\n30.0\n' in dxf)
 
     def test_get_section_error(self):
         self.assertRaises(ValueError, Sections.get, 'MOZMAN')

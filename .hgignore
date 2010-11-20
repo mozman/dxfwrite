@@ -14,3 +14,4 @@ doc/_build/*
 *.*~
 *.wpr
 MANIFEST
+.coverage

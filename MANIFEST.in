@@ -1,4 +1,4 @@
-include NEWS TODO README LICENSE
+include NEWS README LICENSE
 include makedxfexamples.py
 recursive-include tests *.py
-recursive-include doc *.*
+recursive-include examples *.py *.bat *.sh

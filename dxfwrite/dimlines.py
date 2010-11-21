@@ -194,8 +194,8 @@ class _DimensionBase(object):
         self.data = DXFList()
 
     def prop(self, property_name):
-        """ get dimension line properties by name with the possibility to
-        override several properties.
+        """ Get dimension line properties by **property_name** with the
+        possibility to override several properties.
         """
         if property_name == 'layer':
             return self.layer if self.layer is not None else self.dimstyle.layer
@@ -230,22 +230,16 @@ class LinearDimension(_DimensionBase):
     """ Simple straight dimension line with two or more measure points, build
     with basic dxf entities. This is NOT a dxf dimension entity. And This is
     a 2D element, so all z-values will be ignored!
-
-    INIT PARAMS
-
-    pos
-        position of dimension line, line goes through this point
-    measure_points
-        list of points to dimension (two or more)
-    angle
-       angle of dimension line
-    dimstyle
-       dimstyle name, 'Default' - style is the default value
-    layer
-       dimension line layer, override the default value of dimstyle
     """
     def __init__(self, pos, measure_points, angle=0., dimstyle='Default',
                  layer=None, roundval=None):
+        """
+        :param pos: position of dimension line, line goes through this point
+        :param measure_points: list of points to dimension (two or more)
+        :param float angle: angle of dimension line
+        :param string dimstyle: dimstyle name, 'Default' - style is the default value
+        :param string layer: dimension line layer, override the default value of dimstyle
+        """
         super(LinearDimension, self).__init__(dimstyle, layer, roundval)
         self.angle = angle
         self.measure_points = measure_points
@@ -425,6 +419,17 @@ class AngularDimension(_DimensionBase):
 
     def __init__(self, pos, center, start, end,
                  dimstyle='angle.deg', layer=None, roundval=None):
+        """
+        :param pos: position of dimension line, line goes through this point
+        :param center: center point of angle
+        :param start: line from center to start is the first side of the
+            angle
+        :param end: line from center to end is the second side of the angle
+        :param string dimstyle: dimstyle name, 'Default' - style is the
+            default value
+        :param string layer: dimension line layer, override the default value
+            of dimstyle
+        """
         super(AngularDimension, self).__init__(dimstyle, layer, roundval)
         self.dimlinepos = vector2d(pos)
         self.center = vector2d(center)
@@ -527,6 +532,18 @@ class ArcDimension(AngularDimension):
     """
     def __init__(self, pos, center, start, end, arc3points=False,
                  dimstyle='Default', layer=None, roundval=None):
+        """
+        :param pos: position of dimension line, line goes through this point
+        :param center: center point of arc
+        :param start: start point of arc
+        :param end: end point of arc
+        :param bool arc3points: if **True** arc is defined by three points
+            on the arc (center, start, end)
+        :param string dimstyle: dimstyle name, 'Default' - style is the
+            default value
+        :param string layer: dimension line layer, override the default value
+            of dimstyle
+        """
         super(ArcDimension, self).__init__(pos, center, start, end,
                                            dimstyle, layer, roundval)
         self.arc3points = arc3points
@@ -556,6 +573,15 @@ class RadialDimension(_DimensionBase):
     """
     def __init__(self, center, target, length=1.,
                  dimstyle='Default', layer=None, roundval=None):
+        """
+        :param center: center point of radius
+        :param target: target point of radius
+        :param float length: length of radius arrow (drawing length)
+        :param string dimstyle: dimstyle name, 'Default' - style is the
+            default value
+        :param string layer: dimension line layer, override the default value
+            of dimstyle
+        """
         super(RadialDimension, self).__init__(dimstyle, layer, roundval)
         self.center = vector2d(center)
         self.target = vector2d(target)

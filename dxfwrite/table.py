@@ -65,14 +65,13 @@ class Table(object):
     name = 'TABLE'
 
     def __init__(self, insert, nrows, ncols, default_grid=True):
-        """Constructor
-
-        insert -- insert point as 2D or 3D point
-        nrows -- row count
-        ncols -- column count
-        default_grid -- if True always a a solid line grid will be drawn, if
-            False, only explicit defined borders will be drawn, default grid
-            has a priority of 50.
+        """
+        :param insert: insert point as 2D or 3D point
+        :param int nrows: row count
+        :param int ncols: column count
+        :param bool default_grid: if **True** always a solid line grid will
+            be drawn, if **False**, only explicit defined borders will be
+            drawn, default grid has a priority of 50.
         """
         self.insert = insert
         self.nrows = nrows
@@ -98,44 +97,50 @@ class Table(object):
         self.empty_cell = Cell(self) # represents all empty cells
 
     def set_col_width(self, column, value):
-        """Set column width of <column> to <value>."""
+        """Set column width of **column** to **value** (in drawing units).
+        """
         self.col_widths[column] = float(value)
 
     def set_row_height(self, row, value):
-        """Set row heigth of row <row> to <value>."""
+        """Set row heigth of **row** to **value** (in drawing units).
+        """
         self.row_heights[row] = float(value)
 
     def text_cell(self, row, col, text, span=(1, 1), style='default'):
-        """Create a new text cell at pos (<row>, <col>), with <text> as
-        content, text can be a multi line text, use '\n' as line seperator.
-        The cell spans over <span> cells and has the cell style with the
-        name <style>.
+        """Create a new text cell at pos (**row**, **col**), with **text** as
+        content, text can be a multi line text, use ``'\\n'`` as line
+        seperator.
+
+        The cell spans over **span** cells and has the cell style with the
+        name **style**.
         """
         cell = TextCell(self, text, style=style, span=span)
         return self.set_cell(row, col, cell)
 
     # pylint: disable-msg=W0102
     def block_cell(self, row, col, blockdef, span=(1, 1), attribs={}, style='default'):
-        """Create a new block cell at position (row, col), content is a block
-        reference inserted by a DXF-INSERT entity, attributes will be added if
-        the block definition contains attdefs. Assignments are defined by
-        attribs-key to attdef-tag association. Example: attribs = {'num': 1}
-        if an attdef with tag=='num' in the block definition exists, an attrib
-        with text=str(1) will be created and added to the insert entity.
-        The cell spans over <span> cells and has the cell style with the
-        name <style>.
+        """Create a new block cell at position (**row**, **col**), content is
+        a block reference inserted by a :ref:`INSERT` entity, attributes will
+        be added if the block definition contains :ref:`ATTDEF`. Assignments
+        are defined by attribs-key to attdef-tag association.
+        Example: attribs = {'num': 1} if an :ref:`ATTDEF` with tag=='num' in
+        the block definition exists, an attrib with text=str(1) will be
+        created and added to the insert entity.
+
+        The cell spans over **span** cells and has the cell style with the
+        name **style**.
         """
         cell = BlockCell(self, blockdef, style=style, attribs=attribs, span=span)
         return self.set_cell(row, col, cell)
 
     def set_cell(self, row, col, cell):
-        """Insert a <cell> at position (<row>, <col>)."""
+        """Insert a **cell** at position (**row**, **col**)."""
         row, col = self.validate_index(row, col)
         self._cells[row, col] = cell
         return cell
 
     def get_cell(self, row, col):
-        """Get cell at position (<row>, <col>)."""
+        """Get cell at position (**row**, **col**)."""
         row, col = self.validate_index(row, col)
         try:
             return self._cells[row, col]
@@ -152,7 +157,7 @@ class Table(object):
 
     def frame(self, row, col, width=1, height=1, style='default'):
         """Create a Frame object which frames the cell area starting at
-        <row>, <col> covering <widths> columns and <heigth> rows.
+        **row**, **col** covering **widths** columns and **heigth** rows.
         """
         frame = Frame(self, pos=(row, col), span=(height, width),
                       style=style)
@@ -160,9 +165,9 @@ class Table(object):
         return frame
 
     def new_cell_style(self, name, **kwargs):
-        """Create a new Style object with the name <name>.
+        """Create a new Style object with the name **name**.
 
-        kwargs -- see Style.get_default_cell_style()
+        :param kwargs: see Style.get_default_cell_style()
         """
         style = deepcopy(self.get_cell_style('default'))
         style.update(kwargs)
@@ -173,10 +178,12 @@ class Table(object):
                          priority=100, linetype=None):
         """Create a new border style.
 
-        status -- True border is visible, False border is hidden
-        color -- dxf color index
-        linetype -- linetype name, BYLAYER if None
-        priority -- drawing priority - higher values covers lower values
+        :param bool status: if **True** border is visible, **False** border
+            is hidden
+        :param int color: dxf color index
+        :param string linetype: linetype name, BYLAYER if None
+        :param int priority: drawing priority - higher values covers lower
+            values
         """
         border_style = Style.get_default_border_style()
         border_style['color'] = color
@@ -186,7 +193,7 @@ class Table(object):
         return border_style
 
     def get_cell_style(self, name):
-        """Get cell style by <name>.
+        """Get cell style by **name**.
         """
         return self.styles[name]
 
@@ -194,7 +201,7 @@ class Table(object):
         """Iterate over all visible cells.
 
         returns a generator which yields all visible cells as tuples:
-        <row>, <col>, <cell>
+        **row**, **col**, **cell**
         """
         if self.visibility_map is None:
             raise Exception("Can only be called at dxf creation.")

@@ -3,6 +3,8 @@
 Ellipse
 =======
 
+Type: Composite Entity
+
 Ellipse curves are approximated by a :ref:`POLYLINE`.
 
 For an explanation of ellipse curves see Wikipedia:

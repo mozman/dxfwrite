@@ -3,6 +3,8 @@
 Spline
 ======
 
+Type: Composite Entity
+
 Spline curves are approximated by :ref:`POLYLINE`.
 
 For an explanation of spline curves see Wikipedia:

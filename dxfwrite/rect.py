@@ -20,18 +20,6 @@ from dxfwrite.entities import Polyline, Solid
 
 class Rectangle(object):
     """ 2D Rectangle, consisting of a polyline and a solid as background filling.
-
-    insert point
-    width, height -- in drawing units
-    rotation -- in degree
-    halign -- LEFT, CENTER, RIGHT
-    valign -- TOP, MIDDLE, BOTTOM
-    color -- dxf color index, default is BYLAYER, if color is None, no polyline
-        will be created, and the rectangle consist only of the background
-        filling (if bgcolor != None)
-    bgcolor -- dxf color index, default is None (no background filling)
-    layer -- target layer, default is '0'
-    linetype -- linetype name, None = BYLAYER
     """
     name = 'RECTANGLE'
 

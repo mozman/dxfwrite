@@ -482,17 +482,19 @@ class DXFEngine(object):
         """
         2D Rectangle, build with a polyline and a solid as background filling
 
-        insert point -- where to place the rantangle
-        width, height -- in drawing units
-        rotation -- in degree (circle = 360 degree)
-        halign -- LEFT, CENTER, RIGHT
-        valign -- TOP, MIDDLE, BOTTOM
-        color -- dxf color index, default is BYLAYER, if color is None, no
+        :param point insert: where to place the rantangle
+        :param float width: width in drawing units
+        :param float height: height in drawing units
+        :param float rotation: in degree (circle = 360 degree)
+        :param int halign: **LEFT**, **CENTER**, **RIGHT**
+        :param int valign: **TOP**, **MIDDLE**, **BOTTOM**
+        :param int color: dxf color index, default is **BYLAYER**, if color is None, no
              polyline will be created, and the rectangle consist only of the
-             background filling (if bgcolor != None)
-        bgcolor -- dxf color index, default is None (no background filling)
-        layer -- target layer, default is '0'
-        linetype -- linetype name, None = BYLAYER
+             background filling (if bgcolor != `None`)
+        :param int bgcolor: dxf color index, default is `None` (no background filling)
+        :param string layer: target layer, default is ``'0'``
+        :param string linetype: linetype name, None = **BYLAYER**
+
         """
         return Rectangle(insert, width, height, **kwargs)
 
@@ -599,27 +601,25 @@ class DXFEngine(object):
     def insert2(blockdef, insert=(0., 0.), attribs={}, **kwargs):
         """
         Insert a new block-reference with auto-creating of attribs from attdefs,
-        and setting attrib-text by the attribs-dict.
+        and setting attrib-text by the attribs-dict. (multi-insert is not
+        supported)
 
-        Arguments
-        ---------
-
-        blockdef -- the block definition itself
-        insert -- insert point (xy- or xyz-tuple), z-axis is 0 by default
-        xscale -- x-scale factor (float), default=1.
-        yscale -- y-scale factor (float), default=1.
-        zscale -- z-scale factor (float), default=1.
-        rotation -- rotation angle in degree (float), default=0.
-        attribs -- dict with tag:value pairs, to fill the the attdefs in the
+        :param blockdef: the block definition itself
+        :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+        :param float xscale: x-scale factor, default=1.
+        :param float yscale: y-scale factor, default=1.
+        :param float zscale: z-scale factor, default=1.
+        :param float rotation: rotation angle in degree, default=0.
+        :param dict attribs: dict with tag:value pairs, to fill the the attdefs in the
             block-definition. example: {'TAG1': 'TextOfTAG1'}, create and insert
             an attrib from an attdef (with tag-value == 'TAG1'), and set
             text-value of the attrib to value 'TextOfTAG1'.
+        :param string linetype: linetype name, if not defined = **BYLAYER**
+        :param string layer: layer name
+        :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
-        multi-insert is not supported.
 
-        Common kwargs
-        -------------
-        linetype, color, layer
+
         """
         return Insert2(blockdef=blockdef, insert=insert, attribs=attribs,
                        **kwargs)

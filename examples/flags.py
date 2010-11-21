@@ -49,8 +49,8 @@ dwg.blocks.add(flag)
 number = 1
 for point in sample_coords:
     # now insert flag symbols at coordinate 'point'
-    # insert2 needs the block definition object as parameter 'flag'
-    # see https://bitbucket.org/mozman/dxfwrite/wiki/Insert2
+    # insert2 needs the block definition object as parameter 'blockdef'
+    # see http://packages.python.org/dxfwrite/entities/insert2.html
     # fill attribtes by creating a dict(), keystr is the 'tag' name of the
     # attribute
     values = {
@@ -58,8 +58,8 @@ for point in sample_coords:
         'XPOS': "x = %.3f" % point[0],
         'YPOS': "y = %.3f" % point[1]
     }
-    dwg.add(dxf.insert2(flag, insert=point, attribs=values, layer='FLAGS',
-                        rotation=-15))
+    dwg.add(dxf.insert2(blockdef=flag, insert=point, attribs=values,
+                        layer='FLAGS', rotation=-15))
     number += 1
 
 dwg.save()

@@ -3,6 +3,8 @@
 Clothoid
 ========
 
+Type: Composite Entity
+
 Clothoid curves are approximated by :ref:`POLYLINE`.
 
 For an explanation of clothoid curves see Wikipedia:

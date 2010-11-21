@@ -70,6 +70,8 @@ Composite Entities
    :maxdepth: 1
 
    /entities/mtext
+   /entities/rect
+   /entities/insert2
    /entities/linear_dim
    /entities/angular_dim
    /entities/arc_dim

@@ -3,6 +3,8 @@
 Bezier
 ======
 
+Type: Composite Entity
+
 Bezier curves are approximated by :ref:`POLYLINE`.
 
 For an explanation of bezier curves see Wikipedia:

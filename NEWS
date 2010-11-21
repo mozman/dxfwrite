@@ -8,8 +8,11 @@ Version 0.3.7 -
     see http://packages.python.org/dxfwrite/headervars.html
   * splitted makedxfexamples.py into several files and moved them into the
     subdir 'examples'
+  * curves.Ellpise: radiusx -> rx; radiusy -> ry
+  * moved documentation to: http://packages.python.org/dxfwrite,
+    and using Sphinx (http://sphinx.pocoo.org)
 
-Version 0.3.6 - 14 Novemeber 2010
+Version 0.3.6 - 14 November 2010
 
   * moved dxfwrite.drawing.ENCODING to class Drawing
   * Python 3.1 support

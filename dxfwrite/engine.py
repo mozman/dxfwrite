@@ -505,20 +505,23 @@ class DXFEngine(object):
 
         Cells can contain Multiline-Text or DXF-BLOCKs, or you can create your own
         cell-type by extending the CustomCell object.
+
         Cells can span over columns and rows.
+
         Text cells can contain text with an arbitrary rotation angle, or letters can be
         stacked top-to-bottom.
+
         BlockCells contains block references (INSERT-entity) created from a block
         definition (BLOCK), if the block definition contains attribute definitions
         (ATTDEF-entity), attribs created by Attdef.new_attrib() will be added to the
         block reference (ATTRIB-entity).
 
-        insert -- insert point as 2D or 3D point
-        nrows -- row count
-        ncols -- column count
-        default_grid -- if True always a a solid line grid will be drawn, if
-            False, only explicit defined borders will be drawn, default grid
-            has a priority of 50.
+        :param insert: insert point as 2D or 3D point
+        :param int nrows: row count
+        :param int ncols: column count
+        :param bool default_grid: if **True** always a solid line grid will
+            be drawn, if **False**, only explicit defined borders will be
+            drawn, default grid has a priority of 50.
         """
         return Table(insert, nrows, ncols, default_grid)
 

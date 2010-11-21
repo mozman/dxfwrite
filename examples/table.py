@@ -111,7 +111,7 @@ table.new_cell_style('stacked', textcolor=6, textheight=0.25,
                      stacked=True)
 table.text_cell(6, 3, "STACKED FIELD", span=(7, 1), style='stacked')
 
-for pos in [3, 4 , 5, 6]:
+for pos in [3, 4, 5, 6]:
     blockcell = table.block_cell(pos, 1, mat_symbol,
                                 attribs={'num': pos},
                                 style='matsym')

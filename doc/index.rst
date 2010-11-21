@@ -3,10 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to dxfwrite's documentation!
-====================================
+dxfwrite |version| documentation
+================================
 
-Create DXF R12 drawings with python.
+Welcome! This is the documentation for dxfwrite |version|, last updated |today|.
+
+A Python library to create DXF R12 drawings.
 
 usage::
 
@@ -30,7 +32,13 @@ Contents
    :maxdepth: 1
 
    Drawing
+   dxfengine
+
    headervars
+   dxftypes
+   /entities/layer
+   /entities/textstyle
+
 
 DXF R12 Entities
 ================
@@ -80,3 +88,9 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+Document License
+================
+
+Unless otherwise stated, the content of this document is licensed under
+`Creative Commons Attribution-ShareAlike 3.0 License
+<http://creativecommons.org/licenses/by-sa/3.0/>`_

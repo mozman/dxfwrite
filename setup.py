@@ -9,6 +9,8 @@
 import os
 from distutils.core import setup
 
+from dxfwrite import VERSION, AUTHOR_NAME, AUTHOR_EMAIL
+
 def read(fname):
     try:
         return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -16,12 +18,12 @@ def read(fname):
         return "File '%s' not found.\n" % fname
 
 setup(name='dxfwrite',
-    version='0.3.7',
+    version=VERSION,
     description='A Python library to create DXF R12 drawings.',
-    author='mozman',
+    author=AUTHOR_NAME,
     url='http://bitbucket.org/mozman/dxfwrite',
     download_url='http://bitbucket.org/mozman/dxfwrite/downloads',
-    author_email='mozman@gmx.at',
+    author_email=AUTHOR_EMAIL,
     packages=['dxfwrite', 'dxfwrite/algebra'],
     provides=['dxfwrite'],
     long_description=read('README')+read('NEWS'),

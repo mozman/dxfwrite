@@ -12,9 +12,11 @@ from dxfwrite.const import *
 from dxfwrite.base import *
 from dxfwrite.engine import DXFEngine
 
-__version__ = "v0.3.6 - 2010.14.11"
-__author__ = "Manfred Moitzi (mozman)"
-__license__ = "GPLv3"
+VERSION = "0.3.7"
+CYEAR = "2010"
+AUTHOR_NAME = "Manfred Moitzi"
+AUTHOR_EMAIL = "mozman@gmx.at"
+LICENSE = "GPLv3"
 
 __doc__ = """A Python library to create DXF R12 drawings.
 
@@ -40,7 +42,7 @@ NOT IMPLEMENTED:
 - TRACE
 - DIMENSION (use LinearDimension, AngularDimension, ArcDimension or
              RadialDimension)
-""" % (__author__,__version__,__license__,)
+""" % (AUTHOR_NAME, VERSION, LICENSE,)
 
 # --------------------------------------------------------------------------
 # dxfwrite.py: copyright (C) 2010 by Manfred Moitzi (mozman)

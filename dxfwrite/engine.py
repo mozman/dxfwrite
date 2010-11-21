@@ -51,23 +51,11 @@ class DXFEngine(object):
         """
         Create a new layer.
 
-        Arguments
-        ---------
+        :param string name: layer name
+        :param int flags: standard flag values, bit-coded, default=0
+        :param int color: color number, negative if layer is off, default=1
+        :param string linetype: linetype name, default="CONTINUOUS"
 
-        name -- layer name  (string)
-        flags -- standard flag values, bit-coded, default=0
-
-        =================================  ===================================
-                      Flag                             Description
-        =================================  ===================================
-        STD_FLAGS_LAYER_FROZEN             If set, layer is frozen
-        STD_FLAGS_LAYER_FROZEN_BY_DEFAULT  If set, layer is frozen by default
-                                           in new Viewports
-        STD_FLAGS_LAYER_LOCKED             If set, layer is locked
-        =================================  ===================================
-
-        color -- color number (int), negative if layer is off, default=1
-        linetype -- linetype name (string), default="CONTINUOUS"
         """
         return Layer(name, **kwargs)
 
@@ -76,26 +64,16 @@ class DXFEngine(object):
         """
         Create a new textstyle.
 
-        Arguments
-        ---------
+        :param string name: textstyle name
+        :param int flags: standard flag values, bit-coded, default=0
+        :param int generation_flags: text generation flags, default = 0
+        :param float height: fixed text height, 0 if not fixed = default
+        :param last_height: last height used, default=1.
+        :param float width: width factor, default=1.
+        :param float oblique: oblique angle in degree, default=0.
+        :param string font: primary font filename, default="ARIAL"
+        :param string bigfont: big-font file name, default=""
 
-        name -- textstyle name (string)
-        flags -- standard flag values (int), bit-coded, default=0
-        generation_flags -- text generation flags (int), default = 0
-
-        =====================  ===================================
-                Flag                        Description
-        =====================  ===================================
-        STYLE_TEXT_BACKWARD    Text is backward (mirrored in X)
-        STYLE_TEXT_UPSIDEDOWN  Text is upside down (mirrored in Y)
-        =====================  ===================================
-
-        height -- fixed text height, (float), 0 if not fixed = default
-        last_height -- last height used (float), default=1.
-        width -- width factor (float), default=1.
-        oblique -- oblique angle in degree (float), default=0.
-        font -- primary font filename (string), default="ARIAL"
-        bigfont -- big-font file name(string), default=""
         """
         return Style(name, **kwargs)
 
@@ -104,14 +82,12 @@ class DXFEngine(object):
         """
         Create a new linetype.
 
-        Arguments
-        ---------
-
-        name -- linetype name (string)
-        flags -- standard flag values, bit-coded, default=0
-        description -- descriptive text for linetype (string), default=""
-        pattern -- LinePatterDef(), line pattern definition, see method
+        :param string name: linetype name
+        :param int flags: standard flag values, bit-coded, default=0
+        :param string description: descriptive text for linetype, default=""
+        :param pattern: :ref:`LinePatterDef`, line pattern definition, see method
                    DXFEngine.linepattern()
+
         """
         return Linetype(name, **kwargs)
 
@@ -120,32 +96,20 @@ class DXFEngine(object):
         """
         Create a new view.
 
-        Arguments
-        ---------
-
-        name -- view name (string)
-        flags -- standard flag values (int), bit-coded, default=0
+        :param string name: view name
+        :param int flags: standard flag values, bit-coded, default=0
             STD_FLAGS_PAPER_SPACE, if set this is a paper space view.
-        height, width --view height and width, in DCS?! (float), default=1.0
-        center_point -- view center point, in DCS?! (xy-tuple), default=(.5, .5)
-        direction_point -- view direction from target point, in WCS!!
+        :param float height, width: view height and width, in DCS?!, default=1.0
+        :param center_point: view center point, in DCS?! (xy-tuple), default=(.5, .5)
+        :param direction_point: view direction from target point, in WCS!!
             (xyz-tuple), default=(0, 0, 1)
-        target_point -- target point, in WCS!! (xyz-tuple), default=(0, 0, 0)
-        lens_length -- lens length (float), default=50
-        front_clipping, back_clipping -- front and back clipping planes,
-            offsets from target point (float), default=0
-        view_twist -- twist angle in degree (float), default=0
-        view_mode -- view mode (int), bit-coded, default=0
-        =============================
-        viewmode flags
-        =============================
-        VMODE_TURNED_OFF
-        VMODE_PERSPECTIVE_VIEW_ACTIVE
-        VMODE_FRONT_CLIPPING_ON
-        VMODE_BACK_CLIPPING_ON
-        VMODE_UCS_FOLLOW_MODE_ON
-        VMODE_FRONT_CLIP_NOT_AT_EYE
-        =============================
+        :param target_point: target point, in WCS!! (xyz-tuple), default=(0, 0, 0)
+        :param float lens_length: lens length, default=50
+        :param float front_clipping: front and back clipping planes,
+            offsets from target point, default=0
+        :param back_clipping: see front_clipping
+        :param float view_twist: twist angle in degree, default=0
+        :param int view_mode: view mode, bit-coded, default=0
         """
         return View(name, **kwargs)
 
@@ -154,44 +118,33 @@ class DXFEngine(object):
         """
         Create a new viewport.
 
-        Arguments
-        ---------
-
-        name -- viewport name (string)
-        flags -- standard flag values (int), bit-coded, default=0
-        lower_left -- lower-left corner of viewport, (xy-tuple), default=(0, 0)
-        upper_right -- upper-right corner of viewport, (xy-tuple), default=(1, 1)
-        center_point -- view center point, in WCS, (xy-tuple), default=(.5, .5)
-        snap_base -- snap base point, (xy-tuple), default=(0, 0)
-        snap_spacing -- snap spacing, X and Y (xy-tuple), default=(.1, .1)
-        grid_spacing -- grid spacing, X and Y (xy-tuple), default=(.1, .1)
-        direction_point -- view direction from target point (xyz-tuple), default=(0, 0, 1)
-        target_point -- view target point (xyz-tuple), default=(0, 0, 0)
-        aspect_ratio -- viewport aspect ratio (float), default=1.
-        lens_length -- lens length (float), default=50
-        front_clipping, back_clipping -- front and back clipping planes, offsets
+        :param name: viewport name (string)
+        :param flags: standard flag values (int), bit-coded, default=0
+        :param lower_left: lower-left corner of viewport, (xy-tuple), default=(0, 0)
+        :param upper_right: upper-right corner of viewport, (xy-tuple), default=(1, 1)
+        :param center_point: view center point, in WCS, (xy-tuple), default=(.5, .5)
+        :param snap_base: snap base point, (xy-tuple), default=(0, 0)
+        :param snap_spacing: snap spacing, X and Y (xy-tuple), default=(.1, .1)
+        :param grid_spacing: grid spacing, X and Y (xy-tuple), default=(.1, .1)
+        :param direction_point: view direction from target point (xyz-tuple), default=(0, 0, 1)
+        :param target_point: view target point (xyz-tuple), default=(0, 0, 0)
+        :param aspect_ratio: viewport aspect ratio (float), default=1.
+        :param lens_length: lens length (float), default=50
+        :param front_clipping: front and back clipping planes, offsets
             from target point (float), default=0
-        view_twist -- twist angle in degree (float), default=0
-        status -- status field (int), default=0
-        id -- id (int), default=0
-        circle_zoom -- circle zoom percent (float), default=100
-        view_mode -- view mode (int), bit-coded, default=0
-        ===============================
-        viewmode flags
-        ===============================
-        VMODE_TURNED_OFF
-        VMODE_PERSPECTIVE_VIEW_ACTIVE
-        VMODE_FRONT_CLIPPING_ON
-        VMODE_BACK_CLIPPING_ON
-        VMODE_UCS_FOLLOW_MODE_ON
-        VMODE_FRONT_CLIP_NOT_AT_EYE
-        ===============================
-        fast_zoom -- fast zoom setting (int), default=1
-        ucs_icon -- UCSICON settings (int), default=3
-        snap_on -- snap on/off (int), default=0
-        grid_on -- grid on/off (int), default=0
-        snap_style -- snap style (int), defautl=0
-        snap_isopair -- snap isopair (int), default=0
+        :param back_clipping: see front_clipping
+        :param view_twist: twist angle in degree (float), default=0
+        :param status: status field (int), default=0
+        :param id: id (int), default=0
+        :param circle_zoom: circle zoom percent (float), default=100
+        :param view_mode: view mode (int), bit-coded, default=0
+        :param fast_zoom: fast zoom setting (int), default=1
+        :param ucs_icon: UCSICON settings (int), default=3
+        :param snap_on: snap on/off (int), default=0
+        :param grid_on: grid on/off (int), default=0
+        :param snap_style: snap style (int), defautl=0
+        :param snap_isopair: snap isopair (int), default=0
+
         """
         return Viewport(name, **kwargs)
 
@@ -493,14 +446,34 @@ class DXFEngine(object):
     @staticmethod
     def mtext(text, insert, linespacing=1.5, **kwargs):
         """
-        Multiline-Text buildup with simple Text-Entities.
+        Create a multi-line text buildup **MText** with simple :ref:`TEXT`
+        entities.
 
-        Mostly the same kwargs like text().
-        Caution: align point is always the insert point, I don't need a second
-        alignpoint because horizontal alignment FIT, ALIGN, BASELINE_MIDDLE is
-        not supported.
+        Mostly the same kwargs like :ref:`TEXT`.
 
-        linespacing -- linespacing in percent of height, 1.5 = 150% = 1+1/2 lines
+        .. caution::
+           **alignpoint** is always the insert point, I don't need a
+           second alignpoint because horizontal alignment FIT, ALIGN,
+           BASELINE_MIDDLE is not supported.
+
+        :param string text: the text to display
+        :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+        :param float linespacing: linespacing in percent of height, 1.5 = 150% =
+            1+1/2 lines
+        :param float height: text height in drawing-units
+        :param float rotation: text rotion in dregree, default=0
+        :param float xscale: text width factor, default=1
+        :param float oblique: text oblique angle in degree, default=0
+        :param string style: text style name, default=STANDARD
+        :param int mirror: text generation flags, bit-coded, default=0
+        :param int halign: horizontal justification type
+        :param int valign: vertical justification type
+        :param string layer: layer name
+        :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+
+        any combination of **valign** (TOP, MIDDLE, BOTTOM) and **halign** (LEFT,
+        CENTER, RIGHT) is valid.
+
         """
         return MText(text, insert, linespacing, **kwargs)
 
@@ -548,28 +521,25 @@ class DXFEngine(object):
         return Table(insert, nrows, ncols, default_grid)
 
     @staticmethod
-    def ellipse(center, radiusx, radiusy, startangle=0., endangle=360.,
+    def ellipse(center, rx, ry, startangle=0., endangle=360.,
                 rotation=0., segments=100, **kwargs):
         """
         Create a new ellipse-entity, consisting of an approximation with a
         polyline.
 
-        Arguments
-        ---------
+        :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
+        :param float rx: radius in x-axis
+        :param float ry: radius in y-axis
+        :param float startangle: in degree
+        :param float endangle: in degree
+        :param float rotation: angle between x-axis and ellipse-main-axis in degree
+        :param int segments: count of line segments for polyline approximation
+        :param string linetype: linetype name, if not defined = **BYLAYER**
+        :param string layer: layer name
+        :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
-        center -- center point (xy- or xyz-tuple), z-axis is 0 by default
-        radiusx -- radius in x-axis (float)
-        radiusy -- radius in y-axis (float)
-        startangle -- in degree (float)
-        endangle -- in degree (float)
-        rotation -- angle between x-axis and ellipse-main-axis in degree (float)
-        segments -- count of line segments for polyline approximation (int)
-
-        Common kwargs
-        -------------
-        linetype, color, layer
         """
-        return Ellipse(center=center, radiusx=radiusx, radiusy=radiusy,
+        return Ellipse(center=center, rx=rx, ry=ry,
                        startangle=startangle, endangle=endangle, rotation=rotation,
                        segments=segments, **kwargs)
 
@@ -579,16 +549,13 @@ class DXFEngine(object):
         Create a new cubic-spline-entity, consisting of an approximation with a
         polyline.
 
-        Arguments
-        ---------
-
-        points -- breakpoints (knots) as 2D points (float-tuples), defines the
+        :param points: breakpoints (knots) as 2D points (float-tuples), defines the
             curve, the curve goes through this points
-        segments -- count of line segments for polyline approximation
+        :param int segments: count of line segments for polyline approximation
+        :param string linetype: linetype name, if not defined = **BYLAYER**
+        :param string layer: layer name
+        :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
-        Common kwargs
-        -------------
-        linetype, color, layer
         """
         return Spline(points, segments=segments, **kwargs)
 
@@ -598,27 +565,10 @@ class DXFEngine(object):
         Create a new cubic-bezier-entity, consisting of an approximation with a
         polyline.
 
-        Methods
-        -------
-        *start_point(point, tangent) -- set start point and -tangent*
+        :param string linetype: linetype name, if not defined = **BYLAYER**
+        :param string layer: layer name
+        :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
-        point -- control point as a 2D point (float-tuple)
-        tangent -- control tangent as a 2D vector (float-tuple), 'right' tangent
-
-        *append_point(point, tangent1, tangent2=None, segments=20)*
-
-        Append a control point with two control tangents.
-
-        point -- control point as 2D point
-        tangent1 -- first control tangent as 2D vector 'left' of point
-        tangent2 -- second control tangent as 2D vector 'right' of point, if
-            omitted tangent2 = -tangent1
-        segments -- count of line segments for polyline approximation, count of
-            line segments from previous control point to this point.
-
-        Common kwargs
-        -------------
-        linetype, color, layer
         """
         return Bezier(**kwargs)
 
@@ -627,22 +577,19 @@ class DXFEngine(object):
                  mirrorx=False, mirrory=False, segments=100, **kwargs):
         """
         Create a new clothoid-entity, consisting of an approximation with a
-        polyline. see http://en.wikipedia.org/wiki/Euler_spiral
+        polyline.
 
-        Arguments
-        ---------
+        :param start: insert point as 2D points (float-tuples)
+        :param float rotation: in dregrees
+        :param loat length: length of curve in drawing units
+        :param float paramA: clothoid parameter A
+        :param bool mirrorx: mirror curve about x-axis
+        :param bool mirrory: mirror curve about y-axis
+        :param int segments: count of line segments for polyline approximation
+        :param string linetype: linetype name, if not defined = **BYLAYER**
+        :param string layer: layer name
+        :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
-        start -- insert point as 2D points (float-tuples)
-        rotation -- in dregrees (float)
-        length -- length of curve in drawing units (float)
-        paramA -- clothoid parameter A
-        mirrorx -- True or False
-        mirrory -- True or False
-        segments -- count of line segments for polyline approximation
-
-        Common kwargs
-        -------------
-        linetype, color, layer
         """
         return Clothoid(start=start, rotation=rotation, length=length,
                         paramA=paramA, mirrorx=mirrorx, mirrory=mirrory,

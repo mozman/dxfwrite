@@ -281,7 +281,7 @@ class Solid(_Entity):
     def extension_point(self):
         if 3 not in self.attribs:
             try: # set point self[3] equal to point self[2]
-                self[3] = self[2]['xyz'] # assign a 3-tuple not a DXFPoint3D
+                self[3] = self[2]['xyz'] # has to be a tuple
             except KeyError: # valid() fails if self[2] does not exist
                 pass
 

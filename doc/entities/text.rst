@@ -1,4 +1,4 @@
-.. TEXT:
+.. _TEXT:
 
 TEXT
 ====

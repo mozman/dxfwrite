@@ -26,23 +26,23 @@ class Insert2(object):
                  xscale=1., yscale=1., zscale=1.,
                  layer=const.BYBLOCK, color=const.BYLAYER, linetype=None):
         """
-        kwargs
-        ------
+        Insert a new block-reference with auto-creating of :ref:`ATTRIB` from
+        :ref:`ATTDEF`, and setting attrib-text by the attribs-dict.
+        (multi-insert is not supported)
 
-        blockdef -- the block definition itself
-        insert -- insert point (xy- or xyz-tuple), z-axis is 0 by default
-        xscale -- x-scale factor (float), default=1.
-        yscale -- y-scale factor (float), default=1.
-        zscale -- z-scale factor (float), default=1.
-        rotation -- rotation angle in degree (float), default=0.
-        attribs -- dict with tag:value pairs, to fill the the attdefs in the
+        :param blockdef: the block definition itself
+        :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+        :param float xscale: x-scale factor, default=1.
+        :param float yscale: y-scale factor, default=1.
+        :param float zscale: z-scale factor, default=1.
+        :param float rotation: rotation angle in degree, default=0.
+        :param dict attribs: dict with tag:value pairs, to fill the the attdefs in the
             block-definition. example: {'TAG1': 'TextOfTAG1'}, create and insert
             an attrib from an attdef (with tag-value == 'TAG1'), and set
             text-value of the attrib to value 'TextOfTAG1'.
-
-        Common kwargs
-        -------------
-        linetype, color, layer
+        :param string linetype: linetype name, if not defined = **BYLAYER**
+        :param string layer: layer name
+        :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
         """
         self.blockdef = blockdef
         self.insert = insert

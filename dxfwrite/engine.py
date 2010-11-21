@@ -603,9 +603,9 @@ class DXFEngine(object):
     @staticmethod
     def insert2(blockdef, insert=(0., 0.), attribs={}, **kwargs):
         """
-        Insert a new block-reference with auto-creating of attribs from attdefs,
-        and setting attrib-text by the attribs-dict. (multi-insert is not
-        supported)
+        Insert a new block-reference with auto-creating of :ref:`ATTRIB` from
+        :ref:`ATTDEF`, and setting attrib-text by the attribs-dict.
+        (multi-insert is not supported)
 
         :param blockdef: the block definition itself
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
@@ -620,8 +620,6 @@ class DXFEngine(object):
         :param string linetype: linetype name, if not defined = **BYLAYER**
         :param string layer: layer name
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
-
-
 
         """
         return Insert2(blockdef=blockdef, insert=insert, attribs=attribs,

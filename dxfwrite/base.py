@@ -208,7 +208,7 @@ class DXFPoint(object):
     """ 3D point with 3 float coordinates """
     def __init__(self, coords=(0., 0., 0.), index_shift=0):
         if len(coords) in (2, 3) :
-            # just use a nornmal list not DXFList, because point has public access
+            # just use a normal list not DXFList, because point has public access
             # and can be set as tuple or list too, so always expect a tuple or list
             self.point = [DXFFloat(value, (pos+1)*10+index_shift)
                             for pos, value in enumerate(coords)]
@@ -257,6 +257,13 @@ class DXFPoint(object):
         """ add z-axis if absent """
         if len(self.point) < 3:
             self.point.append(DXFFloat(zvalue, self.get_index_shift()+30))
+
+    @property
+    def tuple(self):
+        # CAUTION: do not override the 'value' attribute!!!
+        # 'value' would be the suitable name for this property, but that causes
+        # several seriouse problems.
+        return tuple(self['xyz'[:len(self.point)]])
 
 class DXFPoint2D(DXFPoint):
     """ only output x and y axis! """

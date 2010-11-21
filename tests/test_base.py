@@ -163,6 +163,7 @@ class TestDXFPoint(unittest.TestCase):
         # more than 3 or less than 2 coords raises a ValueError
         self.assertRaises(ValueError, DXFPoint, (0., 0., 0., 0.) )
         self.assertRaises(ValueError, DXFPoint, (0., ) )
+
     def test_index_access(self):
         point = DXFPoint( (7., 8., 9.) )
         self.assertEqual(point[0], 7.)
@@ -227,6 +228,15 @@ class TestDXFPoint(unittest.TestCase):
         p = DXFPoint3D( (1., 2.) )
         self.assertEqual(len(p.point), 3)
         self.assertEqual(p.point[2].value, 0.)
+
+    def test_get_value_2D(self):
+        p = DXFPoint( (1., 2.) )
+        self.assertEqual(p.tuple, (1., 2.))
+
+    def test_get_value_3D(self):
+        p = DXFPoint( (1., 2., 3.) )
+        self.assertEqual(p.tuple, (1., 2., 3.))
+
 
 if __name__=='__main__':
     unittest.main()

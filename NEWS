@@ -5,7 +5,7 @@ News
 Version 0.3.7 -
 
   * changed: set DXF Header variables now looks like dwg.header['$VAR'] = value,
-    see http://packages.python.org/dxfwrite/Drawing.html
+    see http://packages.python.org/dxfwrite/headervars.html
   * splitted makedxfexamples.py into several files and moved them into the
     subdir 'examples'
 

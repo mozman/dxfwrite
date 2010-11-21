@@ -98,7 +98,7 @@ class TestDXFEngine(unittest.TestCase):
                                         default_grid=True))
 
     def test_ellipse(self):
-        self.assertTrue(DXFEngine.ellipse(center=(0,0), radiusx=3, radiusy=1))
+        self.assertTrue(DXFEngine.ellipse(center=(0,0), rx=3, ry=1))
 
     def test_spline(self):
         self.assertTrue(DXFEngine.spline(points=[(0,0), (2,1), (5,3)],

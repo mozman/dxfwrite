@@ -22,15 +22,15 @@ from dxfwrite.algebra import Clothoid as _ClothoidValues
 __all__ = ['Ellipse', 'Bezier', 'Spline', 'Clothoid']
 
 class Ellipse(object):
-    def __init__(self, center=(0., 0., 0.), radiusx=1.0, radiusy=1.0,
+    def __init__(self, center=(0., 0., 0.), rx=1.0, ry=1.0,
                  startangle=0., endangle=360., rotation=0., segments=100,
                  color=const.BYLAYER, layer='0', linetype=None):
         self.color = color
         self.layer = layer
         self.linetype = linetype
         self.center = center
-        self.radiusx = float(radiusx)
-        self.radiusy = float(radiusy)
+        self.rx = float(rx)
+        self.ry = float(ry)
         self.startangle = float(startangle)
         self.endangle = float(endangle)
         self.rotation = float(rotation)
@@ -39,8 +39,8 @@ class Ellipse(object):
     def _build_curve(self):
         def curve_point(alpha):
             alpha = radians(alpha)
-            point = (cos(alpha) * self.radiusx,
-                     sin(alpha) * self.radiusy)
+            point = (cos(alpha) * self.rx,
+                     sin(alpha) * self.ry)
             point = rotate_2d(point, radians(self.rotation))
             x, y = vadd(self.center, point)
             return (x, y, zaxis)
@@ -94,21 +94,21 @@ class Bezier(object):
     def start(self, point, tangent):
         """Defines the start point and the start tangent.
 
-        point -- 2D start point
-        tangent -- start tangent as 2D vector, example: (5, 0) means a horizontal
-            tangent with a length of 5 drawing units
+        :param point: 2D start point
+        :param tangent: start tangent as 2D vector, example: (5, 0) means a
+            horizontal tangent with a length of 5 drawing units
         """
         self.points.append( (point, None, tangent, None) )
 
     def append(self, point, tangent1, tangent2=None, segments=20):
         """Append a control point with two control tangents.
 
-        point -- the control point as 2D point
-        tangent1 -- first control tangent as 2D vector 'left' of point
-        tangent2 -- second control tangent as 2D vector 'right' of point, if
-            omitted tangent2 = -tangent1
-        segments -- count of line segments for polyline approximation, count of
-            line segments from previous control point to this point.
+        :param point: the control point as 2D point
+        :param tangent1: first control tangent as 2D vector *left* of point
+        :param tangent2: second control tangent as 2D vector *right* of point,
+            if omitted tangent2 = -tangent1
+        :param int segments: count of line segments for polyline approximation,
+            count of line segments from previous control point to this point.
         """
         if tangent2 is None:
             tangent2 = (-tangent1[0], -tangent1[1])

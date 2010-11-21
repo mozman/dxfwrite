@@ -33,20 +33,20 @@ expected = "  0\nPOLYLINE\n  6\nSOLID\n 62\n3\n  8\n0\n 66\n1\n 10\n0.0\n 20\n" 
 
 class TestEllipse(unittest.TestCase):
     def test_api(self):
-        ellipse = Ellipse(center=(0., 0.), radiusx=5.0, radiusy=3.0,
+        ellipse = Ellipse(center=(0., 0.), rx=5.0, ry=3.0,
                           startangle=0., endangle=360., rotation=30.,
                           segments=100, color=3, layer='0', linetype='SOLID')
         self.assertNotEqual(ellipse, None)
 
     def test_implementation(self):
-        ellipse = Ellipse(center=(0., 0.), radiusx=5.0, radiusy=3.0,
+        ellipse = Ellipse(center=(0., 0.), rx=5.0, ry=3.0,
                           startangle=0., endangle=90., rotation=30.,
                           segments=16, color=3, layer='0', linetype='SOLID')
         result = ellipse.__dxf__()
         self.assertEqual(result, expected)
 
     def test_closed_ellipse(self):
-        ellipse = Ellipse(center=(0., 0.), radiusx=5.0, radiusy=3.0,
+        ellipse = Ellipse(center=(0., 0.), rx=5.0, ry=3.0,
                           startangle=0., endangle=360., rotation=30.,
                           segments=16, color=3, layer='0', linetype='SOLID')
         polyline = ellipse._build_curve()

@@ -7,6 +7,20 @@ The HEADER section of the DXF file contains settings of variables
 associated with the drawing. The following list shows the header
 variables and their meanings.
 
+set/get header variables::
+
+    #set value
+    drawing.header['$ANGBASE'] = 30
+    drawing.header['$EXTMIN'] = (0, 0, 0)
+    drawing.header['$EXTMAX'] = (100, 100, 0)
+
+    #get value
+    version = drawing.header['$ACADVER'].value
+
+    # for 2D/3D points use:
+    minx, miny, minz = drawing.header['$EXTMIN'].tuple
+    maxx, maxy, maxz = drawing.header['$EXTMAX'].tuple
+
 +----------------+--------+-------------------------------------+
 | Variable       | Type   | Description                         |
 +================+========+=====================================+

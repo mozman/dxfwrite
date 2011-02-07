@@ -25,6 +25,12 @@ drawing entities by :ref:`DXFEngine` and add them to the drawing with the
 :ref:`Textstyles <Textstyle>`, :ref:`Views <View>` and
 :ref:`Viewports <Viewport>` were created by the :ref:`Drawing` object.
 
+.. raw:: html
+
+   <a href="http://flattr.com/thing/129228/dxfwrite" target="_blank">
+   <img src="http://api.flattr.com/button/flattr-badge-large.png"
+   alt="Flattr this" title="Flattr this" border="0" /></a>
+
 Contents
 ========
 

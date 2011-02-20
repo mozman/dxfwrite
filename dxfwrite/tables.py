@@ -41,6 +41,9 @@ class _Table(object):
     def __contains__(self, name):
         return name in self._entries
 
+    def clear(self):
+        self._entries.clear()
+
     def _get_values(self):
         return self._entries.values()
 
@@ -61,3 +64,5 @@ class Viewports(_Table):
     def add(self, viewport):
         self._entries.append(viewport)
 
+    def clear(self):
+        self._entries = []

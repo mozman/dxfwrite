@@ -90,5 +90,13 @@ class TestLinearDimensionImplementation(unittest.TestCase):
                                   angle=45)
         self.assertEqual(dimline.__dxf__(), expected)
 
+    def test_dim_points_order(self):
+        """ test if point sorting works. """
+        points = [ (1.7,2.5), (0,0), (3.3,6.9), (8,12) ]
+        dimline = LinearDimension((3,3), points, angle=15.)
+        dimline._setup()
+        self.assertEqual(dimline.point_order, [1, 0, 2, 3])
+
+
 if __name__=='__main__':
     unittest.main()

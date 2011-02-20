@@ -277,7 +277,7 @@ class LinearDimension(_DimensionBase):
                 self._get_dimline_point(section+1))
 
     def _get_dimline_bounds(self):
-        """ get thr first and the last point of dimension line """
+        """ get the first and the last point of dimension line """
         return (self._get_dimline_point(0),
                 self._get_dimline_point(-1))
 
@@ -302,9 +302,9 @@ class LinearDimension(_DimensionBase):
     @staticmethod
     def _indices_of_sorted_points(points):
         """ get indices of points, for points sorted by x, y values """
-        indexed_points = [(idx, point) for idx, point in enumerate(points)]
+        indexed_points = [(point, idx) for idx, point in enumerate(points)]
         indexed_points.sort()
-        return list([idx for idx, point in indexed_points])
+        return [idx for point, idx in indexed_points]
 
     def _build_vectors(self):
         """ build unit vectors, parallel and normal to dimension line """

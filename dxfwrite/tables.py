@@ -38,7 +38,7 @@ class _Table(object):
                 DXFAtom('ENDTAB')
             )))
 
-    def has(self, name):
+    def __contains__(self, name):
         return name in self._entries
 
     def _get_values(self):

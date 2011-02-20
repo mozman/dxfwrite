@@ -22,6 +22,11 @@ class TestTables(unittest.TestCase):
         dxf = dxfstr(table)
         self.assertEqual(dxf, "  0\nTABLE\n  2\nLAYER\n 70\n0\n  0\nENDTAB\n")
 
+    def test_has_layer(self):
+        table = Tables().get('LAYER')
+        table.add( {'name': 'TEST'} )
+        self.assertTrue(table.has('TEST'))
+
     def test_empty_styles_table(self):
         table = Tables().get('STYLE')
         dxf = dxfstr(table)

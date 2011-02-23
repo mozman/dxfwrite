@@ -133,12 +133,14 @@ class DXFColorIndex(object):
 
     @staticmethod
     def generate_color_map(color_table):
-        color_map = dict( (key, index) for index, key in enumerate(color_table))
-        if color_map[(0, 0, 0)] == 0: # standard colors black == white
-            if color_table[7] == (255, 255, 255): # color is not redefined
-                color_map[(0, 0, 0)] = 7 # black == white!
-            else: # color 7 is redefined, delete key and get the nearest color!
-                del color_map[(0, 0, 0)]
+        def iter_colors_backwards():
+            lastindex = len(color_table) - 1
+            for index, color in enumerate(reversed(color_table)):
+                yield (lastindex - index, color)
+
+        color_map = dict(iter_colors_backwards())
+        if 0 in color_map: # index 0 means BYBLOCK
+            del color_map[0]
         return color_map
 
     def add_user_styles(self, pen_styles):
@@ -191,6 +193,11 @@ class DXFColorIndex(object):
                     min_index = index
                 index += 1
             return min_index
+
+        # stupid special case black/white == 7
+        # do not redefine color 7 with user values!!!
+        if rgb == (0, 0, 0):
+            return 7
         try:
             return self.color_map[rgb]
         except KeyError:

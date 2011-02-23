@@ -13,6 +13,8 @@ from dxfwrite.base import *
 from dxfwrite.engine import DXFEngine
 
 VERSION = "0.3.7"
+version = (0, 3, 7)
+
 CYEAR = "2010"
 AUTHOR_NAME = "Manfred Moitzi"
 AUTHOR_EMAIL = "mozman@gmx.at"

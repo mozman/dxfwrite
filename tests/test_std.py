@@ -63,6 +63,16 @@ class TestDXFColorIndex(unittest.TestCase):
         colors = DXFColorIndex()
         self.assertEqual(colors.get_rgb(1), (255, 0, 0))
 
+    def test_get_black(self):
+        colors = DXFColorIndex()
+        # stupid special case black/white == 7
+        self.assertEqual(colors.get_dxf_color_index( (0, 0, 0) ), 7)
+
+    def test_get_white(self):
+        colors = DXFColorIndex()
+        # stupid special case black/white == 7
+        self.assertEqual(colors.get_dxf_color_index( (255, 255, 255) ), 7)
+
     def test_get_nearest_color(self):
         colors = DXFColorIndex()
         self.assertEqual(colors.get_dxf_color_index((254, 1, 1)), 1)

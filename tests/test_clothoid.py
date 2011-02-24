@@ -4,6 +4,8 @@
 # Purpose: test clothoid module and curve
 # Created: 28.03.2010
 
+from dxfwrite.helpers import normalize_dxf_chunk
+
 import sys
 if sys.version_info[:2]> (2, 6):
     import unittest
@@ -89,14 +91,14 @@ class TestDXFClothoid(unittest.TestCase):
     def test_implementation(self):
         clothoid = DXFClothoid(start=(1, 1), paramA=25, length=10, rotation=30,
                                mirrorx=False, mirrory=False, segments=10)
-        result = clothoid.__dxf__()
-        self.assertEqual(expected_dxf, result)
+        result = normalize_dxf_chunk(clothoid.__dxf__())
+        self.assertSequenceEqual(normalize_dxf_chunk(expected_dxf), result)
 
     def test_implementation_mirror(self):
         clothoid = DXFClothoid(start=(1, 1), paramA=25, length=10, rotation=30,
                                mirrorx=True, mirrory=True, segments=10)
         result = clothoid.__dxf__()
-        self.assertEqual(expected_mirror_dxf, result)
+        self.assertSequenceEqual(normalize_dxf_chunk(expected_mirror_dxf), normalize_dxf_chunk(result))
 
 if __name__=='__main__':
     unittest.main()

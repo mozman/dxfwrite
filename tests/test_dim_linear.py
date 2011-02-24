@@ -5,6 +5,8 @@
 # Created: 16.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+from __future__ import absolute_import
+from dxfwrite.helpers import normalize_dxf_chunk
 
 import sys
 if sys.version_info[:2]> (2, 6):
@@ -15,6 +17,7 @@ else: # python 2.6 and prior needs the unittest2 package
 import sys
 
 from dxfwrite.dimlines import LinearDimension
+
 class TestLinearDimAPI(unittest.TestCase):
     def test_init(self):
         dimline = LinearDimension(pos=(5, 5),
@@ -66,7 +69,7 @@ class TestLinearDimensionImplementation(unittest.TestCase):
                  "0.0\n 41\n1.0\n 42\n1.0\n 50\n0.0\n"
 
         dimline = LinearDimension(pos=(5,5),measure_points=[(0,0),(10,0)])
-        self.assertEqual(dimline.__dxf__(), expected)
+        self.assertSequenceEqual(normalize_dxf_chunk(dimline.__dxf__()), normalize_dxf_chunk(expected))
 
     def test_45deg(self):
         expected = "  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n-0.212132034356\n" \
@@ -88,7 +91,7 @@ class TestLinearDimensionImplementation(unittest.TestCase):
         self.maxDiff = None
         dimline = LinearDimension(pos=(5,5),measure_points=[(0,0),(10,0)],
                                   angle=45)
-        self.assertEqual(dimline.__dxf__(), expected)
+        self.assertSequenceEqual(normalize_dxf_chunk(dimline.__dxf__()), normalize_dxf_chunk(expected))
 
     def test_dim_points_order(self):
         """ test if point sorting works. """

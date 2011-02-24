@@ -3,6 +3,8 @@
 # Author:  mozman
 # Purpose: test spline module
 # Created: 26.03.2010
+from __future__ import absolute_import
+from dxfwrite.helpers import normalize_dxf_chunk
 
 import sys
 if sys.version_info[:2]> (2, 6):
@@ -103,7 +105,7 @@ class TestDXFSpline(unittest.TestCase):
         spline = Spline(points=test_points, segments=16, color=1, layer="0",
                         linetype='SOLID')
         result = spline.__dxf__()
-        self.assertEqual(expected_dxf, result)
+        self.assertSequenceEqual(normalize_dxf_chunk(expected_dxf), normalize_dxf_chunk(result))
 
 if __name__=='__main__':
     unittest.main()

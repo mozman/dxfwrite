@@ -4,11 +4,15 @@
 # Purpose: test ellipse curve
 # Created: 27.03.2010
 
+from __future__ import absolute_import
+
 import sys
 if sys.version_info[:2]> (2, 6):
     import unittest
 else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
+
+from dxfwrite.helpers import normalize_dxf_chunk
 
 from dxfwrite.curves import Ellipse
 from dxfwrite.const import POLYLINE_CLOSED
@@ -43,7 +47,7 @@ class TestEllipse(unittest.TestCase):
                           startangle=0., endangle=90., rotation=30.,
                           segments=16, color=3, layer='0', linetype='SOLID')
         result = ellipse.__dxf__()
-        self.assertEqual(result, expected)
+        self.assertSequenceEqual(normalize_dxf_chunk(result), normalize_dxf_chunk(expected))
 
     def test_closed_ellipse(self):
         ellipse = Ellipse(center=(0., 0.), rx=5.0, ry=3.0,

@@ -6,12 +6,14 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+from __future__ import absolute_import
+from dxfwrite.helpers import normalize_dxf_chunk
+
 import sys
 if sys.version_info[:2]> (2, 6):
     import unittest
 else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
-
 
 from dxfwrite.dimlines import RadialDimension
 
@@ -38,7 +40,7 @@ class TestRadialDimImplementation(unittest.TestCase):
                  "DIMTICK_RADIUS\n 10\n3.0\n 20\n3.0\n 30\n0.0\n 41\n1.0\n 42\n"\
                  "1.0\n 50\n225.0\n"
         dimline = RadialDimension(center=(0, 0), target=(3, 3), length=1.)
-        self.assertEqual(dimline.__dxf__(), expected)
+        self.assertSequenceEqual(normalize_dxf_chunk(dimline.__dxf__()), normalize_dxf_chunk(expected))
 
 if __name__=='__main__':
     unittest.main()

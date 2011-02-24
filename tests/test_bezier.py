@@ -18,6 +18,8 @@ def get_next(generator):
 if PYTHON25:
     next = get_next
 
+from dxfwrite.helpers import normalize_dxf_chunk
+
 from dxfwrite.algebra.bezier import CubicBezierCurve
 from dxfwrite.curves import Bezier
 
@@ -93,7 +95,7 @@ class TestDXFBezier(unittest.TestCase):
 
         #test implementation
         result = bezier.__dxf__()
-        self.assertEqual(expected_dxf, result)
+        self.assertSequenceEqual(normalize_dxf_chunk(expected_dxf), normalize_dxf_chunk(result))
 
     def test_to_few_points(self):
         bezier = Bezier(color=256, layer='0', linetype=None)

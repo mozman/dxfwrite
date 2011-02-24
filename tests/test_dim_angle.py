@@ -5,6 +5,8 @@
 # Created: 21.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+from __future__ import absolute_import
+from dxfwrite.helpers import normalize_dxf_chunk
 
 import sys
 if sys.version_info[:2] > (2, 6):
@@ -48,7 +50,7 @@ class TestAngularDimImplementation(unittest.TestCase):
         else:
             result = dimline.__dxf__().encode('utf8')
             expected = expected_ % "45\xc2\xb0\n"
-        self.assertEqual(result, expected)
+        self.assertSequenceEqual(normalize_dxf_chunk(result), normalize_dxf_chunk(expected))
 
 if __name__=='__main__':
     unittest.main()

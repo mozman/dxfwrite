@@ -12,8 +12,9 @@ from dxfwrite.const import *
 from dxfwrite.base import *
 from dxfwrite.engine import DXFEngine
 
-VERSION = "0.3.7"
-version = (0, 3, 7)
+
+version = (0, 4, 0)
+VERSION = "%d.%d.%d"  % version
 
 CYEAR = "2010"
 AUTHOR_NAME = "Manfred Moitzi"

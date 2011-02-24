@@ -6,11 +6,15 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+from __future__ import absolute_import
+
 import sys
 if sys.version_info[:2]> (2, 6):
     import unittest
 else: # python 2.6 and prior needs the unittest2 package
     import unittest2 as unittest
+
+from dxfwrite.helpers import normalize_dxf_chunk
 
 import dxfwrite
 from dxfwrite.rect import Rectangle
@@ -49,7 +53,7 @@ class TestRectangleImplementation(unittest.TestCase):
                               rotation=45,
                               bgcolor=3,
                               layer='RECTANGLE')
-        self.assertEqual(rectangle.__dxf__(), expected)
+        self.assertSequenceEqual(normalize_dxf_chunk(rectangle.__dxf__()), normalize_dxf_chunk(expected))
 
 if __name__=='__main__':
     unittest.main()

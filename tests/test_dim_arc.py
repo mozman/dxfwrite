@@ -5,6 +5,8 @@
 # Created: 21.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+from __future__ import absolute_import
+from dxfwrite.helpers import normalize_dxf_chunk
 
 import sys
 if sys.version_info[:2]> (2, 6):
@@ -46,7 +48,7 @@ class TestArcDimImplementation(unittest.TestCase):
                  " 42\n1.0\n 50\n135.0\n"
         dimline = ArcDimension(pos=(5,5), center=(0, 0), start=(1, 0),
                                end=(1, 1), )
-        self.assertEqual(dimline.__dxf__(), expected)
+        self.assertSequenceEqual(normalize_dxf_chunk(dimline.__dxf__()), normalize_dxf_chunk(expected))
 
     def test_setup(self):
         dimline = ArcDimension((5,5), (4,0), (0,4), (-4,0), arc3points=True)

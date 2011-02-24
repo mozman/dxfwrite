@@ -13,10 +13,10 @@ from dxfwrite.base import *
 from dxfwrite.engine import DXFEngine
 
 
-version = (0, 4, 0)
+version = (1, 0, 0)
 VERSION = "%d.%d.%d"  % version
 
-CYEAR = "2010"
+CYEAR = "2010, 2011"
 AUTHOR_NAME = "Manfred Moitzi"
 AUTHOR_EMAIL = "mozman@gmx.at"
 LICENSE = "GPLv3"

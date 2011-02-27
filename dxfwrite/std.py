@@ -9,6 +9,8 @@
 
 from array import array
 
+from dxfwrite.htmlcolors import get_color_tuple_by_name
+
 # dxf default pen assignment:
 # 1 : 1.40mm - red
 # 2 : 0.35mm - yellow
@@ -202,6 +204,10 @@ class DXFColorIndex(object):
             return self.color_map[rgb]
         except KeyError:
             return nearest_color_index()
+
+    def colorname_to_dxf_color_index(self, colorname):
+        colortuple = get_color_tuple_by_name(colorname)
+        return self.get_dxf_color_index(colortuple)
 
 def linetypes():
     """ Creates a list of standard linetypes.

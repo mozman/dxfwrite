@@ -20,7 +20,7 @@ usage::
    drawing.save()
 
 First create a :ref:`Drawing` , than create various
-drawing entities by :ref:`DXFEngine` and add them to the drawing with the
+drawing entities by :class:`DXFEngine` and add them to the drawing with the
 :func:`~dxfwrite.drawing.Drawing.add` method. :ref:`Layers <Layer>`,
 :ref:`Textstyles <Textstyle>`, :ref:`Views <View>` and
 :ref:`Viewports <Viewport>` were created by the :ref:`Drawing` object.
@@ -82,7 +82,7 @@ Composite Entities
    /entities/angular_dim
    /entities/arc_dim
    /entities/radial_dim
-   /entities/rectangle
+   /entities/rect
    /entities/table
    /entities/ellipse
    /entities/spline

@@ -26,6 +26,8 @@ Methods
 
 .. automethod:: dxfwrite.drawing.Drawing.add_viewport
 
+.. automethod:: dxfwrite.drawing.Drawing.add_xref
+
 Attributes
 ----------
 

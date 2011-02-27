@@ -237,7 +237,7 @@ class Style(_TableEntry):
             'oblique': 0,
             'generation_flags': 0,
             'last_height': 1,
-            'font': "ARIAL",
+            'font': "ARIAL.TTF",
             'bigfont': ""
         }
         default.update(kwargs)

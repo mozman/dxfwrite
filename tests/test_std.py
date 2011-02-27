@@ -55,32 +55,36 @@ class TestDXFLineweight(unittest.TestCase):
         self.assertAlmostEqual(lineweights.get(DXF_INDEX), TESTLW)
 
 class TestDXFColorIndex(unittest.TestCase):
+    def setUp(self):
+        self.colors = DXFColorIndex()
+
     def test_init(self):
-        colors = DXFColorIndex()
-        self.assertTrue(colors is not None)
+        self.assertTrue(self.colors is not None)
 
     def test_get_rgb(self):
-        colors = DXFColorIndex()
-        self.assertEqual(colors.get_rgb(1), (255, 0, 0))
+        self.assertEqual(self.colors.get_rgb(1), (255, 0, 0))
 
     def test_get_black(self):
-        colors = DXFColorIndex()
         # stupid special case black/white == 7
-        self.assertEqual(colors.get_dxf_color_index( (0, 0, 0) ), 7)
+        self.assertEqual(self.colors.get_dxf_color_index( (0, 0, 0) ), 7)
 
     def test_get_white(self):
-        colors = DXFColorIndex()
         # stupid special case black/white == 7
-        self.assertEqual(colors.get_dxf_color_index( (255, 255, 255) ), 7)
+        self.assertEqual(self.colors.get_dxf_color_index( (255, 255, 255) ), 7)
+
+    def test_black_color_name_to_dxf_index(self):
+        self.assertEqual(7, self.colors.colorname_to_dxf_color_index('black'))
+
+    def test_white_color_name_to_dxf_index(self):
+        # stupid dxf black/white == 7 issue
+        self.assertEqual(7, self.colors.colorname_to_dxf_color_index('white'))
 
     def test_get_nearest_color(self):
-        colors = DXFColorIndex()
-        self.assertEqual(colors.get_dxf_color_index((254, 1, 1)), 1)
+        self.assertEqual(self.colors.get_dxf_color_index((254, 1, 1)), 1)
 
     def test_index_range(self):
-        colors = DXFColorIndex()
-        self.assertRaises(IndexError, colors.get_rgb, 0)
-        self.assertRaises(IndexError, colors.get_rgb, 256)
+        self.assertRaises(IndexError, self.colors.get_rgb, 0)
+        self.assertRaises(IndexError, self.colors.get_rgb, 256)
 
     def test_user_styles(self):
         styles = UserStylesMock()

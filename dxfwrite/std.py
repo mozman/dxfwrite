@@ -205,7 +205,7 @@ class DXFColorIndex(object):
         except KeyError:
             return nearest_color_index()
 
-    def colorname_to_dxf_color_index(self, colorname):
+    def get_dxf_color_index_by_colorname(self, colorname):
         colortuple = get_color_tuple_by_name(colorname)
         return self.get_dxf_color_index(colortuple)
 

@@ -73,11 +73,11 @@ class TestDXFColorIndex(unittest.TestCase):
         self.assertEqual(self.colors.get_dxf_color_index( (255, 255, 255) ), 7)
 
     def test_black_color_name_to_dxf_index(self):
-        self.assertEqual(7, self.colors.colorname_to_dxf_color_index('black'))
+        self.assertEqual(7, self.colors.get_dxf_color_index_by_colorname('black'))
 
     def test_white_color_name_to_dxf_index(self):
         # stupid dxf black/white == 7 issue
-        self.assertEqual(7, self.colors.colorname_to_dxf_color_index('white'))
+        self.assertEqual(7, self.colors.get_dxf_color_index_by_colorname('white'))
 
     def test_get_nearest_color(self):
         self.assertEqual(self.colors.get_dxf_color_index((254, 1, 1)), 1)

@@ -181,7 +181,7 @@ class Drawing(object):
         """ Create standard text styles """
         return [DXFEngine.style(name, font=f) for name, f in std.styles() ]
 
-    def add_xref(self, filepath, insert=(0., 0., 0.)):
+    def add_xref(self, filepath, insert=(0., 0., 0.), layer='0'):
         """ Create a simple XREF reference, `filepath` is the referenced
         drawing and `insert` is the insertion point.
 
@@ -195,4 +195,4 @@ class Drawing(object):
         blockname = normblockname(filename)
         xref = DXFEngine.block(name=blockname, flags=const.BLK_XREF, xref=filepath)
         self.blocks.add(xref)
-        self.add(DXFEngine.insert(blockname, insert=insert))
+        self.add(DXFEngine.insert(blockname, insert, layer=layer))

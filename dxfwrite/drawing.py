@@ -7,6 +7,8 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+import os
+
 from dxfwrite.util import PYTHON3
 if PYTHON3:
     from io import StringIO
@@ -169,12 +171,28 @@ class Drawing(object):
         return ucs
 
     def std_linetypes(self):
-        """ create standard linetypes """
+        """ Create standard linetypes """
         return [DXFEngine.linetype(
             name, description=desc,
             pattern=DXFEngine.linepattern(pat))
                 for name, desc, pat in std.linetypes()]
 
     def std_styles(self):
-        """ create standard text styles """
+        """ Create standard text styles """
         return [DXFEngine.style(name, font=f) for name, f in std.styles() ]
+
+    def add_xref(self, filepath, insert=(0., 0., 0.)):
+        """ Create a simple XREF reference, `filepath` is the referenced
+        drawing and `insert` is the insertion point.
+
+        """
+        def normblockname(blockname):
+            for char in ' :/\\.':
+                blockname = blockname.replace(char, '')
+            return blockname
+
+        dirname, filename = os.path.split(filepath)
+        blockname = normblockname(filename)
+        xref = DXFEngine.block(name=blockname, flags=const.BLK_XREF, xref=filepath)
+        self.blocks.add(xref)
+        self.add(DXFEngine.insert(blockname, insert=insert))

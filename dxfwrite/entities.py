@@ -337,7 +337,7 @@ class Circle(_Entity):
 
     def __init__(self, **kwargs):
         default = {
-            'center': (0,0),
+            'center': (0, 0),
             'radius': 1,
         }
         default.update(kwargs)
@@ -353,13 +353,13 @@ class Insert(_Entity):
 
     def __init__(self, **kwargs):
         default = {
-            'insert': (0,0),
+            'insert': (0, 0),
         }
         default.update(kwargs)
         super(Insert, self).__init__(**default)
         self.data = DXFList()
 
-    def add(self, attrib, relative=True):
+    def add(self, attrib, relative=True, block_basepoint=None):
         """ add attributes to a block reference. The position in attrib is
         absolute in WCS, or relative to the block origin (rotation is relative
         to the block x-axis).
@@ -374,32 +374,58 @@ class Insert(_Entity):
             Insert attrib relative to the block origin (0, 0, 0), this is perhaps
             not the insert point of the block!
             The relative position will be taken from the attrib.
+
+        block_basepoint
+            the basepoint of the block, its the basepoint for scaling and
+            rotating of the attribute.
         """
-        def transform(insert_position, insert_rotation, delta):
-            """ transforms x,y -> x',y' z-axis is ignored. """
-            new_angle = math.radians(insert_rotation) + math.atan2(delta[1], delta[0])
-            radius = math.hypot(delta[0], delta[1])
-            dx = radius * math.cos(new_angle)
-            dy = radius * math.sin(new_angle)
-            return (insert_position[0]+dx, insert_position[1]+dy, insert_position[2])
+        def move_attrib_insert_point_to_basepoint(reverse=False):
+            if block_basepoint is None:
+                return attrib_insert
+            direction = -1 if reverse else +1
+            return tuple( (attrib_insert[axis] - block_basepoint[axis] * direction
+                           for axis in range(len(attrib_insert))) )
+
+        def get_scale_values():
+            scale1 = DXFFloat(1.)
+            return [self.attribs.get(value_name, scale1).value for value_name in ('xscale', 'yscale', 'zscale')]
+
+        def scale():
+            scale_values = get_scale_values()
+            adjust_fontsize(scale_values[0], scale_values[1])
+            return tuple( (attrib_insert[axis] * scale_values[axis]
+                           for axis in range(len(attrib_insert))) )
+
+        def adjust_fontsize(xscale, yscale):
+            if yscale != 1.:
+                attrib['height'] = attrib['height'] * yscale
+
+        def rotate():
+            new_angle = math.radians(insert_angle) + math.atan2(attrib_insert[1], attrib_insert[0])
+            radius = math.hypot(attrib_insert[0], attrib_insert[1])
+            return (radius * math.cos(new_angle), radius * math.sin(new_angle), 0. )
+
+        def get_world_coordinates():
+            basepoint = (0., 0., 0.) if block_basepoint is None else block_basepoint
+            return tuple( (insert_insert[axis] + attrib_insert[axis] - basepoint[axis]
+                           for axis in range(len(insert_insert))) )
 
         if relative is True:
             angel0 = DXFAngle(0.)
-            relative_position = attrib['insert']['xyz']
-            relative_angle = attrib.attribs.get('rotation', angel0).value
-            insert_position = self['insert']['xyz']
+            attrib_insert = attrib['insert']['xyz']
+            attrib_angle = attrib.attribs.get('rotation', angel0).value
+            insert_insert = self['insert']['xyz']
             insert_angle = self.attribs.get('rotation', angel0).value
-            insert_position = transform(insert_position, insert_angle, relative_position)
-            # if block reference (insert-entity) is scaled in y-axis
-            # then also shrink the textheight of the attrib-entity
-            if 'yscale' in self.attribs:
-                text_height = attrib['height']
-                attrib['height'] = text_height * self['yscale']
-            attrib['insert'] = insert_position
-            # align point is always the insert point, so baseline styles
-            # like ALIGNED, FIT and BASELINE_MIDDLE is not available
-            attrib['alignpoint'] = insert_position
-            attrib['rotation'] = insert_angle + relative_angle
+
+            attrib_insert = move_attrib_insert_point_to_basepoint()
+            attrib_insert = scale()
+            attrib_insert = rotate()
+            attrib_insert = move_attrib_insert_point_to_basepoint(reverse=True)
+            attrib_insert = get_world_coordinates()
+
+            attrib['insert'] = attrib_insert
+            attrib['alignpoint'] = attrib_insert
+            attrib['rotation'] = insert_angle + attrib_angle
         self.data.append(attrib)
 
     def extension_point(self):

@@ -57,11 +57,12 @@ class Insert2(object):
 
     def _build(self):
         def set_tags(insert_entity):
+            basepoint = self.blockdef['basepoint']['xyz']
             for tag, text in self.attribs.items():
                 try:
                     attdef = self.blockdef.find_attdef(tag)
                     attrib = attdef.new_attrib(text=text)
-                    insert_entity.add(attrib, relative=True)
+                    insert_entity.add(attrib, relative=True, block_basepoint=basepoint)
                 except KeyError: # no attdef <tag> found
                     pass
 

@@ -58,7 +58,11 @@ for point in sample_coords:
         'XPOS': "x = %.3f" % point[0],
         'YPOS': "y = %.3f" % point[1]
     }
-    dwg.add(dxf.insert2(blockdef=flag, insert=point, attribs=values,
+    randomscale = 0.5 + random.random() * 2.0
+    dwg.add(dxf.insert2(blockdef=flag, insert=point,
+                        attribs=values,
+                        xscale=randomscale,
+                        yscale=randomscale,
                         layer='FLAGS', rotation=-15))
     number += 1
 

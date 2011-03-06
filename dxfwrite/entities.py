@@ -392,13 +392,17 @@ class Insert(_Entity):
 
         def scale():
             scale_values = get_scale_values()
-            adjust_fontsize(scale_values[0], scale_values[1])
+            fontscaling(scale_values[0], scale_values[1])
             return tuple( (attrib_insert[axis] * scale_values[axis]
                            for axis in range(len(attrib_insert))) )
 
-        def adjust_fontsize(xscale, yscale):
+        def fontscaling(xscale, yscale):
             if yscale != 1.:
                 attrib['height'] = attrib['height'] * yscale
+
+            distort = round(xscale/yscale, 5)
+            if distort != 1.0:
+                attrib['xscale'] = attrib['xscale'] * distort
 
         def rotate():
             new_angle = math.radians(insert_angle) + math.atan2(attrib_insert[1], attrib_insert[0])

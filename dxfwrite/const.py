@@ -9,8 +9,6 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-
-
 # Valid for: STYLE, LTYPE, APPID, DIMSTYLE, LAYER, LTYPE, STYLE, UCS, VIEW, VPORT
 # Standard flag values (bit-coded values):
 # 16 = If set, table entry is externally dependent on an xref
@@ -50,10 +48,14 @@ MIRROR_Y = 4
 STD_FLAGS_LAYER_FROZEN = 1
 STD_FLAGS_LAYER_FROZEN_BY_DEFAULT = 2
 STD_FLAGS_LAYER_LOCKED = 4
+LAYER_FROZEN = STD_FLAGS_LAYER_FROZEN
+LAYER_FROZEN_BY_DEFAULT = STD_FLAGS_LAYER_FROZEN_BY_DEFAULT
+LAYER_LOCKED = STD_FLAGS_LAYER_LOCKED
 
 # view flags - Section TABLES Table VIEW
 # Standard flag values (bit-coded values):
 STD_FLAGS_PAPER_SPACE = 1
+PAPER_SPACE = STD_FLAGS_PAPER_SPACE
 
 # Orthographic type of UCS GROUPCODE 79:
 UCS_NOT_ORTHOGRAPHIC = 0

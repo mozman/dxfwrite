@@ -6,6 +6,7 @@
 # Created: 14.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
 """
 DXFEngine is the dedicated interface to dxfwrite
 """
@@ -26,21 +27,21 @@ class DXFEngine(object):
     """ Factory, creates the dxf objects.
 
     This is the dedicated interface to dxfwrite, all table entries and all
-    all DXF entities shoul be created by the methods of this object.
+    all DXF entities should be created by the methods of this object.
     All methods are staticmethods, so this object hasn't to be instantiated.
     """
 
     name = 'DXFWRITE'
-    """Engine name for further distinctions of different creation engines."""
+    """ Engine name for further distinctions of different creation engines. """
 
     @staticmethod
     def drawing(name='empty.dxf'):
-        """Create a new drawing.
+        """ Create a new drawing.
 
         The drawing-object contains all the sections, tables and entities, which
-        represent the dxf-drawing.
+        are necessary for a valid dxf-drawing.
 
-        For drawing methods see ``drawing.Drawing`` class.
+        For drawing methods see :class:`~dxfwrite.drawing.Drawing` class.
         """
         from dxfwrite.drawing import Drawing
         return Drawing(name)
@@ -85,7 +86,7 @@ class DXFEngine(object):
         :param string name: linetype name
         :param int flags: standard flag values, bit-coded, default=0
         :param string description: descriptive text for linetype, default=""
-        :param pattern: :ref:`LinePatterDef`, line pattern definition, see method
+        :param pattern: :ref:`LinePatternDef`, line pattern definition, see method
                    DXFEngine.linepattern()
 
         """
@@ -168,7 +169,9 @@ class DXFEngine(object):
 
     @staticmethod
     def linepattern(pattern):
-        """Create a LinePatternDef-object from pattern-list.
+        """
+        Create a :class:`~dxfwrite.linepattern.LinePatternDef` object from
+        pattern-list.
 
         example linepattern([2.0, 1.25, -0.25, 0.25, -0.25]), for format
         description see object linepattern.LinePatternDef.

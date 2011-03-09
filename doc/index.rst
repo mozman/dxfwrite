@@ -76,7 +76,6 @@ Composite Entities
    :maxdepth: 1
 
    /entities/mtext
-   /entities/rect
    /entities/insert2
    /entities/linear_dim
    /entities/angular_dim
@@ -88,6 +87,16 @@ Composite Entities
    /entities/spline
    /entities/bezier
    /entities/clothoid
+
+Howtos
+======
+
+.. toctree::
+   :maxdepth: 1
+
+   /howto/document
+   /howto/shapes
+   /howto/blocks
 
 Indices and tables
 ==================

@@ -10,10 +10,10 @@
 from dxfwrite.base import DXFList, DXFInt, DXFFloat
 
 class LinePatternDef(DXFList):
-    """ Line pattern definition for Linetype()
+    """
+    Line pattern definition for Linetype().
 
-    linedef
-       (list of floats)
+    :param linedef: list of floats
        linedef[0] = total pattern length in drawing units
        linedef[n] = line segment, > 0 is line, < 0 is gap, 0.0 = dot
     """

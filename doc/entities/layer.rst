@@ -35,10 +35,10 @@ Flags
 =================================  ===================================
               Flag                             Description
 =================================  ===================================
-STD_FLAGS_LAYER_FROZEN             If set, layer is frozen
-STD_FLAGS_LAYER_FROZEN_BY_DEFAULT  If set, layer is frozen by default
+LAYER_FROZEN                       If set, layer is frozen
+LAYER_FROZEN_BY_DEFAULT            If set, layer is frozen by default
                                    in new Viewports
-STD_FLAGS_LAYER_LOCKED             If set, layer is locked
+LAYER_LOCKED                       If set, layer is locked
 =================================  ===================================
 
 Example::
@@ -47,6 +47,6 @@ Example::
 
     drawing = dxf.drawing('drawing.dxf')
     drawing.add_layer('LINES', color=3, linetype='DASHED')
-    line = dxf.line((1.2, 3.7), (5.5, 9.7))
+    line = dxf.line((1.2, 3.7), (5.5, 9.7), layer='LINES')
     drawing.add(line)
     drawing.save()

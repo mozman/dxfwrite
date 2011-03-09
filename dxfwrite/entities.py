@@ -360,24 +360,18 @@ class Insert(_Entity):
         self.data = DXFList()
 
     def add(self, attrib, relative=True, block_basepoint=None):
-        """ add attributes to a block reference. The position in attrib is
+        """
+        Add attributes to a block reference. The position in attrib is
         absolute in WCS, or relative to the block origin (rotation is relative
         to the block x-axis).
         Angles are treated in degrees (circle=360 deg) in dxf-format.
 
-        PARAMETER
-
-        attrib
-            the dxf attrib object
-
-        relative
-            Insert attrib relative to the block origin (0, 0, 0), this is perhaps
-            not the insert point of the block!
+        :param attrib: the dxf attrib object
+        :param relative: Insert attrib relative to the block origin (0, 0, 0),
+            this is perhaps not the insert point of the block!
             The relative position will be taken from the attrib.
-
-        block_basepoint
-            the basepoint of the block, its the basepoint for scaling and
-            rotating of the attribute.
+        :param block_basepoint: the basepoint of the block, its the basepoint
+            for scaling and rotating of the attribute.
         """
         def move_attrib_insert_point_to_basepoint(reverse=False):
             if block_basepoint is None:
@@ -458,7 +452,8 @@ class Attdef(_Entity):
         super(Attdef, self).__init__(**default)
 
     def new_attrib(self, **kwargs):
-        """ Create a new ATTRIB with attdef's attributs as default values.
+        """
+        Create a new ATTRIB with attdef's attributs as default values.
 
         :param kwargs: override the attdef default values.
 
@@ -492,7 +487,6 @@ class Block(_Entity):
     name = 'BLOCK'
 
     def __init__(self, **kwargs):
-        """ data has to have the __dxf__ interface and an append method. """
         default = {
             'name': 'empty',
             'flags': 0,
@@ -587,7 +581,6 @@ class Polyline(_Entity):
             self.add_vertex(point)
 
     def extension_point(self):
-        """ check before output """
         if not self.valid():
             self.vertices.append(DXFAtom('SEQEND'))
 

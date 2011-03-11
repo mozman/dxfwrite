@@ -19,9 +19,9 @@ usage::
    drawing.add(dxf.line((0, 0), (1, 0), color=7, layer='LINES'))
    drawing.save()
 
-First create a :ref:`Drawing` , than create various
-drawing entities by :class:`DXFEngine` and add them to the drawing with the
-:func:`~dxfwrite.drawing.Drawing.add` method. :ref:`Layers <Layer>`,
+First create a :ref:`Drawing`, then create various
+drawing entities by :class:`~dxfwrite.engine.DXFEngine` and add them to the
+drawing with the :meth:`~dxfwrite.drawing.Drawing.add` method. :ref:`Layers <Layer>`,
 :ref:`Textstyles <Textstyle>`, :ref:`Views <View>` and
 :ref:`Viewports <Viewport>` were created by the :ref:`Drawing` object.
 

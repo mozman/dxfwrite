@@ -65,3 +65,13 @@ To create a new Textstyle use::
     drawing.new_style('BIGTEXT', height=12, font='arial.ttf')
 
 .. seealso:: :ref:`Textstyle`
+
+How to insert XREFs?
+--------------------
+
+AutoCAD will not always display the XREFs, other DXF-Viewers are less
+restrictive::
+
+    drawing.add_xref('path/drawing.dxf')
+
+.. seealso:: :meth:`~dxfwrite.drawing.Drawing.add_xref`

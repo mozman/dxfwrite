@@ -55,7 +55,7 @@ class _DXFType(object):
             ('int', 420, 429),
             ('string', 430, 439),
             ('int', 440, 459),
-            ('float', 460, 499),
+            ('float', 460, 469),
             ('string', 470, 479),
             ('string', 999, 1009),
             ('float', 1010, 1059),

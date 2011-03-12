@@ -1,0 +1,61 @@
+
+News
+====
+
+Version 1.0.0 - 11 March 2011
+
+  * changed: set DXF Header variables now looks like dwg.header['$VAR'] = value,
+    see http://packages.python.org/dxfwrite/headervars.html
+  * splitted makedxfexamples.py into several files and moved them into the
+    subdir 'examples'
+  * curves.Ellpise: radiusx -> rx; radiusy -> ry
+  * moved documentation to: http://packages.python.org/dxfwrite,
+    and using Sphinx (http://sphinx.pocoo.org)
+  * tested with Python 3.2 - OK
+  * further compatibility-tests only for CPython 2.7 & CPython 3.2+
+  * added Drawing.add_xref(filename), for usage see examples/xref.py
+  * adding relative attributes by Insert.add() concidering the xy-scaling
+  * added **Howtos** section to documentation
+
+Version 0.3.6 - 14 November 2010
+
+  * moved dxfwrite.drawing.ENCODING to class Drawing
+  * Python 3.1 support
+
+Version 0.3.5 - 10 September 2010
+
+  * new: package and tests run with Python 2.7
+
+Version 0.3.4 - 29 August 2010
+
+  * status: 5 - Production/Stable
+  * new: package and tests run with Python 2.5 (tests need unittest2)
+
+Version 0.3.3 - 27 April 2010
+
+  * BUGFIX: makedxfexamples.py - attdef keyword error
+
+Version 0.3.2 - 27 April 2010
+
+  * BUGFIX: Drawing.__dxf__() - StringIO() does not support 'with' statement
+
+Version 0.3.1 - 24 April 2010
+
+  * new: insert2, insert block reference with automatic attrib filling
+  * changed interface for DXFEngine.attrib()
+
+Version 0.3.0b1 - 28 March 2010
+
+  * new: subpackage algebra: circle, ray, clothoid, cspline, bezier (27.03.2010)
+  * new: Spline, Bezier, Clothoid and Ellipse - curves (27.03.2010)
+  * new: acadctb.py to read, write and create AutoCAD ctb-files (25.03.2010)
+  * splitted buildups.py into mtext.py and rect.py
+
+Version 0.2.0 - 21 March 2010
+
+  * Alpha status - api may change
+
+Version 0.1.0 - 14 March 2010
+
+  * Pre-Alpha status
+  * Initial release

@@ -69,7 +69,7 @@ Factory = {
     '$DIMTVP': partial(DXFFloat, group_code=40),
     '$DIMTXT': partial(DXFFloat, group_code=40),
     '$DIMZIN': partial(DXFInt, group_code=70),
-    '$DWGCODEPAGE': partial(DXFInt, group_code=70),
+    '$DWGCODEPAGE': partial(DXFInt, group_code=3),
     '$DRAGMODE': partial(DXFInt, group_code=70),
     '$ELEVATION': partial(DXFFloat, group_code=40),
     '$EXTMAX': DXFPoint3D,

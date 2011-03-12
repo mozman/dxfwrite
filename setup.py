@@ -27,6 +27,7 @@ setup(name='dxfwrite',
     packages=['dxfwrite', 'dxfwrite/algebra'],
     provides=['dxfwrite'],
     long_description=read('README')+read('NEWS'),
+    keywords=['DXF', 'CAD'],
     platforms="OS Independent",
     license="GPLv3",
     classifiers=[

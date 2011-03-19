@@ -13,7 +13,7 @@ from dxfwrite.base import *
 from dxfwrite.engine import DXFEngine
 
 
-version = (1, 0, 0)
+version = (1, 0, 1)
 VERSION = "%d.%d.%d"  % version
 
 CYEAR = "2010, 2011"

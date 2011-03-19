@@ -1,6 +1,10 @@
 
 News
 ====
+Version 1.0.1 -
+
+  * BUGFIX: removed dict-comprehension in module htmlcolors.py for
+    backward-compatibility to Python 2.5 and 2.6
 
 Version 1.0.0 - 11 March 2011
 

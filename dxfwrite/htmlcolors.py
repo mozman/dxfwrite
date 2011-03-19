@@ -735,8 +735,8 @@ capitalized_html_colors = {
         230
     )
 }
-
-lowercase_html_colors = { key.lower(): value for key, value in capitalized_html_colors.items() }
+lowercase_html_colors = dict( ((key.lower(), value) for key, value in capitalized_html_colors.items()) )
+#lowercase_html_colors = { key.lower(): value for key, value in capitalized_html_colors.items() }
 
 def get_color_tuple_by_name(colorname):
     return lowercase_html_colors[colorname.lower()]

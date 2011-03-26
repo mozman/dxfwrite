@@ -37,6 +37,8 @@ class Drawing(object):
         self.tables = Sections.get('TABLES')
         self.blocks = Sections.get('BLOCKS')
         self.entities = Sections.get('ENTITIES')
+        self.modelspace = ModelSpaceProxy(self.entities)
+        self.paperspace = PaperSpaceProxy(self.entities)
         self._anonymous_counter = 0
         self.default_settings()
 
@@ -196,3 +198,19 @@ class Drawing(object):
         xref = DXFEngine.block(name=blockname, flags=const.BLK_XREF, xref=filepath)
         self.blocks.add(xref)
         self.add(DXFEngine.insert(blockname, insert, layer=layer))
+
+class PaperSpaceProxy:
+    def __init__(self, entities):
+        self._entities = entities
+    def add(self, entity):
+        entity['paper_space'] = 1
+        self._entities.add(entity)
+        return entity
+
+class ModelSpaceProxy:
+    def __init__(self, entities):
+        self._entities = entities
+    def add(self, entity):
+        entity['paper_space'] = 0
+        self._entities.add(entity)
+        return entity

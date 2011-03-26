@@ -32,6 +32,16 @@ class TestDrawing(unittest.TestCase):
         dwg = dxf.drawing()
         self.assertEqual(dwg.add("TEST"), "TEST")
 
+    def test_add_modelspace(self):
+        dwg = dxf.drawing()
+        txt = dwg.modelspace.add(dxf.text('TEST', paper_space=1))
+        self.assertEqual(0, txt['paper_space'])
+
+    def test_add_paperspace(self):
+        dwg = dxf.drawing()
+        txt = dwg.paperspace.add(dxf.text('TEST', paper_space=0))
+        self.assertEqual(1, txt['paper_space'])
+
     def test_anonymous_blockname(self):
         dwg = dxf.drawing()
         self.assertTrue(re.match("^\*U\d*$", dwg.anonymous_blockname('U')))

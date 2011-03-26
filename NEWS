@@ -6,7 +6,7 @@ Version 1.0.1 - 26 March 2011
 
   * added easy usage of modelspace/paperspace, see examples/paperspace.py
   * BUGFIX: removed dict-comprehension in module htmlcolors.py for
-    backward-compatibility to Python 2.5 and 2.6
+    backward-compatibility to Python 2.5 and 2.6, works with pypy 1.4.1
 
 Version 1.0.0 - 11 March 2011
 

@@ -32,7 +32,7 @@ def to_string(value):
     if not is_string(value):
         return str(value)
     else:
-        return value
+        return value.encode("raw-unicode-escape").replace("\\u", "\\U+")
 
 # Python 3 adaption
 

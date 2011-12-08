@@ -9,46 +9,43 @@
 
 import sys
 PYTHON3 = sys.version_info[0] > 2
+
 if PYTHON3:
     izip = zip
-    unicode_seq = b'\\u'
-    replace_seq = b'\\U+'
+    def is_string(value):
+        return isinstance(value, str)
 
+    def to_unicode(value):
+        return str(value)
+
+    def to_string(value):
+        if not isinstance(value, str):
+            return str(value)
+        else:
+            escaped_value = value.encode("raw_unicode_escape")
+            if b'\\u' in escaped_value:
+                return str(escaped_value.replace(b'\\u', b'\\U+'), 'utf-8')
+            else:
+                return value
 else:
     from itertools import izip
-    unicode_seq = '\\u'
-    replace_seq = '\\U+'
-
-# Python 3 adaption
-def is_string(value):
-    if PYTHON3:
-        return isinstance(value, str)
-    else:
+    def is_string(value):
         return isinstance(value, basestring)
 
-def to_unicode(value):
-    if PYTHON3:
-        return str(value)
-    else:
+    def to_unicode(value):
         return str(value).decode('utf-8')
 
-def to_string(value):
-    # hook for Python 2/3 unicode problems
-    if not is_string(value):
-        return str(value)
-    else:
-        try:
+    def to_string(value):
+        if not isinstance(value, basestring):
+            return str(value)
+        else:
             escaped_value = value.encode("raw_unicode_escape")
-            assert unicode_seq in escaped_value
-            escaped_value = escaped_value.replace(unicode_seq, replace_seq)
-            if PYTHON3: # needs an unicode string
-                return str(escaped_value, 'utf-8')
+            if '\\u' in escaped_value:
+                return escaped_value.replace('\\u', '\\U+')
             else:
-                return escaped_value
-        except (UnicodeDecodeError, AssertionError):
-            return value
+                return value
 
-# Python 3 adaption
+# end of Python 2/3 adaption
 
 def int2hex(value):
     return hex(value)[2:].upper()

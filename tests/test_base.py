@@ -10,7 +10,7 @@ import unittest
 
 from dxfwrite.base import *
 from dxfwrite.base import _DXFType
-from dxfwrite.util import is_string
+from dxfwrite.util import is_string, to_unicode
 
 class TestAtom(unittest.TestCase):
     def test_atom_cast(self):
@@ -76,8 +76,8 @@ class TestAtom(unittest.TestCase):
         self.assertTrue(DXFBool(1)._value)
 
     def test_none_us_chars(self):
-        atom = DXFAtom('äöü', 1) # dxf string
-        self.assertEqual(atom.__dxf__(), "  1\näöü\n")
+        atom = DXFAtom(to_unicode('äöü'), 1) # dxf string
+        self.assertEqual(atom.__dxf__(), to_unicode("  1\näöü\n"))
 
     def test_Atom_to_string_valid(self):
         # numbers < 100 are formated with leading spaces

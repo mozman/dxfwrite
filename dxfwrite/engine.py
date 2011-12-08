@@ -28,7 +28,7 @@ class DXFEngine(object):
 
     This is the dedicated interface to dxfwrite, all table entries and all
     all DXF entities should be created by the methods of this object.
-    All methods are staticmethods, so this object hasn't to be instantiated.
+    All methods are static methods, so this object hasn't to be instantiated.
     """
 
     name = 'DXFWRITE'
@@ -197,7 +197,7 @@ class DXFEngine(object):
 
         :param point: start point (xy- or xyz-tuple)
         :param orientation: a 3D vector (xyz-tuple), orientation of PDMODE images ...
-            see dxf documtation
+            see dxf documentation
 
         """
 
@@ -257,7 +257,7 @@ class DXFEngine(object):
         :param string text: the text to display
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
         :param float height: text height in drawing-units
-        :param float rotation: text rotion in dregree, default=0
+        :param float rotation: text rotation in degree, default=0
         :param float xscale: text width factor, default=1
         :param float oblique: text oblique angle in degree, default=0
         :param string style: text style name, default=STANDARD
@@ -283,7 +283,7 @@ class DXFEngine(object):
         :param string name: name of shape
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
         :param float xscale: x-scale factor, default=1.
-        :param float rotation: rotiation angle in degree, default=0
+        :param float rotation: rotation angle in degree, default=0
         :param float oblique: text oblique angle in degree, default=0
 
         """
@@ -588,7 +588,7 @@ class DXFEngine(object):
         polyline.
 
         :param start: insert point as 2D points (float-tuples)
-        :param float rotation: in dregrees
+        :param float rotation: in degrees
         :param loat length: length of curve in drawing units
         :param float paramA: clothoid parameter A
         :param bool mirrorx: mirror curve about x-axis

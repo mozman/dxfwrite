@@ -127,7 +127,7 @@ class Drawing(object):
     def save(self):
         """Write DXF data to file-system."""
         if PYTHON3:
-            fileobj = open(self.filename, 'w', encoding=self.ENCODING)
+            fileobj = open(self.filename, 'w', encoding=self.ENCODING, errors="replace")
         else:
             fileobj = open(self.filename, 'w')
         self.save_to_fileobj(fileobj)

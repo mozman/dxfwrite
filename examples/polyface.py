@@ -50,6 +50,22 @@ def get_cube(basepoint, length):
     pface.add_face([p2, p6, p8, p4], color=6) # top
     return pface
 
+def simple_faces():
+    pface = dxf.polyface()
+    p1 = (0,0,0)
+    p2 = (0,1,0)
+    p3 = (1,1,0)
+    p4 = (1,0,0)
+
+    p5 = (0,0,1)
+    p6 = (0,1,1)
+    p7 = (1,1,1)
+    p8 = (1,0,1)
+
+    pface.add_face([p1, p2, p3, p4]) # base
+    pface.add_face([p5, p6, p7, p8]) # top
+    return pface
+
 name = 'polyface.dxf'
 dwg = dxf.drawing(name) # create a drawing
 # add the active viewport
@@ -63,5 +79,6 @@ dwg.add_viewport(
 for x in range(10):
     for y in range(10):
         dwg.add(get_cube((x,y, random()), random()))
+#dwg.add(simple_faces())
 dwg.save() # save dxf drawing
 print("drawing '%s' created.\n" % name)

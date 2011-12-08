@@ -2,6 +2,10 @@
 News
 ====
 
+Version 1.0.2 - 08 December 2011
+
+  * raw unicode encoding by Toni Ruža - use any unicode character for text and table-entries.
+
 Version 1.0.1 - 26 March 2011
 
   * added easy usage of modelspace/paperspace, see examples/paperspace.py
@@ -20,7 +24,7 @@ Version 1.0.0 - 11 March 2011
   * tested with Python 3.2 - OK
   * further compatibility-tests only for CPython 2.7 & CPython 3.2+
   * added Drawing.add_xref(filename), for usage see examples/xref.py
-  * adding relative attributes by Insert.add() concidering the xy-scaling
+  * adding relative attributes by Insert.add() consider the xy-scaling
   * added **Howtos** section to documentation
 
 Version 0.3.6 - 14 November 2010

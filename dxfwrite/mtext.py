@@ -1,17 +1,20 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: MText entitie is composite entities, consisting of basic TEXT entities
-# module belongs to package: dxfwrite.py
+# Purpose: The MText entity is a composite entity, consisting of basic TEXT entities.
+# module belongs to package: dxfwrite
 # Created: 09.03.2010
-# Copyright (C) 2010, Manfred Moitzi
+# Copyright (C) 2010, 2011, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman"
+
 """
-MText -- MultiLine-Text-Entity, composite with simple TEXT-Entities.
+MText -- MultiLine-Text-Entity, created by simple TEXT-Entities.
 
 MTEXT was introduced in R13, so this is a replacement with multiple simple
 TEXT entities. Supports valign (TOP, MIDDLE, BOTTOM), halign (LEFT, CENTER,
 RIGHT), rotation for an arbitrary (!) angle and mirror.
+
 """
 
 import math
@@ -30,6 +33,7 @@ class MText(object):
     supported.
 
     linespacing -- linespacing in percent of height, 1.5 = 150% = 1+1/2 lines
+    
     """
     name = 'MTEXT'
 
@@ -49,30 +53,34 @@ class MText(object):
         self.mirror = kwargs.get('mirror', 0)
         self.layer = kwargs.get('layer', '0')
         self.color = kwargs.get('color', dxfwrite.BYLAYER)
-        self.data = DXFList()
-
-        if len(self.textlines)>1: # more than one line
-            self._build_dxf_text_entities()
-        elif len(self.textlines) == 1: # just a normal text with one line
-            kwargs['alignpoint'] = insert # text() needs the align point
-            self.data.append(Text(text=text, insert=insert, **kwargs))
 
     @property
     def lineheight(self):
-        """ absolute linespacing in drawing units """
+        """ Absolute linespacing in drawing units. 
+        """
         return self.height * self.linespacing
-
-    def _build_dxf_text_entities(self):
-        """ create the dxf TEXT entities """
-        if self.mirror & dxfwrite.MIRROR_Y:
-            self.textlines.reverse()
-        for linenum, text in enumerate(self.textlines):
-            alignpoint = self._get_align_point(linenum)
-            params = self._build_text_params(alignpoint)
-            self.data.append(Text(text=text, **params))
-
+    
+    def _build_dxf_entities(self):
+        """ Create the DXF-TEXT entities. 
+        """
+        dxf_entities = DXFList()
+        textlines = self.textlines
+        
+        if len(textlines) > 1:
+            if self.mirror & dxfwrite.MIRROR_Y:
+                textlines.reverse()
+            for linenum, text in enumerate(textlines):
+                alignpoint = self._get_align_point(linenum)
+                params = self._build_text_params(alignpoint)
+                dxf_entities.append(Text(text=text, **params))
+        elif len(textlines) == 1:
+            params = self._build_text_params(self.insert)
+            dxf_entities = Text(text=textlines[0], **params)
+        return dxf_entities
+        
     def _get_align_point(self, linenum):
-        """Calculate the align point depending on the line number. """
+        """ Calculate the align point depending on the line number. 
+        """
         x = self.insert[0]
         y = self.insert[1]
         try:
@@ -91,7 +99,8 @@ class MText(object):
         return self._rotate( (x, y, z) ) # consider rotation
 
     def _rotate(self, alignpoint):
-        """Rotate alignpoint around insert point about rotation degrees."""
+        """ Rotate alignpoint around insert point about rotation degrees. 
+        """
         dx = alignpoint[0] - self.insert[0]
         dy = alignpoint[1] - self.insert[1]
         beta = math.radians(self.rotation)
@@ -100,7 +109,8 @@ class MText(object):
         return (round(x, 6), round(y, 6), alignpoint[2])
 
     def _build_text_params(self, alignpoint):
-        """Build the calling dict for Text()."""
+        """ Build keyword arguments for the DXF-Text entity creation. 
+        """
         return {
             'insert': alignpoint,
             'alignpoint': alignpoint,
@@ -117,8 +127,10 @@ class MText(object):
         }
 
     def __dxf__(self):
-        """ get the dxf string """
-        return dxfstr(self.data)
+        """ Get the DXF string. 
+        """
+        return dxfstr(self.__dxftags__())
 
     def __dxftags__(self):
-        return self.data
+        return self._build_dxf_entities()
+    

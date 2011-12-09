@@ -14,20 +14,28 @@ if PYTHON3:
 from dxfwrite.vector3d import cross_product, unit_vector
 
 def dxfstr(obj):
-    """ Calls the__dxf__() protocol.
+    """ Create the DXF string by calling the __dxf__() method.
+    
+    This method creates the strings as early as possible, which generates excessive 
+    string concatenation.
+    
+    Returns a valid dxf-string, last char has to be '\n'.
 
-    returns a valid dxf-string, last char has to be a '\n'
-
-    EXAMPLE:
-    '  0\nSECTION\n  2\nHEADER\n  0\nENDSEC\n'
     """
     return obj.__dxf__()
 
 def tags2str(dxfobj):
-    #TODO: Write tests for tags2str()
+    """ Creates the DXF string by collecting the DXF tags at first, by calling the 
+    __dxftags__() methods. Creates the DXF string by only one ''.join() operation.
+    
+    This method creates the DXF string as late as possible.
+    
+    Returns a valid dxf-string, last char has to be '\n'.
+
+    """    
     tagstrings = []
     if not hasattr(dxfobj, "__dxftags__"):
-        tagstrings.append(dxfobj.__dxf__())
+        return dxfstr(dxfobj)
     else:
         for tag in iterflatlist(dxfobj.__dxftags__()):
             tagstrings.append(tag.__dxf__())
@@ -122,6 +130,7 @@ class DXFAtom(object):
         self._value = self._typecast(value, self._group_code)
 
     def __dxf__(self):
+        """ Returns a valid DXF String. Last char has to be '\n'. """
         return "%3d\n%s\n" % (self._group_code, to_string(self._value))
 
     def _typecast(self, value, group_code):
@@ -166,6 +175,7 @@ class DXFAtom(object):
 class DXFList(list):
     """ Collection of DXFAtom """
     def __dxf__(self):
+        """ Returns a valid DXF String. """
         return "".join( ( atom.__dxf__() for atom in self ) )
 
     def __dxftags__(self):

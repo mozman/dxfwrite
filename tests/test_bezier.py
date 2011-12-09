@@ -102,7 +102,7 @@ class TestDXFBezier(unittest.TestCase):
         bezier.start(point=(2, 4), tangent=(0, 2))
         segment_generator = bezier._build_bezier_segments()
         self.assertRaises(ValueError, next, segment_generator)
-        self.assertRaises(ValueError, bezier._build_curve)
+        self.assertRaises(ValueError, bezier.__dxftags__)
 
 if __name__=='__main__':
     unittest.main()

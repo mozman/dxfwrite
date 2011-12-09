@@ -30,7 +30,7 @@ dimstyles
 from math import radians, degrees, pi
 
 from dxfwrite.vector2d import *
-from dxfwrite import DXFList
+from dxfwrite import DXFList, dxfstr
 from dxfwrite.algebra import Ray2D
 from dxfwrite.entities import Line, Text, Block, Insert, Solid, Arc, Circle
 import dxfwrite.const as const
@@ -55,13 +55,13 @@ class _DimStyle(dict):
         ('tickfactor', 1.),
         # tick2x means tick is drawn only for one side, insert tick a second
         # time rotated about 180 degree, but only one time at the dimension line
-        # ends, this is usefull for arrow-like ticks. hint: set dimlineext to 0.
+        # ends, this is useful for arrow-like ticks. hint: set dimlineext to 0.
         ('tick2x', False),
         # dimension value scale factor, value = drawing-units * scale
         ('scale', 100.),
         # round dimension value to roundval fractional digits
         ('roundval', 0),
-        # round dimension value to half untits, round 0.4, 0.6 to 0.5
+        # round dimension value to half units, round 0.4, 0.6 to 0.5
         ('roundhalf', False),
         # dimension value text color
         ('textcolor', 7),
@@ -204,10 +204,6 @@ class _DimensionBase(object):
         else: # pass through self.dimstyle object DimStyle()
             return self.dimstyle[property_name]
 
-    def _build_dimline(self):
-        """ build dimension line object with basic dxf entities """
-        raise NotImplementedError("override abstract method _build_dimline")
-
     def format_dimtext(self, dimvalue):
         """ string format the dimension text """
         ## TODO: concider roundhalf property
@@ -222,8 +218,12 @@ class _DimensionBase(object):
 
     def __dxf__(self):
         """ get the dxf string """
+        return dxfstr(self.__dxftags__())
+    
+    def __dxftags__(self):
+        """ Get dxf tags as cascading DXFList. """
         self._build_dimline()
-        return self.data.__dxf__()
+        return self.data
 
 
 class LinearDimension(_DimensionBase):

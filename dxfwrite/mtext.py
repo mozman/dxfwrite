@@ -18,7 +18,7 @@ import math
 from dxfwrite.vector2d import *
 
 import dxfwrite
-from dxfwrite.base import DXFList
+from dxfwrite.base import DXFList, dxfstr
 from dxfwrite.entities import Text
 
 class MText(object):
@@ -118,4 +118,7 @@ class MText(object):
 
     def __dxf__(self):
         """ get the dxf string """
-        return self.data.__dxf__()
+        return dxfstr(self.data)
+
+    def __dxftags__(self):
+        return self.data

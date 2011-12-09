@@ -143,10 +143,14 @@ class _TableEntry(object):
         return ( value for priority, value  in sorted(priority_attribs) )
 
     def __dxf__(self):
+        return dxfstr(self.__dxftags__())
+
+    def __dxftags__(self):
         dxf = DXFList()
         dxf.append(DXFAtom(self.table_name))
         dxf.extend(self.get_attribs()) # sorted attribs
-        return dxfstr(dxf)
+        return dxf
+
 
 class Linetype(_TableEntry):
     """ DXF LTYPE table entry - linetype definition

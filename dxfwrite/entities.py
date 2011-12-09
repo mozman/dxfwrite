@@ -235,15 +235,19 @@ class _Entity(object):
 
     def __dxf__(self):
         """ create the dxf string """
+        return dxfstr(self.__dxftags__())
+
+    def __dxftags__(self):
         self.extension_point() # last chance to manipulate the entity
         if self.valid():
-            dxf = DXFList()
-            dxf.append(DXFAtom(self.name))
-            dxf.extend(self.get_attribs()) # attribs sorted by priority
-            dxf.extend(self.get_data()) # example: block->content, polyline->vertices, faces, insert->attribs
-            return dxfstr(dxf)
+            dxftags = DXFList()
+            dxftags.append(DXFAtom(self.name))
+            dxftags.extend(self.get_attribs()) # attribs sorted by priority
+            dxftags.extend(self.get_data()) # example: block->content, polyline->vertices, faces, insert->attribs
+            return dxftags
         else:
-            raise DXFValidationError("invalid or missing attributs in object '%s'." % self.__class__.__name__)
+            raise DXFValidationError("invalid or missing attributes in object '%s'." % self.__class__.__name__)
+
 
 class Line(_Entity):
     name = 'LINE'
@@ -516,7 +520,7 @@ class Block(_Entity):
         return [DXFAtom('ENDBLK')]
 
     def valid(self):
-        if len(self.data) == 0:
+        if not len(self.data):
             return False
         else:
             return self.data.endswith('ENDBLK')

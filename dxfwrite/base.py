@@ -24,6 +24,13 @@ def dxfstr(obj):
     """
     return obj.__dxf__()
 
+def iterdxftags(dxfobj):
+    if not hasattr(dxfobj, "__dxftags__"):
+        yield dxfstr(dxfobj)
+    else:
+        for tag in iterflatlist(dxfobj.__dxftags__()):
+            yield(tag.__dxf__())
+
 def tags2str(dxfobj):
     """ Creates the DXF string by collecting the DXF tags at first, by calling the 
     __dxftags__() methods. Creates the DXF string by only one ''.join() operation.
@@ -32,14 +39,17 @@ def tags2str(dxfobj):
     
     Returns a valid dxf-string, last char has to be '\n'.
 
-    """    
-    tagstrings = []
-    if not hasattr(dxfobj, "__dxftags__"):
-        return dxfstr(dxfobj)
+    """
+    return "".join(iterdxftags(dxfobj))
+    
+def writetags(fileobj, dxfobj, encoding=None):        
+    if PYTHON3 or (encoding is None):
+        write = lambda tag: fileobj.write(tag)
     else:
-        for tag in iterflatlist(dxfobj.__dxftags__()):
-            tagstrings.append(tag.__dxf__())
-    return "".join(tagstrings)
+        write = lambda tag: fileobj.write(tag.encode(encoding))
+        
+    for tagstring in iterdxftags(dxfobj):
+        write(tagstring)
 
 class DXFValidationError(Exception):
     pass
@@ -173,7 +183,7 @@ class DXFAtom(object):
                (self.value == atom.value)
 
 class DXFList(list):
-    """ Collection of DXFAtom """
+    """ Collection of DXFAtoms. """
     def __dxf__(self):
         """ Returns a valid DXF String. """
         return "".join( ( atom.__dxf__() for atom in self ) )

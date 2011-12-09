@@ -53,7 +53,7 @@ class TestEllipse(unittest.TestCase):
         ellipse = Ellipse(center=(0., 0.), rx=5.0, ry=3.0,
                           startangle=0., endangle=360., rotation=30.,
                           segments=16, color=3, layer='0', linetype='SOLID')
-        polyline = ellipse._build_curve()
+        polyline = ellipse.__dxftags__()
         self.assertTrue(polyline['flags'] & POLYLINE_CLOSED)
 
 if __name__=='__main__':

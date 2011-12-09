@@ -56,11 +56,21 @@ class Drawing(object):
     def ucs(self): return self.tables.ucs
 
     def __dxf__(self):
+        """ Returns the drawing as string. """
         fp = StringIO()
         self._write_dxf(fp)
         result = fp.getvalue()
         fp.close()
         return result
+
+    def __dxftags__(self):
+        dxftags = DXFList()
+        dxftags.append(self.header.__dxftags__())
+        dxftags.append(self.tables.__dxftags__())
+        dxftags.append(self.blocks.__dxftags__())
+        dxftags.append(self.entities.__dxftags__())
+        dxftags.append(DXFAtom('EOF'))
+        return dxftags
 
     def _write_dxf(self, fp):
         if PYTHON3: # set encoding on open(..., encoding=ENCODING)
@@ -75,7 +85,7 @@ class Drawing(object):
             fp.write(dxfstr(self.blocks).encode(self.ENCODING))
             fp.write(dxfstr(self.entities).encode(self.ENCODING))
             fp.write(dxfstr(DXFAtom('EOF')).encode(self.ENCODING))
-
+            
     def add(self, entity): # shortcut for Drawing.entities.add()
         """ add an entity """
         self.entities.add(entity)

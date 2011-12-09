@@ -29,14 +29,16 @@ class _Table(object):
         self._entries = {} # use only add() for adding objects
 
     def __dxf__(self):
-        return dxfstr(
-            DXFList( (
-                DXFAtom('TABLE'),
-                DXFName(self.tablename),
-                DXFInt(len(self._entries)),
-                DXFList(self._get_values()),
-                DXFAtom('ENDTAB')
-            )))
+        return dxfstr(self.__dxftags__())
+
+    def __dxftags__(self):
+        return DXFList( (
+            DXFAtom('TABLE'),
+            DXFName(self.tablename),
+            DXFInt(len(self._entries)),
+            DXFList(self._get_values()),
+            DXFAtom('ENDTAB')
+        ))
 
     def __contains__(self, name):
         return name in self._entries

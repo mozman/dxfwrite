@@ -13,7 +13,7 @@ if sys.version_info[0] > 2:
 
 from dxfwrite.vector2d import vadd
 import dxfwrite.const as const
-#from dxfwrite.base import DXFList
+from dxfwrite.base import dxfstr
 from dxfwrite.entities import Polyline
 from dxfwrite.algebra import rotate_2d, equals_almost
 from dxfwrite.algebra import CubicSpline, CubicBezierCurve
@@ -21,7 +21,12 @@ from dxfwrite.algebra import Clothoid as _ClothoidValues
 
 __all__ = ['Ellipse', 'Bezier', 'Spline', 'Clothoid']
 
-class Ellipse(object):
+class _BaseCurve(object):
+    def __dxf__(self):
+        return dxfstr(self.__dxftags__())
+
+
+class Ellipse(_BaseCurve):
     def __init__(self, center=(0., 0., 0.), rx=1.0, ry=1.0,
                  startangle=0., endangle=360., rotation=0., segments=100,
                  color=const.BYLAYER, layer='0', linetype=None):
@@ -36,7 +41,7 @@ class Ellipse(object):
         self.rotation = float(rotation)
         self.segments = int(segments)
 
-    def _build_curve(self):
+    def __dxftags__(self):
         def curve_point(alpha):
             alpha = radians(alpha)
             point = (cos(alpha) * self.rx,
@@ -64,10 +69,7 @@ class Ellipse(object):
             polyline.close()
         return polyline
 
-    def __dxf__(self):
-        return self._build_curve().__dxf__()
-
-class Bezier(object):
+class Bezier(_BaseCurve):
     class Segment(object):
         def __init__(self, start, end, start_tangent, end_tangent, segments):
             self.start = start
@@ -127,7 +129,7 @@ class Bezier(object):
         else:
             raise ValueError('Tow or more points needed!')
 
-    def _build_curve(self):
+    def __dxftags__(self):
         polyline = Polyline(layer=self.layer, color=self.color,
                             linetype=self.linetype)
         for segment in self._build_bezier_segments():
@@ -135,10 +137,7 @@ class Bezier(object):
             polyline.add_vertices(points)
         return polyline
 
-    def __dxf__(self):
-        return self._build_curve().__dxf__()
-
-class Spline(object):
+class Spline(_BaseCurve):
     def __init__(self, points=[], segments=100, color=const.BYLAYER, layer='0',
                  linetype=None):
         self.color = color
@@ -147,7 +146,7 @@ class Spline(object):
         self.points = points
         self.segments = int(segments)
 
-    def _build_curve(self):
+    def __dxftags__(self):
         spline = CubicSpline(self.points)
         polyline = Polyline(spline.approximate(self.segments),
                             layer = self.layer,
@@ -155,10 +154,8 @@ class Spline(object):
                             linetype = self.linetype)
         return polyline
 
-    def __dxf__(self):
-        return self._build_curve().__dxf__()
 
-class Clothoid(object):
+class Clothoid(_BaseCurve):
     def __init__(self, start=(0, 0), rotation=0., length=1., paramA=1.0,
                  mirrorx=False, mirrory=False, segments=100,
                  color=const.BYLAYER, layer='0', linetype=None):
@@ -173,7 +170,7 @@ class Clothoid(object):
         self.mirrory = mirrory
         self.segments = int(segments)
 
-    def _build_curve(self):
+    def __dxftags__(self):
         def transform(points):
             for point in points:
                 if self.mirrorx:
@@ -190,6 +187,3 @@ class Clothoid(object):
         points = clothoid.approximate(self.length, self.segments)
         return Polyline(transform(points), color=self.color, layer=self.layer,
                         linetype=self.linetype)
-
-    def __dxf__(self):
-        return self._build_curve().__dxf__()

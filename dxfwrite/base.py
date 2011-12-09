@@ -7,20 +7,31 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-from dxfwrite.util import izip, PYTHON3, to_string, is_string
+from dxfwrite.util import izip, PYTHON3, to_string, is_string, iterflatlist
 if PYTHON3:
     xrange = range
 
 from dxfwrite.vector3d import cross_product, unit_vector
 
 def dxfstr(obj):
-    """call the __dxf__() protocol :
+    """ Calls the__dxf__() protocol.
+
     returns a valid dxf-string, last char has to be a '\n'
 
     EXAMPLE:
     '  0\nSECTION\n  2\nHEADER\n  0\nENDSEC\n'
     """
     return obj.__dxf__()
+
+def tags2str(dxfobj):
+    #TODO: Write tests for tags2str()
+    tagstrings = []
+    if not hasattr(dxfobj, "__dxftags__"):
+        tagstrings.append(dxfobj.__dxf__())
+    else:
+        for tag in iterflatlist(dxfobj.__dxftags__()):
+            tagstrings.append(tag.__dxf__())
+    return "".join(tagstrings)
 
 class DXFValidationError(Exception):
     pass
@@ -155,7 +166,10 @@ class DXFAtom(object):
 class DXFList(list):
     """ Collection of DXFAtom """
     def __dxf__(self):
-        return "".join([atom.__dxf__() for atom in self])
+        return "".join( ( atom.__dxf__() for atom in self ) )
+
+    def __dxftags__(self):
+        return self
 
     def __eq__(self, dxflist):
         if len(self) != len(dxflist):
@@ -262,7 +276,7 @@ class DXFPoint(object):
     def tuple(self):
         # CAUTION: do not override the 'value' attribute!!!
         # 'value' would be the suitable name for this property, but that causes
-        # several seriouse problems.
+        # several serious problems.
         return tuple(self['xyz'[:len(self.point)]])
 
 class DXFPoint2D(DXFPoint):
@@ -281,13 +295,13 @@ def PassThroughFactory(value, group_code):
     return value
 
 class AttribDef(object):
-    """ Attibute definition
+    """ Attribute definition
 
     ATTRIBUTES
 
     .. attribute:: group_code
 
-        DXF groupe code
+        DXF group code
 
     .. attribute:: factory
 

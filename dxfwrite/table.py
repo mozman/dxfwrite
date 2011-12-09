@@ -27,7 +27,7 @@ from array import array
 from copy import deepcopy
 
 import dxfwrite.const as const
-from dxfwrite.base import DXFList
+from dxfwrite.base import DXFList, dxfstr
 from dxfwrite.entities import Line, Solid, Insert
 from dxfwrite.mtext import MText
 
@@ -209,8 +209,11 @@ class Table(object):
                 for row, col in self.visibility_map)
 
     def __dxf__(self):
+        return dxfstr(self.__dxftags__())
+
+    def __dxftags__(self):
         self._build_table()
-        result = self.data.__dxf__()
+        result = self.data
         self.data = DXFList() # don't need to keep this data in memory
         return result
 
@@ -220,7 +223,7 @@ class Table(object):
         self.grid = Grid(self)
 
     def _build_table(self):
-        """Table is generated on calling the __dxf__() method."""
+        """Table is generated on calling the __dxftags__() method."""
         self._setup()
         self.grid.draw_lines()
         for row, col, cell in self.iter_visible_cells():

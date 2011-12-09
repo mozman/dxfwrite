@@ -29,10 +29,15 @@ class Sections(object):
 
 class _Section(object):
     def __dxf__(self):
-        head = dxfstr(DXFAtom('SECTION'))
-        body = dxfstr(self._get_body())
-        tail = dxfstr(DXFAtom('ENDSEC'))
-        return "".join( (head, body, tail) )
+        return dxfstr(self.__dxftags__())
+
+    def __dxftags__(self):
+        return DXFList((
+            DXFAtom('SECTION'),
+            DXFList(self._get_body()),
+            DXFAtom('ENDSEC')
+        ))
+
 
     def _get_body(self):
         """ abstract """

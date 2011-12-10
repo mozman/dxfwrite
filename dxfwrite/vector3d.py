@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:   mozman
 # Created: 27.03.2010
 # Purpose: 3d vectormath
 # module belongs to package dxfwrite
@@ -9,6 +8,8 @@
 """
 3d vector math module
 """
+
+__author__ = "mozman <mozman@gmx.at>"
 
 def vector3d(vector):
     """ return a 3d vector """

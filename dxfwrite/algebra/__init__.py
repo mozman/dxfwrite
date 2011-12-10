@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman <mozman@gmx.at>
 # Purpose: algebra lib to calculate with geometric forms
 # Created: 27.03.2010
 # License: GPLv3
+
+
+
 import math
 
 from dxfwrite.algebra.base import *
@@ -14,7 +16,7 @@ from dxfwrite.algebra.bezier import CubicBezierCurve
 from dxfwrite.algebra.cspline import CubicSpline
 
 __version__ = "v0.2 - 2010.03.27"
-__author__ = "Manfred Moitzi (mozman)"
+__author__ = "mozman <mozman@gmx.at>"
 __license__ = "GPLv3"
 
 __doc__ = """A library to calculate with geometric forms.

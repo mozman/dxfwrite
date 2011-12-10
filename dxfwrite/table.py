@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: table, consisting of basic R12 entities
 # module belongs to package: dxfwrite.py
 # Created: 18.03.2010
@@ -19,6 +18,9 @@ definition (BLOCK), if the block definition contains attribute definitions
 (ATTDEF-entity), attribs created by Attdef.new_attrib() will be added to the
 block reference (ATTRIB-entity).
 """
+
+__author__ = "mozman <mozman@gmx.at>"
+
 import sys
 if sys.version_info[0] > 2:
     xrange = range

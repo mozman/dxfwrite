@@ -75,7 +75,7 @@ class MText(object):
                 dxf_entities.append(Text(text=text, **params))
         elif len(textlines) == 1:
             params = self._build_text_params(self.insert)
-            dxf_entities = Text(text=textlines[0], **params)
+            dxf_entities = Text(text=textlines[0], **params).__dxftags__()
         return dxf_entities
         
     def _get_align_point(self, linenum):

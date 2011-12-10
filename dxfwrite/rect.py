@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: composite entities, consisting of basic R12 entities
 # module belongs to package: dxfwrite.py
 # Created: 09.03.2010
@@ -10,12 +9,14 @@
 2D Rectangle, with optional background filling
 """
 
+__author__ = "mozman <mozman@gmx.at>"
+
 import math
 from dxfwrite.vector2d import *
 from dxfwrite.algebra import rotate_2d
 
 import dxfwrite.const as const
-from dxfwrite.base import DXFList
+from dxfwrite.base import DXFList, dxfstr
 from dxfwrite.entities import Polyline, Solid
 
 class Rectangle(object):
@@ -38,14 +39,15 @@ class Rectangle(object):
         self.layer = layer
         self.linetype = linetype
         self.points = None
-        self.data = DXFList()
 
     def _build_rect(self):
+        data = DXFList()
         self._calc_corners()
         if self.color is not None:
-            self._build_polyline()
+            data.append(self._build_polyline())
         if self.bgcolor is not None:
-            self._build_solid()
+            data.append(self._build_solid())
+        return data
 
     def _calc_corners(self):
         points = [(0., 0.), (self.width, 0.), (self.width, self.height),
@@ -79,14 +81,17 @@ class Rectangle(object):
         polyline.close()
         if self.linetype is not None:
             polyline['linetype'] = self.linetype
-        self.data.append(polyline)
+        return polyline
 
     def _build_solid(self):
         """ build the background solid """
-        self.data.append(Solid(
-            self.points, color=self.bgcolor, layer=self.layer))
+        return Solid(self.points, color=self.bgcolor, layer=self.layer)
 
     def __dxf__(self):
         """ get the dxf string """
-        self._build_rect()
-        return self.data.__dxf__()
+        return dxfstr(self.__dxftags__())
+
+    def __dxftags__(self):
+        return self._build_rect()
+
+

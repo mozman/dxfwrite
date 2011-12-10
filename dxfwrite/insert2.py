@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: insert block references with appended attributes
 # Created: 11.04.2010
 # Copyright (C) 2010, Manfred Moitzi
@@ -11,6 +10,8 @@ Provides the Insert2 composite-entity.
 Insert a new block-reference with auto-creating of attribs from attdefs,
 and setting attrib-text by the attribs-dict.
 """
+
+__author__ = "mozman <mozman@gmx.at>"
 
 from dxfwrite.entities import Insert
 import dxfwrite.const as const

@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: read, create and write acad ctb files
 # Created: 23.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
 # IMPORTANT: use only standard 7-Bit ascii code
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import sys
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: 2d vector math
 # module belongs to package dxfwrite
 # Created: 16.03.2010
@@ -9,6 +8,8 @@
 """
 2d vector math module
 """
+
+__author__ = "mozman <mozman@gmx.at>"
 
 from math import hypot, atan2, sin, cos
 

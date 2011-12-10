@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
+
 # Constants partly taken from sxdf.py by Stani Michiels(Stani) and
 # Remigiusz Fiedler(migius)
 # Purpose: package constants
@@ -8,6 +8,8 @@
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 # Valid for: STYLE, LTYPE, APPID, DIMSTYLE, LAYER, LTYPE, STYLE, UCS, VIEW, VPORT
 # Standard flag values (bit-coded values):

@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: create and write allplan cfg files
 # Created: 24.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
+
 from dxfwrite.std import DXFColorIndex
 
 allplan_default_color_table = [

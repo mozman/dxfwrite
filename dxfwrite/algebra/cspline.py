@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: 2d spline
 # module belongs to package: dxfwrite
 # Created: 26.03.2010
 # License: GPL
 # Source: http://www-lehre.informatik.uni-osnabrueck.de/~cg/2000/skript/7_2_Splines.html
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import math
 from array import array

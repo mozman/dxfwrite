@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: tables R12
 # module belongs to package: dxfwrite.py
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+__author__ = "mozman <mozman@gmx.at>"
 
 from dxfwrite.base import *
 

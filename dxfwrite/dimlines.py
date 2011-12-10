@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: simple with basic dxf eintities created dimension lines, but not
 # the basic DXF-DIMENSION entities.
 # module belongs to package: dxfwrite.py
@@ -26,6 +25,8 @@ dimstyles
     - get(name) to get a dimstyle, 'Default' if name does not exist
     - setup(drawing) create Blocks and Layers in drawing
 """
+
+__author__ = "mozman <mozman@gmx.at>"
 
 from math import radians, degrees, pi
 

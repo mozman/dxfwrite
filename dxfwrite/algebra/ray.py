@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: 2d ray - copied from algebra.Ray2D to remove dependency from the
 # algebra-package
 # module belongs to package: dxfwrite.py
@@ -14,6 +13,8 @@ dependency from the algebra package.
 A ray is an infinite line and is defined by the equation
 y(x) = y0 + x * slope in a cartesian coordinate system
 """
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import math
 from dxfwrite.algebra import equals_almost, normalize_angle, is_vertical_angle

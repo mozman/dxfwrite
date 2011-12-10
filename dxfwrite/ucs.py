@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: user coordinate system
 # module belongs to package dxfwrite
 # Created: 27.03.2010
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import math
 

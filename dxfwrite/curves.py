@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: curve objects
 # Created: 26.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
+
 from math import sin, cos, radians, fmod
 
 import sys
@@ -67,7 +69,7 @@ class Ellipse(_BaseCurve):
 
         if equals_almost(self.startangle, normalize_angle(self.endangle)):
             polyline.close()
-        return polyline
+        return polyline.__dxftags__()
 
 class Bezier(_BaseCurve):
     class Segment(object):
@@ -135,7 +137,7 @@ class Bezier(_BaseCurve):
         for segment in self._build_bezier_segments():
             points = segment.approximate()
             polyline.add_vertices(points)
-        return polyline
+        return polyline.__dxftags__()
 
 class Spline(_BaseCurve):
     def __init__(self, points=[], segments=100, color=const.BYLAYER, layer='0',
@@ -152,7 +154,7 @@ class Spline(_BaseCurve):
                             layer = self.layer,
                             color=self.color,
                             linetype = self.linetype)
-        return polyline
+        return polyline.__dxftags__()
 
 
 class Clothoid(_BaseCurve):
@@ -186,4 +188,4 @@ class Clothoid(_BaseCurve):
         clothoid = _ClothoidValues(self.paramA)
         points = clothoid.approximate(self.length, self.segments)
         return Polyline(transform(points), color=self.color, layer=self.layer,
-                        linetype=self.linetype)
+                        linetype=self.linetype).__dxftags__()

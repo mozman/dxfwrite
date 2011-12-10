@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: 2d circle calculations
 # module belongs to package dxfwrite
 # Created: 28.02.2010
 # License: GPL
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import math
 

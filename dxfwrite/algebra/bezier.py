@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: 2d bezier curve
 # module belongs to package: dxfwrite.py
 # Created: 26.03.2010
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 __all__ = ['CubicBezierCurve']
 

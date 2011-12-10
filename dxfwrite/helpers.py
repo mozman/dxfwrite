@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman -- <mozman@gmx.at>
 # Purpose: normalize dxf chunks
 # Created: 24.02.2011
-# Copyright (C) , Manfred Moitzi
+# Copyright (C) 2011, Manfred Moitzi
 # License: GPLv3
 
+__author__ = "mozman <mozman@gmx.at>"
 
 def normalize_dxf_chunk(dxfstr):
     def round_floats_but_not_ints(tag, places=7):

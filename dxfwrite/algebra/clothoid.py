@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: 2d clothoid
 # module belongs to package: dxfwrite.py
 # Created: 26.03.2010
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import sys
 if sys.version_info[0] > 2:

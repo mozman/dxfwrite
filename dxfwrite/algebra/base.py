@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:   --<>
 # Purpose:
 # Created: 27.03.2010
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import math
 

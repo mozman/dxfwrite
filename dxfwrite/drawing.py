@@ -1,19 +1,14 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: Drawing R12
 # module belongs to package: dxfwrite.py
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import os
+__author__ = "mozman <mozman@gmx.at>"
 
-from dxfwrite.util import PYTHON3
-if PYTHON3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
+import os
 
 from dxfwrite import DXFEngine
 from dxfwrite.base import *
@@ -22,15 +17,15 @@ import dxfwrite.const as const
 import dxfwrite.std as std
 
 class Drawing(object):
-    """
-    The Drawing object manages all the necessary sections, like header, tables
+    """ The Drawing object manages all the necessary sections, like header, tables
     and blocks. The tables-attribute contains the layers, styles, linetypes and
     other tables.
+    
     """
     ENCODING = 'cp1252'
     def __init__(self, name='noname.dxf'):
         """
-        :param string name: filename of the drawing
+        :param string name: filename of drawing
         """
         self.filename = name
         self.header = Sections.get('HEADER')
@@ -56,12 +51,9 @@ class Drawing(object):
     def ucs(self): return self.tables.ucs
 
     def __dxf__(self):
-        """ Returns the drawing as string. """
-        fp = StringIO()
-        self._write_dxf(fp)
-        result = fp.getvalue()
-        fp.close()
-        return result
+        """ Returns the drawing as string.
+        """
+        return tags2str(self)
 
     def __dxftags__(self):
         dxftags = DXFList()
@@ -72,27 +64,16 @@ class Drawing(object):
         dxftags.append(DXFAtom('EOF'))
         return dxftags
 
-    def _write_dxf(self, fp):
-        if PYTHON3: # set encoding on open(..., encoding=ENCODING)
-            fp.write(dxfstr(self.header))
-            fp.write(dxfstr(self.tables))
-            fp.write(dxfstr(self.blocks))
-            fp.write(dxfstr(self.entities))
-            fp.write(dxfstr(DXFAtom('EOF')))
-        else:
-            fp.write(dxfstr(self.header).encode(self.ENCODING))
-            fp.write(dxfstr(self.tables).encode(self.ENCODING))
-            fp.write(dxfstr(self.blocks).encode(self.ENCODING))
-            fp.write(dxfstr(self.entities).encode(self.ENCODING))
-            fp.write(dxfstr(DXFAtom('EOF')).encode(self.ENCODING))
-            
-    def add(self, entity): # shortcut for Drawing.entities.add()
-        """ add an entity """
+    def add(self, entity):
+        """ Add an entity to drawing.
+
+        shortcut for: Drawing.entities.add()
+        """
         self.entities.add(entity)
         return entity
 
     def anonymous_blockname(self, typechar):
-        """ create an anonymous block name
+        """ Create an anonymous block name
 
         typechar
             U = *U### anonymous blocks
@@ -106,8 +87,7 @@ class Drawing(object):
 
     def add_anonymous_block(self, entity, layer="0", typechar='U',
                             basepoint=(0, 0), insert=(0, 0)):
-        """ insert entity (can be a DXFList) as anonymous block
-        into  drawing
+        """ Insert entity (can be a DXFList) as anonymous block into drawing.
         """
         blockname = self.anonymous_blockname(typechar)
         block = DXFEngine.block(blockname, basepoint=basepoint,
@@ -135,7 +115,8 @@ class Drawing(object):
         self.add_layer('TABLEGRID')
 
     def save(self):
-        """Write DXF data to file-system."""
+        """ Write DXF data to file-system.
+        """
         if PYTHON3:
             fileobj = open(self.filename, 'w', encoding=self.ENCODING, errors="replace")
         else:
@@ -144,11 +125,13 @@ class Drawing(object):
         fileobj.close()
 
     def save_to_fileobj(self, fileobj):
-        """Write DXF data to a file-like object. (i.e. StringIO)"""
-        self._write_dxf(fileobj)
+        """ Write DXF data to a file-like object. (i.e. StringIO)
+        """
+        writetags(fileobj, self.__dxftags__(), self.ENCODING)
 
     def saveas(self, name):
-        """Set new filename and write DXF data to file-system."""
+        """ Set new filename and write DXF data to file-system.
+        """
         self.filename = name
         self.save()
 
@@ -183,14 +166,16 @@ class Drawing(object):
         return ucs
 
     def std_linetypes(self):
-        """ Create standard linetypes """
+        """ Create standard linetypes.
+        """
         return [DXFEngine.linetype(
             name, description=desc,
             pattern=DXFEngine.linepattern(pat))
                 for name, desc, pat in std.linetypes()]
 
     def std_styles(self):
-        """ Create standard text styles """
+        """ Create standard text styles.
+        """
         return [DXFEngine.style(name, font=f) for name, f in std.styles() ]
 
     def add_xref(self, filepath, insert=(0., 0., 0.), layer='0'):

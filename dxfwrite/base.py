@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: base types
 # module belongs to package dxfwrite
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 from dxfwrite.util import izip, PYTHON3, to_string, is_string, iterflatlist
 if PYTHON3:
@@ -25,22 +26,23 @@ def dxfstr(obj):
     return obj.__dxf__()
 
 def iterdxftags(dxfobj):
-    if not hasattr(dxfobj, "__dxftags__"):
-        yield dxfstr(dxfobj)
+    if hasattr(dxfobj, '__dxftags__'):
+        for tag in dxfobj.__dxftags__():
+            for subtag in iterdxftags(tag):
+                    yield subtag
     else:
-        for tag in iterflatlist(dxfobj.__dxftags__()):
-            yield(tag.__dxf__())
+        yield dxfobj
 
 def tags2str(dxfobj):
-    """ Creates the DXF string by collecting the DXF tags at first, by calling the 
-    __dxftags__() methods. Creates the DXF string by only one ''.join() operation.
+    """ Creates the DXF string by collecting the DXF tags at first, by iterating over all dxf tags.
+    Creates the DXF string by only one ''.join() operation.
     
     This method creates the DXF string as late as possible.
     
     Returns a valid dxf-string, last char has to be '\n'.
 
     """
-    return "".join(iterdxftags(dxfobj))
+    return "".join( (tag.__dxf__() for tag in iterdxftags(dxfobj)) )
     
 def writetags(fileobj, dxfobj, encoding=None):        
     if PYTHON3 or (encoding is None):
@@ -48,8 +50,8 @@ def writetags(fileobj, dxfobj, encoding=None):
     else:
         write = lambda tag: fileobj.write(tag.encode(encoding))
         
-    for tagstring in iterdxftags(dxfobj):
-        write(tagstring)
+    for dxftag in iterdxftags(dxfobj):
+        write(dxftag.__dxf__())
 
 class DXFValidationError(Exception):
     pass

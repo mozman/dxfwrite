@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman <mozman@gmx.at>
 # Purpose: write DXF R12 files
 # Based on the ideas of Stani Michiels(Stani) sdxf.py and
 # Remigiusz Fiedler(migius) dxflibrary133.py
@@ -13,7 +12,7 @@ from dxfwrite.base import *
 from dxfwrite.engine import DXFEngine
 
 
-version = (1, 0, 2)
+version = (1, 0, 3)
 VERSION = "%d.%d.%d"  % version
 
 CYEAR = "2010, 2011"
@@ -21,6 +20,7 @@ AUTHOR_NAME = "Manfred Moitzi"
 AUTHOR_EMAIL = "mozman@gmx.at"
 LICENSE = "GPLv3"
 
+__author__ = "mozman <mozman@gmx.at>"
 __doc__ = """A Python library to create DXF R12 drawings.
 
 Copyright %s

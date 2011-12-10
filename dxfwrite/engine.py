@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: dxf entity creation engine, main interface for dxfwrite
 # module belongs to package: dxfwrite
 # Created: 14.02.2010
@@ -10,6 +9,8 @@
 """
 DXFEngine is the dedicated interface to dxfwrite
 """
+
+__author__ = "mozman <mozman@gmx.at>"
 
 from dxfwrite.entities import Line, Point, Solid, Face3D, Text, Arc, Circle
 from dxfwrite.entities import Trace, Polyline, Polymesh, Polyface
@@ -143,7 +144,7 @@ class DXFEngine(object):
         :param ucs_icon: UCSICON settings (int), default=3
         :param snap_on: snap on/off (int), default=0
         :param grid_on: grid on/off (int), default=0
-        :param snap_style: snap style (int), defautl=0
+        :param snap_style: snap style (int), default=0
         :param snap_isopair: snap isopair (int), default=0
 
         """
@@ -485,7 +486,7 @@ class DXFEngine(object):
         """
         2D Rectangle, build with a polyline and a solid as background filling
 
-        :param point insert: where to place the rantangle
+        :param point insert: where to place the rectangle
         :param float width: width in drawing units
         :param float height: height in drawing units
         :param float rotation: in degree (circle = 360 degree)

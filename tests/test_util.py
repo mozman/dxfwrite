@@ -1,19 +1,15 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  Manfred Moitzi
-# Purpose: test dxfwrite.util functions
 # Created: 12.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+__author__ = "mozman <mozman@gmx.at>"
+
 import unittest
-import sys
-if sys.version_info[0] > 2:
-    xrange=range
 
 from dxfwrite.util import int2hex, hex2int
 from dxfwrite.util import iterflatlist, set_flag
-from dxfwrite.base import DXFList, DXFAtom
 
 class TestUtil(unittest.TestCase):
     def test_int2hex(self):
@@ -25,14 +21,14 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(hex2int('0'), 0)
 
     def test_int2hex2int(self):
-        for i in xrange(1000):
+        for i in range(1000):
             self.assertEqual(hex2int(int2hex(i)), i)
 
     def test_iterflatten(self):
-        l1 = [1,2,3]
-        l2 = [3,4,l1]
-        l3 = [l2,7]
-        self.assertEqual(list(iterflatlist(l3)), [3,4,1,2,3,7])
+        l1 = [1, 2, 3]
+        l2 = [3, 4, l1]
+        l3 = [l2, 7]
+        self.assertEqual(list(iterflatlist(l3)), [3, 4, 1, 2, 3, 7])
 
     def test_set_flag_on(self):
         self.assertEqual(set_flag(8, 1 << 2), 12)

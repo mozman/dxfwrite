@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.sections.Sections
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import unittest
 
 from dxfwrite.base import *
 from dxfwrite.sections import Sections
-from dxfwrite.tables import Tables
 
 class TestSection(unittest.TestCase):
 

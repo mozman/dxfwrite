@@ -1,12 +1,21 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman -- <mozman@gmx.at>
 # Purpose: try paperspace
 # Created: 26.03.2011
 # Copyright (C) , Manfred Moitzi
 # License: GPLv3
 
-import dxfwrite
+__author__ = "mozman <mozman@gmx.at>"
+
+import os
+import sys
+
+try:
+    import dxfwrite
+except ImportError:
+    # if dxfwrite is not 'installed' append parent dir of __file__ to sys.path
+    curdir = os.path.dirname(os.path.abspath(__file__))
+    sys.path.insert(0, os.path.abspath(os.path.join(curdir, os.path.pardir)))
 from dxfwrite import DXFEngine as dxf
 
 def main():

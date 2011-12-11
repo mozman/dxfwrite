@@ -1,25 +1,21 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: test bezier module
 # Created: 28.03.2010
+# Copyright (C) 2010, Manfred Moitzi
+# License: GPLv3
 
-import sys
+__author__ = "mozman <mozman@gmx.at>"
 
-if sys.version_info[:2] > (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
-
-PYTHON25 = sys.version_info[:2] < (2, 6)
-def get_next(generator):
-    return generator.next()
-
-if PYTHON25:
-    next = get_next
+except ImportError:
+    import unittest
 
 from dxfwrite.helpers import normalize_dxf_chunk
-
 from dxfwrite.algebra.bezier import CubicBezierCurve
 from dxfwrite.curves import Bezier
 

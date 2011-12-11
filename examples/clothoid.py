@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: examples for dxfwrite usage, see also tests for examples
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import sys
 import os

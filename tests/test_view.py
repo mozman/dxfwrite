@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.tableentries.View
 # Created: 10.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+__author__ = "mozman <mozman@gmx.at>"
+
 import unittest
 
 from dxfwrite.tableentries import View
-from dxfwrite import dxfstr, DXFPoint, DXFEngine
+from dxfwrite import dxfstr, DXFEngine
 
 class TestViewTableEntry(unittest.TestCase):
     expected = "  0\nVIEW\n  2\nTest\n 70\n0\n 40\n1.0\n 41\n1.0\n 10\n" \

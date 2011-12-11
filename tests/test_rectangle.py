@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.rect
 # Created: 22.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-from __future__ import absolute_import
+__author__ = "mozman <mozman@gmx.at>"
 
-import sys
-if sys.version_info[:2]> (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
-
-from dxfwrite.helpers import normalize_dxf_chunk
+except ImportError:
+    import unittest
 
 import dxfwrite
+from dxfwrite.helpers import normalize_dxf_chunk
+from dxfwrite.base import dxfstr
+
 from dxfwrite.rect import Rectangle
 
 class TestRectangleAPI(unittest.TestCase):
@@ -32,7 +33,7 @@ class TestRectangleAPI(unittest.TestCase):
             bgcolor=3,
             layer='RECTANGLE',
             linetype="DASHED")
-        dxf = rect.__dxf__()
+        dxf = dxfstr(rect)
         self.assertTrue("DASHED" in dxf)
         self.assertTrue("RECTANGLE" in dxf)
 
@@ -53,7 +54,7 @@ class TestRectangleImplementation(unittest.TestCase):
                               rotation=45,
                               bgcolor=3,
                               layer='RECTANGLE')
-        self.assertSequenceEqual(normalize_dxf_chunk(rectangle.__dxf__()), normalize_dxf_chunk(expected))
+        self.assertSequenceEqual(normalize_dxf_chunk(dxfstr(rectangle)), normalize_dxf_chunk(expected))
 
 if __name__=='__main__':
     unittest.main()

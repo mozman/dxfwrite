@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: test dxfwrite.entities.Attdef()
 # Created: 21.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
+__author__ = "mozman <mozman@gmx.at>"
+
 import unittest
 
-from dxfwrite.base import dxfstr, DXFValidationError
+from dxfwrite.base import dxfstr
 from dxfwrite.entities import Attdef
 
 class TestAttdef(unittest.TestCase):

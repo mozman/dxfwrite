@@ -1,20 +1,22 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.dimlines
 # Created: 21.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
-from __future__ import absolute_import
-from dxfwrite.helpers import normalize_dxf_chunk
 
-import sys
-if sys.version_info[:2] > (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+__author__ = "mozman <mozman@gmx.at>"
+
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
-PYTHON3 = sys.version_info[0] > 2
+except ImportError:
+    import unittest
 
+from dxfwrite.helpers import normalize_dxf_chunk
+from dxfwrite.util import PYTHON3
+from dxfwrite.base import dxfstr
 from dxfwrite.dimlines import AngularDimension
 
 class TestAngularDimAPI(unittest.TestCase):
@@ -27,7 +29,7 @@ class TestAngularDimAPI(unittest.TestCase):
             dimstyle='default',
             layer="ANGULARDIMENSION",
             roundval=1)
-        dxf = dimline.__dxf__()
+        dxf = dxfstr(dimline)
         self.assertTrue("ANGULARDIMENSION" in dxf)
 
 class TestAngularDimImplementation(unittest.TestCase):
@@ -45,10 +47,10 @@ class TestAngularDimImplementation(unittest.TestCase):
         dimline = AngularDimension(pos=(5,5), center=(0, 0), start=(1, 0),
                                    end=(1, 1), )
         if PYTHON3:
-            result = dimline.__dxf__()
+            result = dxfstr(dimline)
             expected = expected_ % "45°\n"
         else:
-            result = dimline.__dxf__().encode('utf8')
+            result = dxfstr(dimline).encode('utf8')
             expected = expected_ % "45\xc2\xb0\n"
         self.assertSequenceEqual(normalize_dxf_chunk(result), normalize_dxf_chunk(expected))
 

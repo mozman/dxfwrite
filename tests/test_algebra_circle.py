@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: test algebra.circle
 # Created: 27.03.2010
 
+__author__ = "mozman <mozman@gmx.at>"
+
 import unittest
-import math
 
 from dxfwrite.algebra import equals_almost, Ray2D, Circle, HALF_PI
 

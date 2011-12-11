@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 #coding:utf-8
-# test module ray2d.py
-# Author:  mozman
-# Purpose: test dxfwrite.entities.Ray2D (is not a dxf-entity)
 # Created: 28.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import unittest, math
+__author__ = "mozman <mozman@gmx.at>"
 
-HALF_PI = math.pi / 2.
-from dxfwrite.algebra import Ray2D, ParallelRaysError
+import unittest
+import math
+
+from dxfwrite.algebra import Ray2D, ParallelRaysError, HALF_PI
 
 class Test_Ray2D(unittest.TestCase):
     def test_init_with_slope(self):

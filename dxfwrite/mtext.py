@@ -5,9 +5,6 @@
 # Created: 09.03.2010
 # Copyright (C) 2010, 2011, Manfred Moitzi
 # License: GPLv3
-
-__author__ = "mozman"
-
 """
 MText -- MultiLine-Text-Entity, created by simple TEXT-Entities.
 
@@ -16,6 +13,8 @@ TEXT entities. Supports valign (TOP, MIDDLE, BOTTOM), halign (LEFT, CENTER,
 RIGHT), rotation for an arbitrary (!) angle and mirror.
 
 """
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import math
 from dxfwrite.vector2d import *

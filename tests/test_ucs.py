@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.tableentries.UCS
 # Created: 10.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import sys
-if sys.version_info[:2]> (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+__author__ = "mozman <mozman@gmx.at>"
+
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from dxfwrite.tableentries import UCS
 from dxfwrite import dxfstr, DXFEngine

@@ -6,6 +6,10 @@
 # Copyright (C) 2010, Toni Ruža
 # License: GPLv3
 
+from __future__ import unicode_literals
+
+__author__ = "raz"
+
 try:
     import dxfwrite
 except ImportError:
@@ -16,12 +20,11 @@ except ImportError:
 
 from dxfwrite import DXFEngine as dxf
 
-
 drawing = dxf.drawing('unicode_text.dxf')
 drawing.add(dxf.line((0, 0), (24, 0), color=7))
-layer_name = u'ŽĆČĐŠ'
+layer_name = 'ŽĆČĐŠ'
 drawing.add_layer(layer_name, color=2)
 drawing.add(dxf.text(
-    u'На крај села жута ћирилична кућа', insert=(0, 0.2), layer=layer_name
+    'На крај села жута ћирилична кућа', insert=(0, 0.2), layer=layer_name
 ))
 drawing.save()

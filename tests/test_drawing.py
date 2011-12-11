@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test drawing
 # Created: 27.04.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import os
 import re
@@ -55,7 +55,7 @@ class TestDrawing(unittest.TestCase):
         self.assertEqual(entity, "TEST")
 
     def test_writing(self):
-        filename = 'test.dwg'
+        filename = 'test.dxf'
         try:
             os.remove(filename)
         except OSError:

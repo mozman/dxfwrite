@@ -17,13 +17,13 @@ RIGHT), rotation for an arbitrary (!) angle and mirror.
 __author__ = "mozman <mozman@gmx.at>"
 
 import math
-from dxfwrite.vector2d import *
 
 import dxfwrite
 from dxfwrite.base import DXFList, dxfstr
 from dxfwrite.entities import Text
+from dxfwrite.mixins import SubscriptAttributes
 
-class MText(object):
+class MText(SubscriptAttributes):
     """ MultiLine-Text buildup with simple Text-Entities.
 
     Mostly the same kwargs like DXFEngine.text().

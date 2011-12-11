@@ -98,5 +98,15 @@ class TestMText(unittest.TestCase):
         expected = self.expected_line.substitute(text=text, px='0.0', py='0.0', pz='0.0', valign=str(valign))
         self.assertEqual(dxfstr(mtext), expected)
 
+    def test_get_attribute_by_subscript(self):
+        mtext = MText("Test\nTest", (0, 0))
+        layer = mtext['layer']
+        self.assertEqual(layer, mtext.layer)
+
+    def test_set_attribute_by_subscript(self):
+        mtext = MText("Test\nTest", (0, 0))
+        mtext['layer'] = "modified"
+        self.assertEqual(mtext.layer, "modified")
+
 if __name__=='__main__':
     unittest.main()

@@ -1,21 +1,24 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test ellipse curve
 # Created: 27.03.2010
+# Copyright (C) 2010, Manfred Moitzi
+# License: GPLv3
 
-from __future__ import absolute_import
+__author__ = "mozman <mozman@gmx.at>"
 
-import sys
-if sys.version_info[:2]> (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from dxfwrite.helpers import normalize_dxf_chunk
+from dxfwrite.base import dxfstr, DXFInt
+from dxfwrite.const import POLYLINE_CLOSED
 
 from dxfwrite.curves import Ellipse
-from dxfwrite.const import POLYLINE_CLOSED
 
 expected = "  0\nPOLYLINE\n  6\nSOLID\n 62\n3\n  8\n0\n 66\n1\n 10\n0.0\n 20\n" \
 "0.0\n 30\n0.0\n 70\n8\n  0\nVERTEX\n  8\n0\n 10\n4.33012701892\n 20\n2.5\n 30\n" \
@@ -46,15 +49,20 @@ class TestEllipse(unittest.TestCase):
         ellipse = Ellipse(center=(0., 0.), rx=5.0, ry=3.0,
                           startangle=0., endangle=90., rotation=30.,
                           segments=16, color=3, layer='0', linetype='SOLID')
-        result = ellipse.__dxf__()
+        result = dxfstr(ellipse)
         self.assertSequenceEqual(normalize_dxf_chunk(result), normalize_dxf_chunk(expected))
-
+        
     def test_closed_ellipse(self):
         ellipse = Ellipse(center=(0., 0.), rx=5.0, ry=3.0,
                           startangle=0., endangle=360., rotation=30.,
                           segments=16, color=3, layer='0', linetype='SOLID')
-        polyline = ellipse.__dxftags__()
-        self.assertTrue(polyline['flags'] & POLYLINE_CLOSED)
+        flags = 0
+        for tag in ( t for t in ellipse.__dxftags__() if isinstance(t, DXFInt) ):
+            if tag.group_code == 70:
+                flags = tag.value
+                break
+                
+        self.assertTrue(flags & POLYLINE_CLOSED)
 
 if __name__=='__main__':
     unittest.main()

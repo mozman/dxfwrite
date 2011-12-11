@@ -1,25 +1,21 @@
 #!/usr/bin/env python
 #coding:utf-8
-# test module ray2d.py
-# Author:  mozman
-# Purpose: test Table - a buildup of basic dxf entities
 # Created: 21.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import sys
-if sys.version_info[:2]> (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+__author__ = "mozman <mozman@gmx.at>"
+
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
+except ImportError:
+    import unittest
 
-if sys.version_info[0] > 2:
-    izip = zip
-    xrange = range
-else:
-    from itertools import izip
-
-from dxfwrite.table import Table, DEFAULT_CELL_TEXTCOLOR, CustomCell
+from dxfwrite.base import dxfstr
+from dxfwrite.table import Table, CustomCell
 from dxfwrite.table import Grid, Style, DEFAULT_BORDER_COLOR
 
 class DXFMock:
@@ -118,7 +114,7 @@ class TestTableImplementation(unittest.TestCase):
         expected = [(0, 0, textcell), (0, 2, empty), # cell (0, 1) is covered by (0,0)
                     (1, 2, empty), # cells (1, 0), (1, 2) are coverd by cell (0, 0)
                     (2, 0, empty), (2, 1, empty), (2, 2, empty)] #row 2
-        for got, should in izip(table.iter_visible_cells(), expected):
+        for got, should in zip(table.iter_visible_cells(), expected):
             self.assertEqual(got[0], should[0]) # row
             self.assertEqual(got[1], should[1]) # col
             self.assertEqual(got[2], should[2]) # cell
@@ -132,7 +128,7 @@ class TestTableImplementation(unittest.TestCase):
         cell = TestCell(table, 'default', (1, 1))
         for row, col in indices:
             table.set_cell(row, col, cell)
-        table.__dxf__()
+        dxfstr(table)
         dxfmock = DXFMock()
         self.assertEqual(cell.counter, 9) # count get_dxf_entity calls
         self.assertEqual(cell.counter, dxfmock.counter)
@@ -168,7 +164,7 @@ class TestTableImplementation(unittest.TestCase):
 class TestGrid(unittest.TestCase):
     def setUp(self):
         self.table = Table((0, 0), 3, 3)
-        for x in xrange(3):
+        for x in range(3):
             self.table.set_col_width(x, 3.0)
             self.table.set_row_height(x, 3.0)
 

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: test base module
 # Created: 09.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import unittest
 
@@ -80,7 +81,7 @@ class TestAtom(unittest.TestCase):
         self.assertEqual(atom.__dxf__(), to_unicode("  1\näöü\n"))
 
     def test_Atom_to_string_valid(self):
-        # numbers < 100 are formated with leading spaces
+        # numbers < 100 are formatted with leading spaces
         atom = DXFAtom('HEADER', 0)
         self.assertEqual(dxfstr(atom), '  0\nHEADER\n')
         # values > 999 are ok
@@ -212,7 +213,7 @@ class TestDXFPoint(unittest.TestCase):
 
     def test_to_3D_on_3d_point(self):
         point = DXFPoint((1., 2., 3.), 3)
-        point.to_3D(7) # only 2d-points will be extented to 3d
+        point.to_3D(7) # only 2D-points will be extended to 3D
         self.assertEqual(point.point[2].value, 3)
 
     def test_to_3D_group_code(self):

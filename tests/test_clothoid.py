@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test clothoid module and curve
 # Created: 28.03.2010
+
+__author__ = "mozman <mozman@gmx.at>"
 
 from dxfwrite.helpers import normalize_dxf_chunk
 

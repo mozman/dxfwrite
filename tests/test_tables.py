@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.tables
 # Created: 10.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import unittest
 
@@ -62,5 +62,7 @@ class TestViewPorts(unittest.TestCase):
             count += 1
             self.assertEqual(table['name'], 'test')
         self.assertEqual(count, 2)
+
+        
 if __name__=='__main__':
     unittest.main()

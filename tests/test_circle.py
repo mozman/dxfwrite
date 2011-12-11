@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.entities.Circle()
 # Created: 20.02.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
 import unittest
 
-from dxfwrite.base import dxfstr, DXFValidationError
+from dxfwrite.base import dxfstr
 from dxfwrite.entities import Circle
 
 class TestCircle(unittest.TestCase):

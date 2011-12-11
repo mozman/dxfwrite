@@ -12,6 +12,7 @@ import sys
 PYTHON3 = sys.version_info[0] > 2
 
 if PYTHON3:
+    from io import StringIO
     izip = zip
     def is_string(value):
         return isinstance(value, str)
@@ -28,8 +29,9 @@ if PYTHON3:
                 return str(escaped_value.replace(b'\\u', b'\\U+'), 'utf-8')
             else:
                 return value
-else:
+else: # PYTHON2
     from itertools import izip
+    from StringIO import StringIO
     def is_string(value):
         return isinstance(value, basestring)
 

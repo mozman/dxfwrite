@@ -1,19 +1,21 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.dimlines
 # Created: 21.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
-from __future__ import absolute_import
-from dxfwrite.helpers import normalize_dxf_chunk
 
-import sys
-if sys.version_info[:2]> (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+__author__ = "mozman <mozman@gmx.at>"
+
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
+except ImportError:
+    import unittest
 
+from dxfwrite.helpers import normalize_dxf_chunk
+from dxfwrite.base import dxfstr
 from dxfwrite.dimlines import ArcDimension
 
 class TestArcDimAPI(unittest.TestCase):
@@ -27,8 +29,7 @@ class TestArcDimAPI(unittest.TestCase):
             dimstyle='default',
             layer="ARCDIMENSION",
             roundval=1)
-        dxf = dimline.__dxf__()
-        self.assertTrue("ARCDIMENSION" in dxf)
+        self.assertTrue("ARCDIMENSION" in dxfstr(dimline))
 
 class TestArcDimImplementation(unittest.TestCase):
     def test_45deg(self):

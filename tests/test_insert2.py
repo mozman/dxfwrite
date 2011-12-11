@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author: mozman
-# Purpose:
 # Created: 11.04.2010
+# Copyright (C) 2010, Manfred Moitzi
+# License: GPLv3
+
+__author__ = "mozman <mozman@gmx.at>"
 
 import unittest
 
 from dxfwrite import DXFEngine as dxf
+from dxfwrite.base import dxfstr
 
 class TestInsert2(unittest.TestCase):
     def test_insert2(self):
@@ -18,7 +21,7 @@ class TestInsert2(unittest.TestCase):
         attribs = {'TAG1': 'TextForTAG1', 'TAG2': 'TextForTAG2'}
         blockref = dxf.insert2(block, insert=(0, 0), attribs=attribs)
 
-        result = blockref.__dxf__()
+        result = dxfstr(blockref)
         self.assertTrue('TAG1' in result)
         self.assertTrue('TAG2' in result)
         self.assertTrue('TextForTAG1' in result)

@@ -1,21 +1,25 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.buildups.MText
 # Created: 09.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import sys
-if sys.version_info[:2]> (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+__author__ = "mozman <mozman@gmx.at>"
+
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from string import Template
 
-from dxfwrite.mtext import MText
 import dxfwrite
+from dxfwrite.base import dxfstr
+from dxfwrite.mtext import MText
+
 
 class TestMText(unittest.TestCase):
     expected_line = Template("  0\nTEXT\n 62\n256\n  8\n0\n 10\n${px}\n 20\n${py}\n" \
@@ -36,7 +40,7 @@ class TestMText(unittest.TestCase):
         mtext = MText(text, (0., 0., 0.), 1.0)
         line1 = self.expected_line.substitute(text='lineA', px='0.0', py='0.0', pz='0.0', valign=str(valign))
         line2 = self.expected_line.substitute(text='lineB', px='0.0', py='-1.0', pz='0.0', valign=str(valign))
-        self.assertEqual(mtext.__dxf__(), line1+line2)
+        self.assertEqual(dxfstr(mtext), line1+line2)
 
     def test_horiz_bottom(self):
         text = "lineA\nlineB"
@@ -44,7 +48,7 @@ class TestMText(unittest.TestCase):
         mtext = MText(text, (0., 0., 0.), 1.0, valign=valign)
         line1 = self.expected_line.substitute(text='lineA', px='0.0', py='1.0', pz='0.0', valign=str(valign))
         line2 = self.expected_line.substitute(text='lineB', px='0.0', py='0.0', pz='0.0', valign=str(valign))
-        self.assertEqual(mtext.__dxf__(), line1+line2)
+        self.assertEqual(dxfstr(mtext), line1+line2)
 
     def test_baseline(self):
         mtext = MText("lineA\nlineB", (0., 0., 0.), 1.0, valign=dxfwrite.BASELINE)
@@ -56,7 +60,7 @@ class TestMText(unittest.TestCase):
         mtext = MText(text, (0., 0., 0.), 1.0, valign=valign)
         line1 = self.expected_line.substitute(text='lineA', px='0.0', py='0.5', pz='0.0', valign=str(valign))
         line2 = self.expected_line.substitute(text='lineB', px='0.0', py='-0.5', pz='0.0', valign=str(valign))
-        self.assertEqual(mtext.__dxf__(), line1+line2)
+        self.assertEqual(dxfstr(mtext), line1+line2)
 
     def test_45deg_top(self):
         text = "lineA\nlineB\nlineC"
@@ -70,7 +74,7 @@ class TestMText(unittest.TestCase):
         line3 = self.expected_line_rot.substitute(text='lineC', px='1.414214', py='-1.414214', pz='0.0',
                                               valign=str(valign), rot=str(rotation))
 
-        self.assertEqual(mtext.__dxf__(), line1+line2+line3)
+        self.assertEqual(dxfstr(mtext), line1+line2+line3)
 
     def test_45deg_bottom(self):
         text = "lineA\nlineB\nlineC"
@@ -84,7 +88,15 @@ class TestMText(unittest.TestCase):
         line3 = self.expected_line_rot.substitute(text='lineC', px='0.0', py='0.0', pz='0.0',
                                               valign=str(valign), rot=str(rotation))
 
-        self.assertEqual(mtext.__dxf__(), line1+line2+line3)
+        self.assertEqual(dxfstr(mtext), line1+line2+line3)
+        
+    def test_one_liner(self):
+        text = "OneLine"
+        valign = dxfwrite.TOP
+
+        mtext = MText(text, (0., 0., 0.))
+        expected = self.expected_line.substitute(text=text, px='0.0', py='0.0', pz='0.0', valign=str(valign))
+        self.assertEqual(dxfstr(mtext), expected)
 
 if __name__=='__main__':
     unittest.main()

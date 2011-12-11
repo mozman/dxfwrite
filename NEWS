@@ -2,6 +2,11 @@
 News
 ====
 
+Version 1.0.3 - ...
+
+  * rewrite of DXF-String building process
+  * refactored MText class
+
 Version 1.0.2 - 08 December 2011
 
   * raw unicode encoding by Toni Ruža - use any unicode character for text and table-entries.

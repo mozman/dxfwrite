@@ -10,6 +10,7 @@ __author__ = "mozman <mozman@gmx.at>"
 import sys
 import os
 
+from timeit import Timer
 from random import random
 
 try:
@@ -21,6 +22,7 @@ except ImportError:
 
 import dxfwrite
 from dxfwrite import DXFEngine as dxf
+from dxfwrite.util import StringIO
 
 def get_cube(basepoint, length):
     def scale( point ):
@@ -66,19 +68,51 @@ def simple_faces():
     pface.add_face([p5, p6, p7, p8]) # top
     return pface
 
-name = 'polyface.dxf'
-dwg = dxf.drawing(name) # create a drawing
-# add the active viewport
-dwg.add_viewport(
-    '*Active',
-    center_point=(0, 0),
-    height = 30,
-    direction_point=(30, 30, 10)
-    )
+print("Profiling dxfstr() speed")
 
-for x in range(10):
-    for y in range(10):
-        dwg.add(get_cube((x,y, random()), random()))
-#dwg.add(simple_faces())
-dwg.save() # save dxf drawing
-print("drawing '%s' created.\n" % name)
+def create_dxf_drawing():
+    dwg = dxf.drawing() # create a drawing
+    # add the active viewport
+    dwg.add_viewport(
+        '*Active',
+        center_point=(0, 0),
+        height = 30,
+        direction_point=(30, 30, 10)
+        )
+    for x in range(10):
+        for y in range(10):
+            dwg.add(get_cube((x,y, random()), random()))
+    return dwg
+
+drawing = create_dxf_drawing()
+
+def profile_dxfstr():
+    dxf_string = dxfwrite.dxfstr(drawing)
+
+def profile_save_to_fileobj():
+    fp = StringIO()
+    drawing.save_to_fileobj(fp)
+    dxf_string = fp.getvalue()
+    fp.close()
+
+setup_dxfstr = """
+from __main__ import profile_dxfstr
+"""
+
+setup_write_dxf = """
+from __main__ import profile_save_to_fileobj
+"""
+
+def print_result(time, text):
+    print("Operation: %s takes %.2f seconds\n" % (text, time))
+    
+COUNT = 100
+def main():
+    print("Sizeof DXF string: %d" % len(dxfwrite.dxfstr(drawing)) )
+    t = Timer("profile_dxfstr()", setup_dxfstr)
+    print_result(t.timeit(COUNT), 'using the dxfstr()')
+    t = Timer("profile_save_to_fileobj()", setup_write_dxf)
+    print_result(t.timeit(COUNT), 'using the save_to_fileobj()')
+
+if __name__ == '__main__':
+    main()

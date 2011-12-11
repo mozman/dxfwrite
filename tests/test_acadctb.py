@@ -1,24 +1,23 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
 # Purpose: test dxfwrite.acadctb
 # Created: 24.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import sys
-if sys.version_info[:2]> (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
-    import unittest2 as unittest
+__author__ = "mozman <mozman@gmx.at>"
 
-if sys.version_info[0] > 2: # Python 3 adaption
-    from io import StringIO
-else:
-    from StringIO import StringIO
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
+    import unittest2 as unittest
+except ImportError:
+    import unittest
+    
 
 import os
-
+from dxfwrite.util import StringIO
 from dxfwrite.acadctb import *
 
 class TestUserStyleAPI(unittest.TestCase):

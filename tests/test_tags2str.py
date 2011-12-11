@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Purpose: test base module
 # Created: 09.12.2011
 # Copyright (C) 2011, Manfred Moitzi
 # License: GPLv3
@@ -33,7 +32,8 @@ class TestDXFList(unittest.TestCase):
         atoms.append(DXFAtom('HEADER'))
         atoms.append(DXFAtom('SECTION', 1))
         self.assertEqual(dxfstr(atoms), '  0\nHEADER\n  1\nSECTION\n')
-        self.assertEqual(dxfstr(atoms), tags2str(atoms))
+        result = tags2str(atoms)
+        self.assertEqual(dxfstr(atoms), result)
 
     def test_Sublists(self):
         atoms = DXFList([

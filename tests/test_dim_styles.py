@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test _DimStyle
 # Created: 15.11.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-import sys
+__author__ = "mozman <mozman@gmx.at>"
+
 import unittest
 
 from dxfwrite.dimlines import _DimStyles
@@ -38,6 +37,6 @@ class TestDimStyles(unittest.TestCase):
         style = styles.get('TESTSTYLE')
         self.assertEqual(style.layer, "TESTLAYER")
 
-
+        
 if __name__=='__main__':
     unittest.main()

@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 #coding:utf-8
-# Author:  mozman
-# Purpose: test dxfwrite.dimlines
 # Created: 16.03.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
-from __future__ import absolute_import
-from dxfwrite.helpers import normalize_dxf_chunk
 
-import sys
-if sys.version_info[:2]> (2, 6):
-    import unittest
-else: # python 2.6 and prior needs the unittest2 package
+__author__ = "mozman <mozman@gmx.at>"
+
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: easy_install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
+except ImportError:
+    import unittest
 
 import sys
-
+from dxfwrite.helpers import normalize_dxf_chunk
+from dxfwrite.base import dxfstr
 from dxfwrite.dimlines import LinearDimension
 
 class TestLinearDimAPI(unittest.TestCase):
@@ -26,7 +27,7 @@ class TestLinearDimAPI(unittest.TestCase):
                                   dimstyle='default',
                                   layer="LINEARDIMENSION",
                                   roundval=1)
-        dxf = dimline.__dxf__()
+        dxf = dxfstr(dimline)
         self.assertTrue('LINEARDIMENSION' in dxf)
 
     def test_set_text(self):
@@ -34,7 +35,7 @@ class TestLinearDimAPI(unittest.TestCase):
             (5, 5), [(0, 0), (5, 0), (10, 0), (15, 0), (20, 0)])
         dimline.set_text(1, 'override')
         self.assertEqual(dimline.text_override[1], 'override')
-        dxf = dimline.__dxf__()
+        dxf = dxfstr(dimline)
         self.assertTrue('override' in dxf)
         self.assertRaises(IndexError, dimline.set_text, 5, 'out of range')
 
@@ -69,7 +70,7 @@ class TestLinearDimensionImplementation(unittest.TestCase):
                  "0.0\n 41\n1.0\n 42\n1.0\n 50\n0.0\n"
 
         dimline = LinearDimension(pos=(5,5),measure_points=[(0,0),(10,0)])
-        self.assertSequenceEqual(normalize_dxf_chunk(dimline.__dxf__()), normalize_dxf_chunk(expected))
+        self.assertSequenceEqual(normalize_dxf_chunk(dxfstr(dimline)), normalize_dxf_chunk(expected))
 
     def test_45deg(self):
         expected = "  0\nLINE\n 62\n7\n  8\nDIMENSIONS\n 10\n-0.212132034356\n" \
@@ -91,7 +92,7 @@ class TestLinearDimensionImplementation(unittest.TestCase):
         self.maxDiff = None
         dimline = LinearDimension(pos=(5,5),measure_points=[(0,0),(10,0)],
                                   angle=45)
-        self.assertSequenceEqual(normalize_dxf_chunk(dimline.__dxf__()), normalize_dxf_chunk(expected))
+        self.assertSequenceEqual(normalize_dxf_chunk(dxfstr(dimline)), normalize_dxf_chunk(expected))
 
     def test_dim_points_order(self):
         """ test if point sorting works. """

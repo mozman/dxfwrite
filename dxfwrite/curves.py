@@ -13,17 +13,18 @@ import sys
 if sys.version_info[0] > 2:
     xrange = range
 
+from dxfwrite import const
 from dxfwrite.vector2d import vadd
-import dxfwrite.const as const
 from dxfwrite.base import dxfstr
 from dxfwrite.entities import Polyline
 from dxfwrite.algebra import rotate_2d, equals_almost
 from dxfwrite.algebra import CubicSpline, CubicBezierCurve
 from dxfwrite.algebra import Clothoid as _ClothoidValues
+from dxfwrite.mixins import SubscriptAttributes
 
 __all__ = ['Ellipse', 'Bezier', 'Spline', 'Clothoid']
 
-class _BaseCurve(object):
+class _BaseCurve(SubscriptAttributes):
     def __dxf__(self):
         return dxfstr(self.__dxftags__())
 

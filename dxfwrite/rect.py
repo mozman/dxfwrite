@@ -12,14 +12,15 @@
 __author__ = "mozman <mozman@gmx.at>"
 
 import math
+
+from dxfwrite import const
 from dxfwrite.vector2d import *
 from dxfwrite.algebra import rotate_2d
-
-import dxfwrite.const as const
 from dxfwrite.base import DXFList, dxfstr
 from dxfwrite.entities import Polyline, Solid
+from dxfwrite.mixins import SubscriptAttributes
 
-class Rectangle(object):
+class Rectangle(SubscriptAttributes):
     """ 2D Rectangle, consisting of a polyline and a solid as background filling.
     """
     name = 'RECTANGLE'

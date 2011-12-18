@@ -6,12 +6,20 @@
 
 __author__ = "mozman <mozman@gmx.at>"
 
-import unittest
+try:
+    # Python 2.6 and earlier need the unittest2 package
+    # try: pip install unittest2
+    # or download source from: http://pypi.python.org/pypi/unittest2
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
-from dxfwrite.entities import _Entity
+
+from dxfwrite.entities import _Entity, Line
 
 class MockEntity(_Entity):
-    name = 'LINE' # so we can use dxf attributes
+    DXF_ENTITY_NAME = Line.DXF_ENTITY_NAME
+    DXF_ATTRIBUTES = Line.DXF_ATTRIBUTES
 
 class TestEntity(unittest.TestCase):
     def test_init(self):
@@ -29,11 +37,13 @@ class TestEntity(unittest.TestCase):
 
     def test_get_attribute_error(self):
         e = MockEntity()
-        self.assertRaises(KeyError, e.__getitem__, 'mozman')
+        with self.assertRaises(KeyError):
+            result = e['mozman']
 
     def test_set_attribute_error(self):
         e = MockEntity()
-        self.assertRaises(KeyError, e.__setitem__, 'mozman', 1)
+        with self.assertRaises(KeyError):
+            e['mozman'] = 'test'
 
 if __name__=='__main__':
     unittest.main()

@@ -11,7 +11,7 @@ __author__ = "mozman <mozman@gmx.at>"
 from dxfwrite.base import *
 from dxfwrite.linepattern import LinePatternDef
 
-_DXF12_TableEntryAttributeDefinition = {
+_DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION = {
     'LTYPE': {
         'name': AttribDef(DXFString, 2, priority=52),
         'flags': AttribDef(DXFInt, 70, priority=53),
@@ -94,6 +94,8 @@ _DXF12_TableEntryAttributeDefinition = {
 class _TableEntry(object):
     """ Base class for table entries.
     """
+    TABLE_NAME = "ABSTRACT_TABLE"
+    DXF_ATTRIBUTES = {}
 
     def __init__(self, name, **kwargs):
         self.attribs = {}
@@ -102,14 +104,9 @@ class _TableEntry(object):
         for key, value in kwargs.items():
             self[key] = value
 
-    @property
-    def attribute_definition(self):
-        """ get its own attribute definitions """
-        return _DXF12_TableEntryAttributeDefinition[self.table_name]
-
     def is_valid_attribute_name(self, key):
         """ True if an AttribDef for key exists. """
-        return key in self.attribute_definition
+        return key in self.DXF_ATTRIBUTES
 
     def __setitem__(self, key, value):
         if self.is_valid_attribute_name(key):
@@ -129,12 +126,12 @@ class _TableEntry(object):
 
     def _get_dxf_atom(self, attribname, value):
         """ create an object for attribname by factory from attribute_definition """
-        attrib = self.attribute_definition[attribname]
+        attrib = self.DXF_ATTRIBUTES[attribname]
         return attrib.factory(value, attrib.group_code)
 
     def _priority(self, key):
         """ get priority of attribute key """
-        return self.attribute_definition[key].priority
+        return self.DXF_ATTRIBUTES[key].priority
 
     def get_attribs(self):
         """ get attribs sorted by priority """
@@ -147,7 +144,7 @@ class _TableEntry(object):
 
     def __dxftags__(self):
         dxf = DXFList()
-        dxf.append(DXFAtom(self.table_name))
+        dxf.append(DXFAtom(self.TABLE_NAME))
         dxf.extend(self.get_attribs()) # sorted attribs
         return dxf
 
@@ -166,7 +163,8 @@ class Linetype(_TableEntry):
     pattern
         LinePatternDef object
     """
-    table_name = 'LTYPE'
+    TABLE_NAME = 'LTYPE'
+    DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['LTYPE']
 
     def __init__(self, name, **kwargs):
         default = {
@@ -194,7 +192,8 @@ class Layer(_TableEntry):
     linetype
         name of linetype (string)
     """
-    table_name = 'LAYER'
+    TABLE_NAME = 'LAYER'
+    DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['LAYER']
 
     def __init__(self, name, **kwargs):
         default = {
@@ -231,7 +230,8 @@ class Style(_TableEntry):
     bigfont
         big-font file name(string), default=""
     """
-    table_name = 'STYLE'
+    TABLE_NAME = 'STYLE'
+    DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['STYLE']
 
     def __init__(self, name, **kwargs):
         default = {
@@ -284,7 +284,8 @@ class View(_TableEntry):
         VMODE_UCS_FOLLOW_MODE_ON
         VMODE_FRONT_CLIP_NOT_AT_EYE
     """
-    table_name = 'VIEW'
+    TABLE_NAME = 'VIEW'
+    DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['VIEW']
 
     def __init__(self, name, **kwargs):
         default = {
@@ -368,7 +369,8 @@ class Viewport(_TableEntry):
     snap_isopair
         snap isopair (int), default=0
     """
-    table_name = 'VPORT'
+    TABLE_NAME = 'VPORT'
+    DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['VPORT']
 
     def __init__(self, name, **kwargs):
         default = {
@@ -403,7 +405,8 @@ class Viewport(_TableEntry):
         super(Viewport, self).__init__(name, **default)
 
 class AppID(_TableEntry):
-    table_name = 'APPID'
+    TABLE_NAME = 'APPID'
+    DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['APPID']
 
     def __init__(self, name, **kwargs):
         default = {
@@ -426,7 +429,8 @@ class UCS(_TableEntry):
     yaxis
         yaxis direction in WCS
     """
-    table_name = 'UCS'
+    TABLE_NAME = 'UCS'
+    DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['UCS']
 
     def __init__(self, name, **kwargs):
         default = {

@@ -84,10 +84,6 @@ a simple example::
 Installation
 ============
 
-with easy_install::
-
-    easy_install dxfwrite
-
 with pip::
 
     pip install dxfwrite

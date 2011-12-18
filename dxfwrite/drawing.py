@@ -194,18 +194,16 @@ class Drawing(object):
         self.blocks.add(xref)
         self.add(DXFEngine.insert(blockname, insert, layer=layer))
 
-class PaperSpaceProxy:
+class ModelSpaceProxy(object):
+    LAYOUT = 0
     def __init__(self, entities):
         self._entities = entities
+
     def add(self, entity):
-        entity['paper_space'] = 1
+        entity['paper_space'] = self.LAYOUT
         self._entities.add(entity)
         return entity
 
-class ModelSpaceProxy:
-    def __init__(self, entities):
-        self._entities = entities
-    def add(self, entity):
-        entity['paper_space'] = 0
-        self._entities.add(entity)
-        return entity
+class PaperSpaceProxy(ModelSpaceProxy):
+    LAYOUT = 1
+

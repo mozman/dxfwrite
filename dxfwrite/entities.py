@@ -14,7 +14,7 @@ from dxfwrite.base import *
 from dxfwrite.util import iterflatlist, set_flag
 import dxfwrite.const as const
 
-_DXF12_EntityAttributeDefinition = {
+_DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
     'LINE': {
         'start': AttribDef(DXFPoint3D, 0, priority=100),
         'end': AttribDef(DXFPoint3D, 1, 101),
@@ -152,7 +152,7 @@ _DXF12_EntityAttributeDefinition = {
         }
     }
 
-def _add_common_attribs():
+def _add_common_attribs(attribute_definition):
     common_attribs = {
         'linetype': AttribDef(DXFString, 6, priority=20),
         'elevation': AttribDef(DXFFloat, 38, priority=30),
@@ -162,13 +162,14 @@ def _add_common_attribs():
         'paper_space': AttribDef(DXFInt, 67, priority=50),
         'extrusion_direction': AttribDef(DXFPoint, 200, priority=55),
     }
-    for entry in _DXF12_EntityAttributeDefinition.values():
+    for entry in attribute_definition.values():
         entry.update(common_attribs)
-_add_common_attribs()
+
+_add_common_attribs(_DXF12_ENTITY_ATTRIBUTE_DEFINITION)
 
 class _Entity(object):
-    """ name is the key to the attribute definitions, example: 'CIRCLE' """
-    name = 'ABSTRACT'
+    DXF_ENTITY_NAME = 'ABSTRACT'
+    DXF_ATTRIBUTES = {}
 
     def __init__(self, **kwargs):
         self.attribs = {}
@@ -180,14 +181,9 @@ class _Entity(object):
             if value is not None:
                 self[key] = value
 
-    @property
-    def attribute_definition(self):
-        """ get its own attribute definitions """
-        return _DXF12_EntityAttributeDefinition[self.name]
-
     def is_valid_attribute_name(self, key):
         """ True if an AttribDef for key exists. """
-        return key in self.attribute_definition
+        return key in self.DXF_ATTRIBUTES
 
     def __setitem__(self, key, value):
         if self.is_valid_attribute_name(key):
@@ -207,12 +203,12 @@ class _Entity(object):
 
     def _get_dxf_atom(self, attribname, value):
         """ create an object for attribname by factory from attribute_definition """
-        attrib = self.attribute_definition[attribname]
+        attrib = self.DXF_ATTRIBUTES[attribname]
         return attrib.factory(value, attrib.group_code)
 
     def _priority(self, key):
         """ get priority of attribute key """
-        return self.attribute_definition[key].priority
+        return self.DXF_ATTRIBUTES[key].priority
 
     def get_attribs(self):
         """ get attribs sorted by priority """
@@ -225,23 +221,23 @@ class _Entity(object):
         return DXFList()
 
     def valid(self):
-        """ validate object before dxf output """
+        """ Validate object before dxf output. """
         return True
 
     def extension_point(self): # abstract
-        """ general extension point, first call in __dxf__.
+        """ general extension point, first call in __dxftags__.
         """
         pass
 
     def __dxf__(self):
-        """ create the dxf string """
+        """ Create the dxf string. """
         return dxfstr(self.__dxftags__())
 
     def __dxftags__(self):
         self.extension_point() # last chance to manipulate the entity
         if self.valid():
             dxftags = DXFList()
-            dxftags.append(DXFAtom(self.name))
+            dxftags.append(DXFAtom(self.DXF_ENTITY_NAME))
             dxftags.extend(self.get_attribs()) # attribs sorted by priority
             dxftags.extend(self.get_data()) # example: block->content, polyline->vertices, faces, insert->attribs
             return dxftags
@@ -250,7 +246,8 @@ class _Entity(object):
 
 
 class Line(_Entity):
-    name = 'LINE'
+    DXF_ENTITY_NAME = 'LINE'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['LINE']
 
     def __init__(self, **kwargs):
         default = {
@@ -262,7 +259,8 @@ class Line(_Entity):
 
 
 class Point(_Entity):
-    name = 'POINT'
+    DXF_ENTITY_NAME = 'POINT'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POINT']
 
     def __init__(self, **kwargs):
         default = {
@@ -272,7 +270,8 @@ class Point(_Entity):
         super(Point, self).__init__(**default)
 
 class Solid(_Entity):
-    name = 'SOLID'
+    DXF_ENTITY_NAME = 'SOLID'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['SOLID']
 
     def __init__(self, points=[], **kwargs):
         super(Solid, self).__init__(**kwargs)
@@ -296,13 +295,16 @@ class Solid(_Entity):
         return True
 
 class Trace(Solid):
-    name = 'TRACE'
+    DXF_ENTITY_NAME = 'TRACE'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['TRACE']
 
 class Face3D(Solid):
-    name = '3DFACE'
+    DXF_ENTITY_NAME = '3DFACE'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['3DFACE']
 
 class Shape(_Entity):
-    name = 'SHAPE'
+    DXF_ENTITY_NAME = 'SHAPE'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['SHAPE']
 
     def __init__(self, **kwargs):
         default = {
@@ -312,7 +314,8 @@ class Shape(_Entity):
         super(Shape, self).__init__(**default)
 
 class Text(_Entity):
-    name = 'TEXT'
+    DXF_ENTITY_NAME = 'TEXT'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['TEXT']
 
     def __init__(self, **kwargs):
         default = {
@@ -324,7 +327,8 @@ class Text(_Entity):
         super(Text, self).__init__(**default)
 
 class Arc(_Entity):
-    name = 'ARC'
+    DXF_ENTITY_NAME = 'ARC'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['ARC']
 
     def __init__(self, **kwargs):
         default = {
@@ -337,7 +341,8 @@ class Arc(_Entity):
         super(Arc, self).__init__(**default)
 
 class Circle(_Entity):
-    name = 'CIRCLE'
+    DXF_ENTITY_NAME = 'CIRCLE'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['CIRCLE']
 
     def __init__(self, **kwargs):
         default = {
@@ -353,7 +358,8 @@ class Insert(_Entity):
     The (Insert) attrib 'attribs_follow' is managed by the object itself, and
     a DXFAtom('SEQEND') will be added to end of the attibs list.
     """
-    name = 'INSERT'
+    DXF_ENTITY_NAME = 'INSERT'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['INSERT']
 
     def __init__(self, **kwargs):
         default = {
@@ -441,7 +447,8 @@ class Insert(_Entity):
         return self.data
 
 class Attdef(_Entity):
-    name = 'ATTDEF'
+    DXF_ENTITY_NAME = 'ATTDEF'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['ATTDEF']
 
     def __init__(self, **kwargs):
         default = {
@@ -474,7 +481,8 @@ class Attdef(_Entity):
         return Attrib(**kwargs)
 
 class Attrib(_Entity):
-    name = 'ATTRIB'
+    DXF_ENTITY_NAME = 'ATTRIB'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['ATTRIB']
 
     def __init__(self, **kwargs):
         default = {
@@ -488,7 +496,8 @@ class Attrib(_Entity):
         super(Attrib, self).__init__(**default)
 
 class Block(_Entity):
-    name = 'BLOCK'
+    DXF_ENTITY_NAME = 'BLOCK'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['BLOCK']
 
     def __init__(self, **kwargs):
         default = {
@@ -503,7 +512,7 @@ class Block(_Entity):
     def find_attdef(self, tag):
         for entity in iterflatlist(self.data): # flatten nested list
             if isinstance(entity, _Entity) and \
-                (entity.name == 'ATTDEF') and \
+                (entity.DXF_ENTITY_NAME == 'ATTDEF') and \
                 (entity['tag'] == tag):
                 return entity
         raise KeyError("no attdef with tag '%s' found!" % str(tag))
@@ -545,7 +554,8 @@ class Polyline(_Entity):
     close
         set close-status of polyline
     """
-    name = 'POLYLINE'
+    DXF_ENTITY_NAME = 'POLYLINE'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
     def __init__(self, points=[], **kwargs):
         """ polyline constructor
@@ -613,7 +623,8 @@ class Polymesh(_Entity):
         set vertex at pos(row, col) to point, point is a 2D or 3D point
         z-value of 2D points is 0.
     """
-    name = 'POLYLINE' # a polymesh is also a polyline
+    DXF_ENTITY_NAME = 'POLYLINE' # a polymesh is also a polyline
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
     def __init__(self, nrows, ncols, **kwargs):
         """ 2 <= nrows <= 256; 2 <= ncols <= 256
@@ -660,7 +671,8 @@ class Polymesh(_Entity):
 class Polyface(_Entity):
     """ freeform polymesh with arbitrary count of faces.
     """
-    name = 'POLYLINE' # a polyface is also a polyline
+    DXF_ENTITY_NAME = 'POLYLINE' # a polyface is also a polyline
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
     def __init__(self, precision=6, **kwargs):
         default = {
@@ -733,7 +745,8 @@ class Polyface(_Entity):
         return DXFList( [self.vertices, self.faces, DXFAtom('SEQEND')] )
 
 class Vertex(_Entity):
-    name = 'VERTEX'
+    DXF_ENTITY_NAME = 'VERTEX'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['VERTEX']
 
     def __init__(self, **kwargs):
         default = {

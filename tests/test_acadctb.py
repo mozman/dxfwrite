@@ -9,7 +9,7 @@ __author__ = "mozman <mozman@gmx.at>"
 
 try:
     # Python 2.6 and earlier need the unittest2 package
-    # try: easy_install unittest2
+    # try: pip install unittest2
     # or download source from: http://pypi.python.org/pypi/unittest2
     import unittest2 as unittest
 except ImportError:

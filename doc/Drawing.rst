@@ -3,30 +3,57 @@
 Drawing
 =======
 
-.. autoclass:: dxfwrite.drawing.Drawing
+.. class:: Drawing
 
-.. automethod:: dxfwrite.drawing.Drawing.__init__
+    The Drawing object manages all the necessary sections, like header, tables
+    and blocks. The tables-attribute contains the layers, styles, linetypes and
+    other tables.
+    
+.. method:: Drawing.__init__
+
+    :param string name: filename of drawing
 
 Methods
 -------
 
-.. automethod:: dxfwrite.drawing.Drawing.add
+.. method:: Drawing.add(entity)
 
-.. automethod:: dxfwrite.drawing.Drawing.save
+    Add an entity to drawing.
 
-.. automethod:: dxfwrite.drawing.Drawing.saveas
+    shortcut for: Drawing.entities.add()
 
-.. automethod:: dxfwrite.drawing.Drawing.add_layer
+.. method:: Drawing.save
 
-.. automethod:: dxfwrite.drawing.Drawing.add_style
+    Write DXF data to file-system.
 
-.. automethod:: dxfwrite.drawing.Drawing.add_linetype
+.. method:: Drawing.saveas(name)
 
-.. automethod:: dxfwrite.drawing.Drawing.add_view
+    Set new filename and write DXF data to file-system.
 
-.. automethod:: dxfwrite.drawing.Drawing.add_viewport
+.. method:: Drawing.add_layer(name, **kwargs)
 
-.. automethod:: dxfwrite.drawing.Drawing.add_xref
+    Define a new layer. For valid keyword args see: :ref:`Layer`
+
+.. method:: Drawing.add_style(name, **kwargs)
+
+    Define a new text-style. For valid keyword args see: :ref:`Textstyle`
+
+.. method:: Drawing.add_linetype(name, **kwargs)
+
+    Define a new linetype. For valid keyword args see: :ref:`Linetype`
+
+.. method:: Drawing.add_view(name, **kwargs)
+
+    Define a new view. For valid keyword args see: :ref:`View`
+
+.. method:: Drawing.add_viewport(name, **kwargs)
+
+    Define a new viewport. For valid keyword args see: :ref:`Viewport`
+
+.. method:: Drawing.add_xref(filepath, insert=(0., 0., 0.), layer='0')
+
+    Create a simple XREF reference, `filepath` is the referenced
+    drawing and `insert` is the insertion point.
 
 Attributes
 ----------
@@ -38,13 +65,13 @@ Attributes
 .. attribute:: modelspace
 
   Provides only a `add` method for adding entities to the `modelspace`, does the same
-  as the :meth:`~dxfwrite.drawing.Drawing.add` method of the `drawing` object, except
+  as the :meth:`~Drawing.add` method of the `drawing` object, except
   it garantees the `paper_space` attribute of the added entity is ``'0'``.
 
 .. attribute:: paperspace
 
   Provides only a `add` method for adding entities to the `paperspace`, does the same
-  as the :meth:`~dxfwrite.drawing.Drawing.add` method of the `drawing` object, except
+  as the :meth:`~Drawing.add` method of the `drawing` object, except
   it garantees the `paper_space` attribute of the added entity is ``'1'``.
 
 .. warning:: DXF R12 supports only **one** paperspace.
@@ -85,3 +112,4 @@ usage::
 
     # add a block definition to the drawing
     drawing.blocks.add(blockdef)
+

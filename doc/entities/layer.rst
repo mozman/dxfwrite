@@ -27,7 +27,13 @@ is a shortcut for::
     layer = DXFEngine.layer(name)
     drawing.layers.add(layer)
 
-.. automethod:: dxfwrite.engine.DXFEngine.layer
+
+.. method:: DXFEngine.layer(name, **kwargs)
+
+    :param string name: layer name
+    :param int flags: standard flag values, bit-coded, default=0
+    :param int color: color number, negative if layer is off, default=1
+    :param string linetype: linetype name, default="CONTINUOUS"
 
 Flags
 -----
@@ -50,3 +56,4 @@ Example::
     line = dxf.line((1.2, 3.7), (5.5, 9.7), layer='LINES')
     drawing.add(line)
     drawing.save()
+

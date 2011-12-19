@@ -7,7 +7,10 @@ Type: Basic DXF R12 entity.
 
 Draw a single line segment from start point to end point.
 
-.. automethod:: dxfwrite.engine.DXFEngine.line
+.. method:: DXFEngine.line(start=(0., 0.), end=(0., 0.), **kwargs)
+
+    :param start: start point (xy- or xyz-tuple)
+    :param end: end point (xy- or xyz-tuple)
 
 Common Keyword Arguments for all Basic DXF R12 Entities
 -------------------------------------------------------
@@ -37,3 +40,4 @@ Attribs of DXF entities can be changed by the index operator::
     line['start'] = (1.2, 4.3, 1.9)
     drawing.add(line)
     drawing.save()
+

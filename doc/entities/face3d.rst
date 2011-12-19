@@ -7,7 +7,10 @@ Type: Basic DXF R12 entity.
 
 A 3DFace of three or four points.
 
-.. automethod:: dxfwrite.engine.DXFEngine.face3d
+.. method:: DXFEngine.face3d(points=[], **kwargs)
+
+    :param points: list of three or four 2D- or 3D-points
+    :param int flags: edge flags, bit-coded, default=0
 
 access/assign 3dface points by index 0, 1, 2 or 3::
 
@@ -57,3 +60,4 @@ Attribs of DXF entities can be changed by the index operator::
     face3d[0] = (1.2, 4.3, 1.9)
     drawing.add(face3d)
     drawing.save()
+

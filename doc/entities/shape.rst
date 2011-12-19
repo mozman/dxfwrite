@@ -5,7 +5,13 @@ SHAPE
 
 Type: Basic DXF R12 entity. (untested)
 
-.. automethod:: dxfwrite.engine.DXFEngine.shape
+.. method:: DXFEngine.shape(name, insert=(0., 0.), **kwargs)
+
+    :param string name: name of shape
+    :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+    :param float xscale: x-scale factor, default=1.
+    :param float rotation: rotation angle in degree, default=0
+    :param float oblique: text oblique angle in degree, default=0
 
 Common Keyword Arguments for all Basic DXF R12 Entities
 -------------------------------------------------------

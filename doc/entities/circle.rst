@@ -7,7 +7,10 @@ Type: Basic DXF R12 entity.
 
 A simple circle.
 
-.. automethod:: dxfwrite.engine.DXFEngine.circle
+.. method:: DXFEngine.circle(radius=1.0, center=(0., 0.), **kwargs)
+
+    :param float radius: circle radius
+    :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
 
 Common Keyword Arguments for all Basic DXF R12 Entities
 -------------------------------------------------------
@@ -38,3 +41,4 @@ Attribs of DXF entities can be changed by the index operator::
     circle['radius'] = 3.5
     drawing.add(circle)
     drawing.save()
+

@@ -1,4 +1,4 @@
-.. TRACE:
+.. _TRACE:
 
 TRACE
 =====
@@ -7,7 +7,9 @@ Type: Basic DXF R12 entity.
 
 A trace of three or four points.
 
-.. automethod:: dxfwrite.engine.DXFEngine.trace
+.. method:: DXFEngine.trace(points=[], **kwargs)
+
+    :param points: list of three or four 2D- or 3D-points
 
 access/assign trace points by index 0, 1, 2 or 3::
 
@@ -41,3 +43,4 @@ Attribs of DXF entities can be changed by the index operator::
     trace[0] = (1.2, 4.3, 1.9)
     drawing.add(trace)
     drawing.save()
+

@@ -34,7 +34,29 @@ to create tables and reports that accurately reflect the information you have
 stored in your blocks, but this works only in CAD Applications, not with dxfwrite.
 The process for doing this is somewhat complex and depends on the used CAD-Application.
 
-.. automethod:: dxfwrite.engine.DXFEngine.attrib
+.. method:: DXFEngine.attrib(text, insert=(0., 0.), **kwargs)
+
+    Create a new attribute, used in the entities section.
+
+    :param string text: attribute text
+    :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+    :param string tag: attribute tag string
+    :param int flags: attribute flags, bit-coded, default=0
+    :param int length: field length ??? see dxf-documentation
+    :param float height: textheight in drawing units (default=1)
+    :param float rotation: text rotation (default=0) (all DXF angles in degrees)
+    :param float oblique: text oblique angle in degree, default=0
+    :param float xscale: width factor (default=1)
+    :param string style: textstyle (default=STANDARD)
+    :param int mirror: bit coded flags
+    :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
+        ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
+    :param int valign: vertical justification type, TOP, MIDDLE, BOTTOM,
+        BASELINE (default BASELINE)
+    :param alignpoint: align point (xy- or xyz-tuple), z-axis is 0 by
+        default, if the justification is anything other than BASELINE/LEFT,
+        alignpoint specify the alignment point (or the second alignment
+        point for ALIGN or FIT).
 
 Flags
 -----
@@ -102,3 +124,4 @@ usage::
     blockref.add(attrib, relative=True)
     drawing.add(blockref) # add block reference to drawing
     drawing.save()
+

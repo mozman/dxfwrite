@@ -12,7 +12,23 @@ Polylines are always 3D-polylines, 2D-polylines are not directly
 supported, but you can modify the created polylines by clearing the flag
 **POLYLINE_3D_POLYLINE** to get a 2D polyline.
 
-.. automethod:: dxfwrite.engine.DXFEngine.polyline
+.. method:: DXFEngine.polyline(points=[], **kwargs)
+
+    :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
+    :param polyline_elevation: polyline elevation (xyz-tuple), z-axis supplies
+        elevation, x- and y-axis has to be 0.)
+    :param int flags: polyline flags, bit-coded, default=0
+    :param float startwidth: default starting width, default=0
+    :param float endwidth: default ending width, default=0
+    :param int mcount: polygon mesh M vertex count, default=0
+    :param int ncount: polygon mesh N vertex count, default=0
+    :param int msmooth_density: (if flags-bit POLYLINE_3D_POLYMESH is set)
+        smooth surface M density, default=0
+    :param int nsmooth_density: (if flags-bit POLYLINE_3D_POLYMESH is set)
+        smooth surface N density, default=0
+        same values as msmooth_density
+    :param int smooth_surface: curves and smooth surface type, default=0
+        ??? see dxf-documentation
 
 Common Keyword Arguments for all Basic DXF R12 Entities
 -------------------------------------------------------
@@ -68,11 +84,23 @@ POLYMESH_BEZIER_SURFACE   Bezier surface
 Methods
 -------
 
-.. automethod:: dxfwrite.entities.Polyline.add_vertex
+.. method:: Polyline.add_vertex(point, **kwargs)
 
-.. automethod:: dxfwrite.entities.Polyline.add_vertices
+    Add a point to polyline.
 
-.. automethod:: dxfwrite.entities.Polyline.close
+    :param point: is a 2D or 3D point, z-value of a 2D point is 0.
+
+.. method:: Polyline.add_vertices(points)
+
+    Add multiple points.
+
+    :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
+
+.. method:: Polyline.close(status=True)
+
+    Close Polyline: first vertex is connected with last vertex.
+
+    :param bool status:  **True** close polyline; **False** open polyline
 
 Example::
 
@@ -82,3 +110,4 @@ Example::
     polyline.add_vertices( [(0,20), (3,20), (6,23), (9,23)] )
     drawing.add(polyline)
     drawing.save()
+

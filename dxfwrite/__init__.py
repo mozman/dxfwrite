@@ -34,6 +34,7 @@ IMPLEMENTED R12 WRITING:
 - ARC
 - TEXT
 - SOLID
+- TRACE
 - FACE3D
 - POLYLINE (POLYMESH, POLYFACE)
 - BLOCK
@@ -42,7 +43,6 @@ IMPLEMENTED R12 WRITING:
 - ATTRIB
 
 NOT IMPLEMENTED:
-- TRACE
 - DIMENSION (use LinearDimension, AngularDimension, ArcDimension or
              RadialDimension)
 """ % (AUTHOR_NAME, VERSION, LICENSE,)

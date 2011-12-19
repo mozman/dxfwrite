@@ -31,7 +31,12 @@ Add entities to a block definition::
 
     block.add(entity)
 
-.. automethod:: dxfwrite.engine.DXFEngine.block
+.. method:: DXFEngine.block(name, basepoint=(0., 0.), **kwargs)
+
+    :param string name: blockname
+    :param basepoint: block base point (xy- or xyz-tuple), z-axis is 0. by default
+    :param int flags: block type flags
+    :param string xref: xref pathname
 
 where entity can be every drawing entity like circle, line, polyline, attribute,
 text, ...

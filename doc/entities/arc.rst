@@ -1,7 +1,7 @@
 .. _ARC:
 
 ARC
-====
+===
 
 Type: Basic DXF R12 entity.
 
@@ -9,7 +9,12 @@ Draws circular arcs — arcs cut from circles, not from ellipses,
 parabolas, or some other complicated curve, the arc goes from start angle
 to end angle.
 
-.. automethod:: dxfwrite.engine.DXFEngine.arc
+.. method:: DXFEngine.arc(radius=1.0, center=(0., 0.), startangle=0., endangle=360., **kwargs)
+
+    :param float radius: arc radius
+    :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
+    :param float startangle: start angle in degree
+    :param float endangle: end angle in degree
 
 Common Keyword Arguments for all Basic DXF R12 Entities
 -------------------------------------------------------
@@ -39,3 +44,4 @@ Attribs of DXF entities can be changed by the index operator::
   arc['radius'] = 3.5
   drawing.add(arc)
   drawing.save()
+

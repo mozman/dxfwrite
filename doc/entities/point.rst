@@ -7,7 +7,12 @@ Type: Basic DXF R12 entity.
 
 A point simply marks a coordinate. Points are generally used for reference.
 
-.. automethod:: dxfwrite.engine.DXFEngine.point
+.. method:: DXFEngine.point(point=(0., 0.), **kwargs)
+
+    :param point: start point (xy- or xyz-tuple)
+    :param orientation: a 3D vector (xyz-tuple), orientation of PDMODE images ...
+        see dxf documentation
+
 
 Common Keyword Arguments for all Basic DXF R12 Entities
 -------------------------------------------------------
@@ -37,3 +42,4 @@ Attribs of DXF entities can be changed by the index operator::
     point['point'] = (2, 3) # int or float
     drawing.add(point)
     drawing.save()
+

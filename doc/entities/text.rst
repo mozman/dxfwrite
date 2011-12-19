@@ -7,7 +7,23 @@ Type: Basic DXF R12 entity.
 
 A simple one line text.
 
-.. automethod:: dxfwrite.engine.DXFEngine.text
+.. method:: DXFEngine.text(text, insert=(0., 0.), height=1.0, **kwargs)
+
+    :param string text: the text to display
+    :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+    :param float height: text height in drawing-units
+    :param float rotation: text rotation in degree, default=0
+    :param float xscale: text width factor, default=1
+    :param float oblique: text oblique angle in degree, default=0
+    :param string style: text style name, default=STANDARD
+    :param int mirror: text generation flags, bit-coded, default=0
+    :param int halign: horizontal justification type
+    :param int valign: vertical justification type
+    :param alignpoint: align point (xy- or xyz-tuple), z-axis is 0 by default
+        If the justification is anything other than BASELINE/LEFT,
+        alignpoint specify the alignment point (or the second alignment
+        point for ALIGN or FIT).
+
 
 Common Keyword Arguments for all Basic DXF R12 Entities
 -------------------------------------------------------
@@ -46,3 +62,4 @@ Attribs of DXF entities can be changed by the index operator::
     text['color'] = 7
     drawing.add(text)
     drawing.save()
+

@@ -95,6 +95,7 @@ or from source::
 Documentation
 =============
 
+http://dxfwrite.readthedocs.org
 http://packages.python.org/dxfwrite/
 
 Good Luck! Feedback is greatly appreciated.

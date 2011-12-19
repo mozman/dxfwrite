@@ -5,18 +5,30 @@ POLYMESH
 
 Create a new m x n - polymesh entity, polymesh is a dxf-polyline entity!
 
-.. automethod:: dxfwrite.engine.DXFEngine.polymesh
+.. method:: DXFEngine.polymesh(nrows, ncols, **kwargs)
+
+    Create a new polymesh entity.
+
+    nrows and ncols >=2 and <= 256, greater meshes have to be divided into
+    smaller meshes.
+
+    The flags-bit **POLYLINE_3D_POLYMESH** is set.
+
+    :param int nrows: count of vertices in m-direction, nrows >=2 and <= 256
+    :param int ncols: count of vertices in n-direction, ncols >=2 and <= 256
 
 for **kwargs** see :ref:`POLYLINE`
 
 Methods
 -------
 
-.. automethod:: dxfwrite.entities.Polymesh.set_vertex
+.. method:: Polymesh.set_vertex(row, col, point)
 
-.. automethod:: dxfwrite.entities.Polymesh.set_mclosed
+    row and col are zero-based indices, point is a tuple (x,y,z)
 
-.. automethod:: dxfwrite.entities.Polymesh.set_nclosed
+.. method:: Polymesh.set_mclosed(status)
+
+.. method:: Polymesh.set_nclosed(status)
 
 Example::
 

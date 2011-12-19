@@ -20,8 +20,8 @@ usage::
    drawing.save()
 
 First create a :ref:`Drawing`, then create various
-drawing entities by :class:`~dxfwrite.engine.DXFEngine` and add them to the
-drawing with the :meth:`~dxfwrite.drawing.Drawing.add` method. :ref:`Layers <Layer>`,
+drawing entities by :class:`DXFEngine` and add them to the
+drawing with the :meth:`Drawing.add` method. :ref:`Layers <Layer>`,
 :ref:`Textstyles <Textstyle>`, :ref:`Views <View>` and
 :ref:`Viewports <Viewport>` were created by the :ref:`Drawing` object.
 

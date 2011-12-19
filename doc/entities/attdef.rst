@@ -22,7 +22,28 @@ default values preset from the :ref:`ATTDEF` object.
 You rarely need to use any of the flags settings (Invisible, Constant, Verify,
 or Preset).
 
-.. automethod:: dxfwrite.engine.DXFEngine.attdef
+.. method:: DXFEngine.attdef(tag, insert=(0., 0.), **kwargs)
+
+    :param string text: attribute default text
+    :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+    :param string prompt: prompt text, like "insert a value:"
+    :param string tag: attribute tag string
+    :param int flags: attribute flags, bit-coded, default=0
+    :param int length: field length ??? see dxf-documentation
+    :param float height: textheight in drawing units (default=1)
+    :param float rotation: text rotation (default=0) (all DXF angles in degrees)
+    :param float oblique: text oblique angle in degree, default=0
+    :param float xscale: width factor (default=1)
+    :param string style: textstyle (default=STANDARD)
+    :param int mirror: bit coded flags
+    :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
+        ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
+    :param int valign: vertical justification type, TOP, MIDDLE, BOTTOM,
+        BASELINE (default BASELINE)
+    :param alignpoint: align point (xy- or xyz-tuple), z-axis is 0 by
+        default, if the justification is anything other than BASELINE/LEFT,
+        alignpoint specify the alignment point (or the second alignment
+        point for ALIGN or FIT).
 
 Flags
 -----
@@ -67,7 +88,12 @@ extrusion_direction 3D Point as tuple(x, y, z) if extrusion direction is not
 Methods
 -------
 
-.. automethod:: dxfwrite.entities.Attdef.new_attrib
+.. method:: Attdef.new_attrib(**kwargs)
+
+    Create a new ATTRIB with attdef's attributs as default values.
+
+    :param kwargs: override the attdef default values.
+
 
 example::
 
@@ -90,3 +116,4 @@ example::
     blockref.add(attrib, relative=True)
     drawing.add(blockref) # add block reference to drawing
     drawing.save()
+

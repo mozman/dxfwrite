@@ -1,4 +1,4 @@
-.. SOLID:
+.. _SOLID:
 
 SOLID
 =====
@@ -7,7 +7,10 @@ Type: Basic DXF R12 entity.
 
 Solids are solid-filled 2D outline, a solid can have 3 or 4 points.
 
-.. automethod:: dxfwrite.engine.DXFEngine.solid
+.. method:: DXFEngine.solid(points=[], **kwargs):
+
+    :param list points: three or four 2D- or 3D-points
+
 
 access/assign solid points by index 0, 1, 2 or 3::
 
@@ -44,3 +47,4 @@ Attribs of DXF entities can be changed by the index operator::
     solid[0] = (1.2, 4.3, 1.9)
     drawing.add(solid)
     drawing.save()
+

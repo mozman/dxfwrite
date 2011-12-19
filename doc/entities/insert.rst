@@ -7,7 +7,18 @@ Type: Basic DXF R12 entity.
 
 Insert a new block-reference, for block definitions see :ref:`BLOCK`.
 
-.. automethod:: dxfwrite.engine.DXFEngine.insert
+.. method:: DXFEngine.insert(blockname, insert=(0., 0.), **kwargs)
+
+    :param string blockname: name of block definition
+    :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
+    :param float xscale: x-scale factor, default=1.
+    :param float yscale: y-scale factor, default=1.
+    :param float zscale: z-scale factor, default=1.
+    :param float rotation: rotation angle in degree, default=0.
+    :param int columns: column count, default=1
+    :param int rows: row count, default=1
+    :param float colspacing: column spacing, default=0.
+    :param float rowspacing: row spacing, default=0.
 
 Common Keyword Arguments for all Basic DXF R12 Entities
 -------------------------------------------------------

@@ -45,7 +45,17 @@ is a shortcut for::
     style = DXFEngine.style(name)
     drawing.styles.add(style)
 
-.. automethod:: dxfwrite.engine.DXFEngine.style
+.. method:: DXFEngine.style(name, **kwargs)
+
+    :param string name: textstyle name
+    :param int flags: standard flag values, bit-coded, default=0
+    :param int generation_flags: text generation flags, default = 0
+    :param float height: fixed text height, 0 if not fixed = default
+    :param last_height: last height used, default=1.
+    :param float width: width factor, default=1.
+    :param float oblique: oblique angle in degree, default=0.
+    :param string font: primary font filename, default="ARIAL"
+    :param string bigfont: big-font file name, default=""
 
 Generation Flags
 ----------------

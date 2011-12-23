@@ -11,25 +11,33 @@ For an explanation of bezier curves see Wikipedia:
 
 http://en.wikipedia.org/wiki/B%C3%A9zier_curve
 
-.. method:: DXFEngine.clothoid(start=(0, 0), rotation=0., length=1., paramA=1.0, mirrorx=False, mirrory=False, segments=100, **kwargs)
+.. method:: bezier(color=const.BYLAYER, layer='0', linetype=None)
 
-    :param start: insert point as 2D points (float-tuples)
-    :param float rotation: in degrees
-    :param loat length: length of curve in drawing units
-    :param float paramA: clothoid parameter A
-    :param bool mirrorx: mirror curve about x-axis
-    :param bool mirrory: mirror curve about y-axis
-    :param int segments: count of line segments for polyline approximation
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param int color: as integer in range [1..255], 0 = BYBLOCK, 256 = BYLAYER
+    :param string layer: Layer name as string
+    :param string linetype:  Linetype name as string, if not defined = BYLAYER
 
 Methods
 -------
 
-.. method:: Bezier.start
+.. method:: Bezier.start(point, tangent):
 
-.. method:: Bezier.append
+    Set start point and start tangent.
+
+    :param point: 2D start point
+    :param tangent: start tangent as 2D vector, example: (5, 0) means a
+        horizontal tangent with a length of 5 drawing units
+
+.. method:: Bezier.append(point, tangent1, tangent2=None, segments=20)
+
+    Append a control point with two control tangents.
+
+    :param point: the control point as 2D point
+    :param tangent1: first control tangent as 2D vector *left* of point
+    :param tangent2: second control tangent as 2D vector *right* of point,
+        if omitted tangent2 = -tangent1
+    :param int segments: count of line segments for polyline approximation,
+        count of line segments from previous control point to this point.
 
 Example
 -------

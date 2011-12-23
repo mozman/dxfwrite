@@ -84,19 +84,19 @@ class TestAlgebraClothoid(unittest.TestCase):
 class TestDXFClothoid(unittest.TestCase):
     def test_api(self):
         clothoid = DXFClothoid(start=(1, 1), paramA=20, length=10, rotation=30,
-                               mirrorx = True, mirrory=False, segments=50,
+                               mirror='x', segments=50,
                                color=1, layer='0', linetype='SOLID')
         self.assertNotEqual(clothoid, None)
 
     def test_implementation(self):
         clothoid = DXFClothoid(start=(1, 1), paramA=25, length=10, rotation=30,
-                               mirrorx=False, mirrory=False, segments=10)
+                               segments=10)
         result = normalize_dxf_chunk(clothoid.__dxf__())
         self.assertSequenceEqual(normalize_dxf_chunk(expected_dxf), result)
 
     def test_implementation_mirror(self):
         clothoid = DXFClothoid(start=(1, 1), paramA=25, length=10, rotation=30,
-                               mirrorx=True, mirrory=True, segments=10)
+                               mirror='xy', segments=10)
         result = clothoid.__dxf__()
         self.assertSequenceEqual(normalize_dxf_chunk(expected_mirror_dxf), normalize_dxf_chunk(result))
 

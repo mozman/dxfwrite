@@ -97,7 +97,7 @@ class Bezier(_BaseCurve):
         self.points = []
 
     def start(self, point, tangent):
-        """Defines the start point and the start tangent.
+        """ Set start point and start tangent.
 
         :param point: 2D start point
         :param tangent: start tangent as 2D vector, example: (5, 0) means a
@@ -160,8 +160,8 @@ class Spline(_BaseCurve):
 
 class Clothoid(_BaseCurve):
     def __init__(self, start=(0, 0), rotation=0., length=1., paramA=1.0,
-                 mirrorx=False, mirrory=False, segments=100,
-                 color=const.BYLAYER, layer='0', linetype=None):
+                 mirror='', segments=100, color=const.BYLAYER, layer='0',
+                 linetype=None):
         self.color = color
         self.layer = layer
         self.linetype = linetype
@@ -169,8 +169,8 @@ class Clothoid(_BaseCurve):
         self.rotation = float(rotation)
         self.length = float(length)
         self.paramA = float(paramA)
-        self.mirrorx = mirrorx
-        self.mirrory = mirrory
+        self.mirrorx = 'x' in mirror.lower()
+        self.mirrory = 'y' in mirror.lower()
         self.segments = int(segments)
 
     def __dxftags__(self):

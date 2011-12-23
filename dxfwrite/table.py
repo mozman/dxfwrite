@@ -89,31 +89,38 @@ class Table(object):
 
         self._cells = {} # data cells
         self.frames = [] # border frame objects
-        # visibility_map stores the visibilty of the cells, created in _setup
+        # visibility_map stores the visibility of the cells, created in _setup
         self.visibility_map = None
         # grid manages the border lines, created in _setup
         self.grid = None
         # data contains the resulting dxf entities
-        self.data = DXFList()
+        self.data = None
         self.empty_cell = Cell(self) # represents all empty cells
 
     def set_col_width(self, column, value):
         """ Set column width to value (in drawing units).
+
+        :param int column: zero based column index
+        :param float value: new column width in drawing units
         """
         self.col_widths[column] = float(value)
 
     def set_row_height(self, row, value):
-        """ Set row heigth to value (in drawing units).
+        """ Set row height to value (in drawing units).
+
+        :param int row: zero based row index
+        :param float value: new row height in drawing units
         """
         self.row_heights[row] = float(value)
 
     def text_cell(self, row, col, text, span=(1, 1), style='default'):
         """ Create a new text cell at position (row, col), with 'text' as
         content, text can be a multi-line text, use ``'\\n'`` as line
-        seperator.
+        separator.
 
         The cell spans over **span** cells and has the cell style with the
         name **style**.
+
         """
         cell = TextCell(self, text, style=style, span=span)
         return self.set_cell(row, col, cell)
@@ -130,7 +137,7 @@ class Table(object):
         the block definition exists, an attrib with text=str(1) will be
         created and added to the insert entity.
 
-        The cell spans over **span** cells and has the cell style with the
+        The cell spans over 'span' cells and has the cell style with the
         name 'style'.
         """
         cell = BlockCell(self, blockdef, style=style, attribs=attribs, span=span)
@@ -144,7 +151,7 @@ class Table(object):
         return cell
 
     def get_cell(self, row, col):
-        """ Get cell at position (**row**, **col**).
+        """ Get cell at position (row, col).
         """
         row, col = self.validate_index(row, col)
         try:
@@ -162,7 +169,7 @@ class Table(object):
 
     def frame(self, row, col, width=1, height=1, style='default'):
         """ Create a Frame object which frames the cell area starting at
-        **row**, **col** covering **widths** columns and **heigth** rows.
+        (row, col) covering 'width' columns and 'heigth' rows.
         """
         frame = Frame(self, pos=(row, col), span=(height, width),
                       style=style)
@@ -217,12 +224,13 @@ class Table(object):
     def __dxftags__(self):
         self._build_table()
         result = self.data
-        self.data = DXFList() # don't need to keep this data in memory
+        self.data = None # don't need to keep this data in memory
         return result
 
     def _setup(self):
         """ Table generation setup.
         """
+        self.data = DXFList()
         self.visibility_map = VisibilityMap(self)
         self.grid = Grid(self)
 
@@ -246,7 +254,7 @@ class VisibilityMap(object):
     """ Stores the visibility of the table cells.
     """
     def __init__(self, table):
-        """ Create the visibilty map for table.
+        """ Create the visibility map for table.
         """
         self.table = table
         self._hidden_cells = {}
@@ -260,7 +268,7 @@ class VisibilityMap(object):
             self._set_span_visibility(row, col, cell.span)
 
     def _set_span_visibility(self, row, col, span):
-        """ Set the visibilty of the given cell.
+        """ Set the visibility of the given cell.
 
         The cell itself is visible, all other cells in the span-range
         (tuple: width, height) are invisible, they are covered by the
@@ -388,7 +396,7 @@ class Grid(object):
     def __init__(self, table):
         """ Constructor
 
-        :param table: assigned data table
+        :param table: associated data table
         """
         self.table = table
         # contains the x-axis coords of the grid lines between the data columns.
@@ -405,7 +413,7 @@ class Grid(object):
         # col-indices are [0 .. ncols+1], ncols+1 for the last grid line right
         # of the last column
         self._vborders = None # created in _init_borders
-        # border style to delete border inside of merged cells
+        # border style to delete borders inside of merged cells
         self.noborder = dict(status=False, priority=999, linetype=None, color=0)
 
     def _init_borders(self, hborder, vborder):
@@ -629,7 +637,7 @@ class Grid(object):
         draw_vborders()
 
 class Frame(object):
-    """ Represent a rectangle cell area enclosed with a border lines.
+    """ Represent a rectangle cell area enclosed by border lines.
     """
     def __init__(self, table, pos=(0, 0), span=(1 ,1), style='default'):
         """ Constructor
@@ -647,23 +655,31 @@ class Frame(object):
 
     @property
     def style(self):
-        """ Get the style object from table.
+        """ :returns: Style() object of the associated table.
         """
         return self.table.get_cell_style(self.stylename)
 
 class Cell(object):
     """ Cell represents the table cell data.
     """
-    def get_span(self):
+    @property
+    def span(self):
         return self._span
-    def set_span(self, value):
+
+    @span.setter
+    def span(self, value):
         """ Ensures that span values are >= 1 in each direction.
         """
         self._span = (max(1, value[0]), max(1, value[1]))
-    span = property(get_span, set_span)
+
+    @property
+    def style(self):
+        """ :returns: Style() object of the associated table.
+        """
+        return self.table.get_cell_style(self.stylename)
 
     def __init__(self, table, style='default', span=(1, 1)):
-        """Constructor
+        """ Constructor
 
         :param table: assigned data table
         :param str style: style name as string
@@ -671,7 +687,7 @@ class Cell(object):
 
         Cell does not know its own position in the data table, because a cell
         can be used multiple times in the same or in different tables.
-        And therefore the cell itself can not determine if the cell-range
+        Therefore the cell itself can not determine if the cell-range
         reaches beyond the table borders.
         """
         self.table = table
@@ -683,7 +699,7 @@ class Cell(object):
     def get_dxf_entity(self, coords, layer):
         return DXFList()
 
-    def substract_margin(self, coords):
+    def get_workspace_coords(self, coords):
         """ Reduces the cell-coords about the hmargin and the vmargin values.
         """
         hmargin = self.style['hmargin']
@@ -691,17 +707,12 @@ class Cell(object):
         return ( coords[0]+hmargin, # left
                  coords[1]-hmargin, # right
                  coords[2]-vmargin, # top
-                 coords[3]+vmargin ) # bottom
-    @property
-    def style(self):
-        """ Get the style object from table.
-        """
-        return self.table.get_cell_style(self.stylename)
+        coords[3]+vmargin ) # bottom
 
 class TextCell(Cell):
     """Represents a multi line text. Text lines are separated by '\n'."""
     def __init__(self, table,  text, style='default', span=(1, 1)):
-        """Constructor
+        """ Constructor
 
         :param table: assigned data table
         :param text: multi line text, lines separated by '\n'
@@ -714,14 +725,14 @@ class TextCell(Cell):
         self.text = text
 
     def get_dxf_entity(self, coords, layer):
-        """Create the cell content as MText-object.
+        """ Create the cell content as MText-object.
 
         :param coords: tuple of border-coordinates : left, right, top, bottom
         :param layer: layer, which should be used for dxf entities
         """
         if not len(self.text):
             return DXFList()
-        left, right, top, bottom = self.substract_margin(coords)
+        left, right, top, bottom = self.get_workspace_coords(coords)
         style = self.style
         halign = style['halign']
         valign = style['valign']
@@ -767,7 +778,7 @@ class CustomCell(Cell):
         style = self.style # pylint: disable-msg=W0612
         # reduce borders about hmargin and vmargin
         # pylint: disable-msg=W0612
-        left, right, top, bottom = self.substract_margin(coords)
+        left, right, top, bottom = self.get_workspace_coords(coords)
         # and now do what you want ...
         # return a dxf entity which implements the __dxf__ protocoll
         # DXFList is a good choice
@@ -779,35 +790,35 @@ class BlockCell(Cell):
     """
     # pylint: disable-msg=W0102
     def __init__(self, table, blockdef, style='default', attribs={}, span=(1, 1)):
-        """Constructor
+        """ Constructor
 
         :param table: assigned data table
-        :param blockdef: block definition to insert (as INSERT-entity), but we need
-            the blockdef to create the ATTRIB-entities
-        :param dict attribs: dict, with ATTDEF-Tags as keys
+        :param blockdef: block definition to insert (as INSERT-Entity), but we
+            need the blockdef to create the ATTRIB-Entities
+        :param dict attribs: dict, with ATTRIB-Tags as keys
         :param str style: style name as string
         :param span: tuple(spanrows, spancols), count of cells that cell covers
 
-        see Cell.__init__()
+        see also Cell.__init__()
         """
 
         super(BlockCell, self).__init__(table, style, span)
         self.blockdef = blockdef # dxf block definition!
         self.attribs = attribs
 
-    def get_dxf_entity(self, coords, layer):
+    def get_dxf_entity(self, border_coords, layer):
         """ Create the cell content as INSERT-entity with trailing
-        ATTRIB-entities.
+        ATTRIB-Entities.
 
-        :param coords: tuple of border-coordinates : left, right, top, bottom
+        :param border_coords: tuple of border-coordinates : left, right, top, bottom
         :param str layer: layer, which should be used for dxf entities
         """
-        left, right, top, bottom = self.substract_margin(coords)
+        left, right, top, bottom = self.get_workspace_coords(border_coords)
         style = self.style
         halign = style['halign']
         valign = style['valign']
-        xpos = (left, float(left+right)/2., right)[halign]
-        ypos = (bottom, float(bottom+top)/2., top)[valign-1]
+        xpos = (left, float(left + right) / 2., right)[halign]
+        ypos = (bottom, float(bottom + top) / 2., top)[valign-1]
         insert = Insert(blockname=self.blockdef['name'],
                         insert=(xpos, ypos),
                         xscale=style['xscale'],
@@ -821,5 +832,5 @@ class BlockCell(Cell):
                 attrib = attdef.new_attrib(text=str(value))
                 insert.add(attrib, relative=True)
             except KeyError:
-                pass # ignore none existing attdefs
+                pass # ignore none existing ATTDEFs
         return insert

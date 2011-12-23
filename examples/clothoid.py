@@ -24,12 +24,12 @@ from dxfwrite import DXFEngine as dxf
 def four_c(A, length, rotation):
     dwg.add(dxf.clothoid(start=(2, 2), length=length, paramA=A,
                          rotation=rotation, color=1))
-    dwg.add(dxf.clothoid(start=(2, 2), mirrorx=True, length=length, paramA=A,
+    dwg.add(dxf.clothoid(start=(2, 2), mirror='x', length=length, paramA=A,
                          rotation=rotation, color=2))
-    dwg.add(dxf.clothoid(start=(2, 2),mirrory=True, length=length, paramA=A,
+    dwg.add(dxf.clothoid(start=(2, 2), mirror='y', length=length, paramA=A,
                          rotation=rotation, color=3))
-    dwg.add(dxf.clothoid(start=(2, 2),mirrorx=True, mirrory=True, length=length, paramA=A,
-                         rotation=rotation,color=4))
+    dwg.add(dxf.clothoid(start=(2, 2), mirror='xy', length=length, paramA=A,
+                         rotation=rotation, color=4))
 name = 'clothoid.dxf'
 dwg = dxf.drawing(name)
 dwg.add(dxf.line((-20,0), (20, 0), linetype="DASHDOT2"))

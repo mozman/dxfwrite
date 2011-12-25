@@ -565,7 +565,7 @@ Composite Entities
 
 .. seealso:: :ref:`Bezier`
 
-.. method:: DXFEngine.clothoid(start=(0, 0), rotation=0., length=1., paramA=1.0, mirrorx=False, mirrory=False, segments=100, **kwargs)
+.. method:: DXFEngine.clothoid(start=(0, 0), rotation=0., length=1., paramA=1.0, mirror="", segments=100, **kwargs)
     :noindex:
 
     Create a new clothoid-entity, consisting of an approximation with a
@@ -575,8 +575,9 @@ Composite Entities
     :param float rotation: in degrees
     :param loat length: length of curve in drawing units
     :param float paramA: clothoid parameter A
-    :param bool mirrorx: mirror curve about x-axis
-    :param bool mirrory: mirror curve about y-axis
+    :param str mirror: ``'x'`` for mirror curve about x-axis,
+      ``'y'`` for mirror curve about y-axis,
+      ``'xy'`` for mirror curve about x- and y-axis
     :param int segments: count of line segments for polyline approximation
     :param string linetype: linetype name, if not defined = **BYLAYER**
     :param string layer: layer name

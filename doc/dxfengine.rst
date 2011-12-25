@@ -66,13 +66,15 @@ Table Entries
     :param string description: descriptive text for linetype, default=""
     :param pattern: line pattern definition, see method `DXFEngine.linepattern`
 
+.. seealso:: :ref:`Linetypes`
+
 .. method:: DXFEngine.linepattern(pattern)
     :noindex:
 
-    Create a :class:`LinePatternDef` object from pattern-list.
+    Create a :ref:`Linepattern` object from pattern-list.
 
     example linepattern([2.0, 1.25, -0.25, 0.25, -0.25]), for format
-    description see object linepattern.LinePatternDef.
+    description see object :ref:`Linepattern`.
 
 .. method:: DXFEngine.view(name, **kwargs)
     :noindex:
@@ -359,28 +361,18 @@ DXF R12 Entities
 .. method:: DXFEngine.solid(points=[], **kwargs)
     :noindex:
 
-    Create a solid-entity with 3 or 4 sides of (3D) points, z-axis is 0
-    by default.
+    Create a solid-entity by 3 or 4 vertices, the z-axis for 2D-points is 0.
 
-    :param list points: three or four 2D- or 3D-points
-
-.. method:: DXFEngine.solid(points=[], **kwargs):
-    :noindex:
-
-    Create a solid-entity with 3 or 4 sides of (3D) points, z-axis is 0
-    by default.
-
-    :param list points: three or four 2D- or 3D-points
+    :param list points: three or four 2D- or 3D-points (tuples)
 
 .. seealso:: :ref:`SOLID`
 
 .. method:: DXFEngine.trace(points=[], **kwargs)
     :noindex:
 
-    Create a trace-entity with 3 or 4 sides of (3D) points, z-axis is 0
-    by default.
+    Create a trace-entity by 3 or 4 vertices, the z-axis for 2D-points is 0.
 
-    :param points: list of three or four 2D- or 3D-points
+    :param points: list of three or four 2D- or 3D-points (tuples)
 
 .. seealso:: :ref:`TRACE`
 

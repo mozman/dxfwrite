@@ -38,6 +38,9 @@ Contents
    dxftypes
    /entities/layer
    /entities/textstyle
+   /entities/linepattern
+   /entities/view
+   /entities/viewports
 
 
 DXF R12 Entities

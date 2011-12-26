@@ -6,9 +6,9 @@ Version 1.0.3 - ...
 
   * rewrite of DXF-String building process
   * refactored MText class
-  * renamed the Viewport table entry to VPort and DXFEngine.viewport to
-    DXFEngine.vport. This is necessary to implement the Viewport Entity, which
-    can create Viewports in the paper space.
+  * changed Viewport table entry to VPort and DXFEngine.viewport to
+    DXFEngine.vport. This was necessary to implement the VIEWPORT (Entity)
+  * added VIEWPORT (Entity) to create viewports in paper space
   * view docs also on dxfwrite.readthedocs.org
   * added some docs
   * changed clothoid mirror parameters

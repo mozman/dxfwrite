@@ -150,6 +150,14 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         2: AttribDef(DXFFloat, 73, priority=132), # face[2] .. third vertex
         3: AttribDef(DXFFloat, 74, priority=133), # face[3] .. fourth vertex
         },
+    'VIEWPORT':{
+        'center_point': AttribDef(DXFPoint3D, 0, 101),
+        'width': AttribDef(DXFFloat, 40, priority=105),
+        'height': AttribDef(DXFFloat, 41, priority=106),
+        'status': AttribDef(DXFFloat, 68, priority=107),
+        'id': AttribDef(DXFFloat, 69, priority=108),
+        },
+
     }
 
 def _add_common_attribs(attribute_definition):
@@ -754,3 +762,107 @@ class Vertex(_Entity):
         }
         default.update(kwargs)
         super(Vertex, self).__init__(**default)
+
+class ViewPortExtendedData(object):
+    def __init__(self):
+        self.view_target_point =  (0., 0., 0.)
+        self.view_direction_vector = (0., 0., 1.)
+        self.view_twist_angle = 0.
+        self.view_height = 1.
+        self.view_center_point = (0., 0.)
+        self.perspective_lens_length = 50.
+        self.front_clip_plane_z_value = 0.
+        self.back_clip_plane_z_value = 0.
+        self.view_mode = 0
+        self.circle_zoom = 100
+        self.fast_zoom = 1
+        self.ucs_icon = 3
+        self.snap = 0
+        self.grid = 0
+        self.snap_style = 0
+        self.snap_isopair = 0
+        self.snap_angle = 0.
+        self.snap_base_point = (0., 0.)
+        self.snap_spacing = (0.1, 0.1)
+        self.grid_spacing = (0.1, 0.1)
+        self.hidden_plot = 0
+
+    def __dxftags__(self):
+        return DXFList(
+            [
+                DXFString('ACAD', 1001),
+                DXFString('MVIEW', 1000),
+                DXFString('{', 1002),
+                DXFInt(16, 1070), # extended data version, always 16 for R11/12
+                DXFPoint(self.view_target_point, 1000),
+                DXFPoint(self.view_direction_vector, 1000),
+                DXFFloat(self.view_twist_angle, 1040),
+                DXFFloat(self.view_height, 1040),
+                DXFFloat(self.view_center_point[0], 1040),
+                DXFFloat(self.view_center_point[1], 1040),
+                DXFFloat(self.perspective_lens_length, 1040),
+                DXFFloat(self.front_clip_plane_z_value, 1040),
+                DXFFloat(self.back_clip_plane_z_value, 1040),
+                DXFInt(self.view_mode, 1070),
+                DXFInt(self.circle_zoom, 1070),
+                DXFInt(self.fast_zoom, 1070),
+                DXFInt(self.ucs_icon, 1070),
+                DXFInt(self.snap, 1070),
+                DXFInt(self.grid, 1070),
+                DXFInt(self.snap_style, 1070),
+                DXFInt(self.snap_isopair, 1070),
+                DXFFloat(self.snap_angle, 1040),
+                DXFFloat(self.snap_base_point[0], 1040),
+                DXFFloat(self.snap_base_point[1], 1040),
+                DXFFloat(self.snap_spacing[0], 1040),
+                DXFFloat(self.snap_spacing[1], 1040),
+                DXFFloat(self.grid_spacing[0], 1040),
+                DXFFloat(self.grid_spacing[1], 1040),
+                DXFInt(self.hidden_plot, 1070),
+                DXFString('{', 1002), # frozen layer list is empty
+                DXFString('}', 1002),
+                DXFString('}', 1002), # end viewport data
+            ]
+        )
+    def __contains__(self, item):
+        return hasattr(self, item)
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
+
+class Viewport(_Entity):
+    DXF_ENTITY_NAME = 'VIEWPORT'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['VIEWPORT']
+
+    def __init__(self, center_point, width, height, **kwargs):
+        self._extended_data = ViewPortExtendedData()
+        default = {
+            'status': 1,
+            'id': 1,
+            }
+        default.update(kwargs)
+        super(Viewport, self).__init__(**default)
+        self.center_point = center_point
+        self.width = width
+        self.height = height
+
+    def get_data(self):
+        # build extended entity group
+        return self._extended_data.__dxftags__()
+
+    def __getitem__(self, item):
+        if item in self._extended_data:
+            return self._extended_data[item]
+        else:
+            return super(Viewport, self).__getitem__(item)
+
+    def __setitem__(self, key, value):
+        if key in self._extended_data:
+            self._extended_data[key] = value
+        else:
+            super(Viewport, self).__setitem__(key, value)
+
+

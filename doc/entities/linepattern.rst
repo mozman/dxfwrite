@@ -1,4 +1,4 @@
-.. _Linetypes:
+.. _Linetype:
 
 Linetypes
 =========

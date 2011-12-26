@@ -249,45 +249,29 @@ class Style(_TableEntry):
 
 class View(_TableEntry):
     """ DXF VIEW table entry - view definition
-
-    INIT-PARAMETER
-
-    name
-       view name (string)
-
-    KWARGS:
-
-    flags
-        standard flag values (int), bit-coded, default=0
-        STD_FLAGS_PAPER_SPACE, if set this is a paper space view.
-    height, width
-        view height and width, in DCS?! (float), default=1.0
-    center_point
-        view center point, in DCS?! (xy-tuple), default = (.5, .5)
-    direction_point
-        view direction from target point, in WCS!! (xyz-tuple), default=(0, 0, 1)
-    target_point
-        target point, in WCS!! (xyz-tuple), default=(0, 0, 0)
-    lens_length
-        lens length (float), default=50
-    front_clipping, back_clipping
-        front and back clipping planes - offsets from target point (float)
-        default=0
-    view_twist
-        twist angle in degree (float), default=0
-    view_mode
-        view mode (int), bit-coded, default=0
-        VMODE_TURNED_OFF
-        VMODE_PERSPECTIVE_VIEW_ACTIVE
-        VMODE_FRONT_CLIPPING_ON
-        VMODE_BACK_CLIPPING_ON
-        VMODE_UCS_FOLLOW_MODE_ON
-        VMODE_FRONT_CLIP_NOT_AT_EYE
     """
     TABLE_NAME = 'VIEW'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['VIEW']
 
     def __init__(self, name, **kwargs):
+        """ Create a new view.
+
+        :param string name: view name
+        :param int flags: standard flag values, bit-coded, default=0
+            STD_FLAGS_PAPER_SPACE, if set this is a paper space view.
+        :param float height, width: view height and width, in DCS?!, default=1.0
+        :param center_point: view center point, in DCS?! (xy-tuple), default=(.5, .5)
+        :param direction_point: view direction from target point, in WCS!!
+            (xyz-tuple), default=(0, 0, 1)
+        :param target_point: target point, in WCS!! (xyz-tuple), default=(0, 0, 0)
+        :param float lens_length: lens length, default=50
+        :param float front_clipping: front and back clipping planes,
+            offsets from target point, default=0
+        :param back_clipping: see front_clipping
+        :param float view_twist: twist angle in degree, default=0
+        :param int view_mode: view mode, bit-coded, default=0
+
+        """
         default = {
             'flags': 0,
             'height': 1.0,
@@ -307,72 +291,38 @@ class View(_TableEntry):
 
 class Viewport(_TableEntry):
     """ DXF VIEWPORT table entry - viewport definition
-
-    INIT-PARAMETER
-
-    name
-        viewport name (string)
-
-    KWARGS:
-
-    flags
-        standard flag values (int), bit-coded, default=0
-    lower_left
-        lower-left corner of viewport, (xy-tuple), default=(0, 0)
-    upper_right
-        upper-right corner of viewport, (xy-tuple), default=(1, 1)
-    center_point
-        view center point, in WCS, (xy-tuple), default=(.5, .5)
-    snap_base
-        snap base point, (xy-tuple), default=(0, 0)
-    snap_spacing
-        snap spacing, X and Y (xy-tuple), default=(.1, .1)
-    grid_spacing
-        grid spacing, X and Y (xy-tuple), default=(.1, .1)
-    direction_point
-        view direction from target point (xyz-tuple), default=(0, 0, 1)
-    target_point
-        view target point (xyz-tuple), default=(0, 0, 0)
-    aspect_ratio
-        viewport aspect ratio (float), default=1.
-    lens_length
-        lens length (float), default=50
-    front_clipping, back_clipping
-        front and back clipping planes - offsets from target point (float)
-        default=0
-    view_twist
-        twist angle in degree (float), default=0
-    status
-        status field (int), default=0
-    id
-        id (int), default=0
-    circle_zoom
-        circle zoom percent (float), default=100
-    view_mode
-        view mode (int), bit-coded, default=0
-        VMODE_TURNED_OFF
-        VMODE_PERSPECTIVE_VIEW_ACTIVE
-        VMODE_FRONT_CLIPPING_ON
-        VMODE_BACK_CLIPPING_ON
-        VMODE_UCS_FOLLOW_MODE_ON
-        VMODE_FRONT_CLIP_NOT_AT_EYE
-    fast_zoom
-        fast zoom setting (int), default=1
-    ucs_icon
-        UCSICON settings (int), default=3
-    snap_on
-        snap on/off (int), default=0
-    grid_on
-        grid on/off (int), default=0
-    snap_style
-        snap style (int), defautl=0
-    snap_isopair
-        snap isopair (int), default=0
     """
     TABLE_NAME = 'VPORT'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['VPORT']
 
     def __init__(self, name, **kwargs):
+        """ Create a new viewport table entry.
+
+        :param str name: viewport name
+        :param int flags: standard flag values, bit-coded, default=0
+        :param lower_left: lower-left corner of viewport, (xy-tuple), default=(0, 0)
+        :param upper_right: upper-right corner of viewport, (xy-tuple), default=(1, 1)
+        :param center_point: view center point, in WCS, (xy-tuple), default=(.5, .5)
+        :param snap_base: snap base point, (xy-tuple), default=(0, 0)
+        :param snap_spacing: snap spacing, X and Y (xy-tuple), default=(.1, .1)
+        :param grid_spacing: grid spacing, X and Y (xy-tuple), default=(.1, .1)
+        :param direction_point: view direction from target point (xyz-tuple), default=(0, 0, 1)
+        :param target_point: view target point (xyz-tuple), default=(0, 0, 0)
+        :param aspect_ratio: viewport aspect ratio (float), default=1.
+        :param float lens_length: lens length, default=50
+        :param float front_clipping: front and back clipping planes, offsets
+            from target point , default=0
+        :param float back_clipping: see front_clipping
+        :param float view_twist: twist angle in degree, default=0
+        :param float circle_zoom: circle zoom percent, default=100
+        :param int view_mode: view mode, bit-coded, default=0
+        :param int fast_zoom: fast zoom setting, default=1
+        :param int ucs_icon: UCSICON settings, default=3
+        :param int snap_on: snap on/off, default=0
+        :param int grid_on: grid on/off, default=0
+        :param int snap_style: snap style, default=0
+        :param int snap_isopair: snap isopair, default=0
+        """
         default = {
             'flags': 0,
             'lower_left': (0, 0),

@@ -99,10 +99,10 @@ Table Entries
 .. method:: DXFEngine.viewport(name, **kwargs)
     :noindex:
 
-    Create a new viewport.
+    Create a new viewport table entry.
 
-    :param name: viewport name (string)
-    :param flags: standard flag values (int), bit-coded, default=0
+    :param str name: viewport name
+    :param int flags: standard flag values, bit-coded, default=0
     :param lower_left: lower-left corner of viewport, (xy-tuple), default=(0, 0)
     :param upper_right: upper-right corner of viewport, (xy-tuple), default=(1, 1)
     :param center_point: view center point, in WCS, (xy-tuple), default=(.5, .5)
@@ -112,21 +112,19 @@ Table Entries
     :param direction_point: view direction from target point (xyz-tuple), default=(0, 0, 1)
     :param target_point: view target point (xyz-tuple), default=(0, 0, 0)
     :param aspect_ratio: viewport aspect ratio (float), default=1.
-    :param lens_length: lens length (float), default=50
-    :param front_clipping: front and back clipping planes, offsets
-        from target point (float), default=0
-    :param back_clipping: see front_clipping
-    :param view_twist: twist angle in degree (float), default=0
-    :param status: status field (int), default=0
-    :param id: id (int), default=0
-    :param circle_zoom: circle zoom percent (float), default=100
-    :param view_mode: view mode (int), bit-coded, default=0
-    :param fast_zoom: fast zoom setting (int), default=1
-    :param ucs_icon: UCSICON settings (int), default=3
-    :param snap_on: snap on/off (int), default=0
-    :param grid_on: grid on/off (int), default=0
-    :param snap_style: snap style (int), default=0
-    :param snap_isopair: snap isopair (int), default=0
+    :param float lens_length: lens length, default=50
+    :param float front_clipping: front and back clipping planes, offsets
+        from target point , default=0
+    :param float back_clipping: see front_clipping
+    :param float view_twist: twist angle in degree, default=0
+    :param float circle_zoom: circle zoom percent, default=100
+    :param int view_mode: view mode, bit-coded, default=0
+    :param int fast_zoom: fast zoom setting, default=1
+    :param int ucs_icon: UCSICON settings, default=3
+    :param int snap_on: snap on/off, default=0
+    :param int grid_on: grid on/off, default=0
+    :param int snap_style: snap style, default=0
+    :param int snap_isopair: snap isopair, default=0
 
 viewmode flags for **view** and **viewport**:
 
@@ -137,6 +135,9 @@ viewmode flags for **view** and **viewport**:
 * VMODE_UCS_FOLLOW_MODE_ON
 * VMODE_FRONT_CLIP_NOT_AT_EYE
 
+.. note:: Viewports in paper space are not supported (yet?), because the Viewport
+    **ENTITY** is not supported at this time, this method creates Viewport
+    **TABLE ENTRIES**.
 
 .. method:: DXFEngine.ucs(name, **kwargs)
     :noindex:

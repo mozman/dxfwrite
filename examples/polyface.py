@@ -70,15 +70,36 @@ name = 'polyface.dxf'
 dwg = dxf.drawing(name) # create a drawing
 # add the active viewport
 dwg.add_viewport(
-    '*Active',
+    '*ACTIVE',
     center_point=(0, 0),
     height = 30,
     direction_point=(30, 30, 10)
     )
 
+# test additional views
+dwg.add_view(
+    'From_X_Axis',
+    center_point=(5, 0),
+    width=10,
+    height=10,
+    direction_point=(1, 0, 0)
+)
+
+dwg.add_view(
+    'From_Y_Axis',
+    center_point=(5, 0),
+    width=10,
+    height=10,
+    direction_point=(0, 1, 0)
+)
+
 for x in range(10):
     for y in range(10):
         dwg.add(get_cube((x,y, random()), random()))
 #dwg.add(simple_faces())
-dwg.save() # save dxf drawing
-print("drawing '%s' created.\n" % name)
+try:
+    dwg.save() # save dxf drawing
+    print("drawing '%s' created.\n" % name)
+except IOError:
+    print("Drawing '%s' is in use, permission denied." % name)
+

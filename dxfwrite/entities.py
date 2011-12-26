@@ -149,7 +149,7 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         1: AttribDef(DXFFloat, 72, priority=131), # face[1] .. second vertex
         2: AttribDef(DXFFloat, 73, priority=132), # face[2] .. third vertex
         3: AttribDef(DXFFloat, 74, priority=133), # face[3] .. fourth vertex
-        }
+        },
     }
 
 def _add_common_attribs(attribute_definition):

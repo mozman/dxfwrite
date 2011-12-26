@@ -50,8 +50,7 @@ class DXFEngine(object):
 #--- Table Entries
     @staticmethod
     def layer(name, **kwargs):
-        """
-        Create a new layer.
+        """ Create a new layer.
 
         :param string name: layer name
         :param int flags: standard flag values, bit-coded, default=0
@@ -63,8 +62,7 @@ class DXFEngine(object):
 
     @staticmethod
     def style(name, **kwargs):
-        """
-        Create a new textstyle.
+        """ Create a new textstyle.
 
         :param string name: textstyle name
         :param int flags: standard flag values, bit-coded, default=0
@@ -81,8 +79,7 @@ class DXFEngine(object):
 
     @staticmethod
     def linetype(name, **kwargs):
-        """
-        Create a new linetype.
+        """ Create a new linetype.
 
         :param string name: linetype name
         :param int flags: standard flag values, bit-coded, default=0
@@ -95,8 +92,7 @@ class DXFEngine(object):
 
     @staticmethod
     def view(name, **kwargs):
-        """
-        Create a new view.
+        """ Create a new view.
 
         :param string name: view name
         :param int flags: standard flag values, bit-coded, default=0
@@ -117,11 +113,10 @@ class DXFEngine(object):
 
     @staticmethod
     def viewport(name, **kwargs):
-        """
-        Create a new viewport.
+        """ Create a new viewport.
 
-        :param name: viewport name (string)
-        :param flags: standard flag values (int), bit-coded, default=0
+        :param str name: viewport name
+        :param int flags: standard flag values, bit-coded, default=0
         :param lower_left: lower-left corner of viewport, (xy-tuple), default=(0, 0)
         :param upper_right: upper-right corner of viewport, (xy-tuple), default=(1, 1)
         :param center_point: view center point, in WCS, (xy-tuple), default=(.5, .5)
@@ -131,36 +126,35 @@ class DXFEngine(object):
         :param direction_point: view direction from target point (xyz-tuple), default=(0, 0, 1)
         :param target_point: view target point (xyz-tuple), default=(0, 0, 0)
         :param aspect_ratio: viewport aspect ratio (float), default=1.
-        :param lens_length: lens length (float), default=50
-        :param front_clipping: front and back clipping planes, offsets
-            from target point (float), default=0
-        :param back_clipping: see front_clipping
-        :param view_twist: twist angle in degree (float), default=0
-        :param status: status field (int), default=0
-        :param id: id (int), default=0
-        :param circle_zoom: circle zoom percent (float), default=100
-        :param view_mode: view mode (int), bit-coded, default=0
-        :param fast_zoom: fast zoom setting (int), default=1
-        :param ucs_icon: UCSICON settings (int), default=3
-        :param snap_on: snap on/off (int), default=0
-        :param grid_on: grid on/off (int), default=0
-        :param snap_style: snap style (int), default=0
-        :param snap_isopair: snap isopair (int), default=0
-
+        :param float lens_length: lens length, default=50
+        :param float front_clipping: front and back clipping planes, offsets
+            from target point , default=0
+        :param float back_clipping: see front_clipping
+        :param float view_twist: twist angle in degree, default=0
+        :param int status: -1 for on but offscreen, 0 for off, >0 stack order
+            (1 is the top viewport), default=0
+        :param int id: default=0, (paper space viewport entity always has an id of
+            1)
+        :param float circle_zoom: circle zoom percent, default=100
+        :param int view_mode: view mode, bit-coded, default=0
+        :param int fast_zoom: fast zoom setting, default=1
+        :param int ucs_icon: UCSICON settings, default=3
+        :param int snap_on: snap on/off, default=0
+        :param int grid_on: grid on/off, default=0
+        :param int snap_style: snap style, default=0
+        :param int snap_isopair: snap isopair, default=0
         """
         return Viewport(name, **kwargs)
 
     @staticmethod
     def ucs(name, **kwargs):
-        """
-        Create a new user-coordinate-system (UCS).
+        """ Create a new user-coordinate-system (UCS).
 
         :param string name: ucs name
         :param int flags: standard flag values, bit-coded
         :param origin: origin in WCS (xyz-tuple), default=(0, 0, 0)
         :param xaxis: xaxis direction in WCS (xyz-tuple), default=(1, 0, 0)
         :param yaxis: yaxis direction in WCS (xyz-tuple), default=(0, 1, 0)
-
         """
         return UCS(name, **kwargs)
 
@@ -170,20 +164,17 @@ class DXFEngine(object):
 
     @staticmethod
     def linepattern(pattern):
-        """
-        Create a :class:`~dxfwrite.linepattern.LinePatternDef` object from
-        pattern-list.
+        """ Create a :ref:`Linepattern` object from pattern-list.
 
-        example linepattern([2.0, 1.25, -0.25, 0.25, -0.25]), for format
-        description see object linepattern.LinePatternDef.
+        example linepattern([2.0, -0.25, 0, -0.25, 0.25, -0.25]), for format
+        description see :ref:`Linepattern`.
         """
         return LinePatternDef(pattern)
 
 #--- Entities
     @staticmethod
     def line(start=(0., 0.), end=(0., 0.), **kwargs):
-        """
-        Create a new line-entity of two (3D) points, z-axis is 0 by default.
+        """ Create a new line-entity of two (3D) points, z-axis is 0 by default.
 
         :param start: start point (xy- or xyz-tuple)
         :param end: end point (xy- or xyz-tuple)
@@ -193,8 +184,7 @@ class DXFEngine(object):
 
     @staticmethod
     def point(point=(0., 0.), **kwargs):
-        """
-        Create a new point-entity of one (3D) point, z-axis is 0 by default.
+        """ Create a new point-entity of one (3D) point, z-axis is 0 by default.
 
         :param point: start point (xy- or xyz-tuple)
         :param orientation: a 3D vector (xyz-tuple), orientation of PDMODE images ...
@@ -206,29 +196,23 @@ class DXFEngine(object):
 
     @staticmethod
     def solid(points=[], **kwargs):
-        """
-        Create a solid-entity with 3 or 4 sides of (3D) points, z-axis is 0
-        by default.
+        """ Create a solid-entity by 3 or 4 vertices, the z-axis for 2D-points is 0.
 
-        :param list points: three or four 2D- or 3D-points
-
+        :param list points: three or four 2D- or 3D-points (tuples)
         """
         return Solid(points, **kwargs)
 
     @staticmethod
     def trace(points=[], **kwargs):
-        """
-        Create a trace-entity with 3 or 4 sides of (3D) points, z-axis is 0
-        by default.
+        """ Create a trace-entity by 3 or 4 vertices, the z-axis for 2D-points is 0.
 
-        :param points: list of three or four 2D- or 3D-points
+        :param list points: three or four 2D- or 3D-points (tuples)
         """
         return Trace(points, **kwargs)
 
     @staticmethod
     def circle(radius=1.0, center=(0., 0.), **kwargs):
-        """
-        Create a new circle-entity.
+        """ Create a new circle-entity.
 
         :param float radius: circle radius
         :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
@@ -239,8 +223,7 @@ class DXFEngine(object):
     @staticmethod
     def arc(radius=1.0, center=(0., 0.), startangle=0., endangle=360.,
             **kwargs):
-        """
-        Create a new arc-entity.
+        """ Create a new arc-entity.
 
         :param float radius: arc radius
         :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
@@ -252,8 +235,7 @@ class DXFEngine(object):
 
     @staticmethod
     def text(text, insert=(0., 0.), height=1.0, **kwargs):
-        """
-        Create a new text entity.
+        """ Create a new text entity.
 
         :param string text: the text to display
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
@@ -278,8 +260,7 @@ class DXFEngine(object):
 
     @staticmethod
     def shape(name, insert=(0., 0.), **kwargs):
-        """
-        Insert a shape-reference.
+        """ Insert a shape-reference.
 
         :param string name: name of shape
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
@@ -292,8 +273,7 @@ class DXFEngine(object):
 
     @staticmethod
     def insert(blockname, insert=(0., 0.), **kwargs):
-        """
-        Insert a new block-reference.
+        """ Insert a new block-reference.
 
         :param string blockname: name of block definition
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
@@ -311,8 +291,7 @@ class DXFEngine(object):
 
     @staticmethod
     def attdef(tag, insert=(0., 0.), **kwargs):
-        """
-        Create a new attribute definition, used in block-definitions.
+        """ Create a new attribute definition, used in block-definitions.
 
         :param string text: attribute default text
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
@@ -340,8 +319,7 @@ class DXFEngine(object):
 
     @staticmethod
     def attrib(text, insert=(0., 0.), **kwargs):
-        """
-        Create a new attribute, used in the entities section.
+        """ Create a new attribute, used in the entities section.
 
         :param string text: attribute text
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
@@ -368,11 +346,9 @@ class DXFEngine(object):
 
     @staticmethod
     def face3d(points=[], **kwargs):
-        """
-        Create a 3Dface entity with 3 or 4 sides of (3D) points, z-axis is 0
-        by default.
+        """ Create a 3DFACE-entity by 3 or 4 vertices, the z-axis for 2D-points is 0.
 
-        :param points: list of three or four 2D- or 3D-points
+        :param list points: three or four 2D- or 3D-points (tuples)
         :param int flags: edge flags, bit-coded, default=0
 
         """
@@ -380,8 +356,7 @@ class DXFEngine(object):
 
     @staticmethod
     def block(name, basepoint=(0., 0.), **kwargs):
-        """
-        Create a block definition, for the blocks section.
+        """ Create a block definition, for the blocks section.
 
         :param string name: blockname
         :param basepoint: block base point (xy- or xyz-tuple), z-axis is 0. by default
@@ -393,8 +368,7 @@ class DXFEngine(object):
 
     @staticmethod
     def polyline(points=[], **kwargs):
-        """
-        Create a new polyline entity. Polymesh and polyface are also polylines.
+        """ Create a new polyline entity. Polymesh and polyface are also polylines.
 
         :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
         :param polyline_elevation: polyline elevation (xyz-tuple), z-axis supplies
@@ -417,8 +391,7 @@ class DXFEngine(object):
 
     @staticmethod
     def polymesh(nrows, ncols, **kwargs):
-        """
-        Create a new polymesh entity.
+        """ Create a new polymesh entity.
 
         nrows and ncols >=2 and <= 256, greater meshes have to be divided into
         smaller meshes.
@@ -433,8 +406,7 @@ class DXFEngine(object):
 
     @staticmethod
     def polyface(precision=6, **kwargs):
-        """
-        Create a new polyface entity, polyface is a dxf-polyline entity!
+        """ Create a new polyface entity, polyface is a dxf-polyline entity!
 
         :param precision: vertex-coords will be rounded to precision places, and if
             the vertex is equal to an other vertex, only one vertex will be used,
@@ -449,8 +421,7 @@ class DXFEngine(object):
 
     @staticmethod
     def mtext(text, insert, linespacing=1.5, **kwargs):
-        """
-        Create a multi-line text buildup **MText** with simple :ref:`TEXT`
+        """ Create a multi-line text buildup **MText** with simple :ref:`TEXT`
         entities.
 
         Mostly the same kwargs like :ref:`TEXT`.
@@ -483,8 +454,7 @@ class DXFEngine(object):
 
     @staticmethod
     def rectangle(insert, width, height, **kwargs):
-        """
-        2D Rectangle, build with a polyline and a solid as background filling
+        """ 2D Rectangle, build with a polyline and a solid as background filling
 
         :param point insert: where to place the rectangle
         :param float width: width in drawing units
@@ -504,8 +474,7 @@ class DXFEngine(object):
 
     @staticmethod
     def table(insert, nrows, ncols, default_grid=True):
-        """
-        Table object like a HTML-Table, buildup with basic DXF R12 entities.
+        """ Table object like a HTML-Table, buildup with basic DXF R12 entities.
 
         Cells can contain Multiline-Text or DXF-BLOCKs, or you can create your own
         cell-type by extending the CustomCell object.
@@ -533,8 +502,7 @@ class DXFEngine(object):
     def ellipse(center, rx, ry, startangle=0., endangle=360.,
                 rotation=0., segments=100, color=256, layer='0',
                 linetype=None):
-        """
-        Create a new ellipse-entity, consisting of an approximation with a
+        """ Create a new ellipse-entity, consisting of an approximation with a
         polyline.
 
         :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
@@ -554,8 +522,7 @@ class DXFEngine(object):
 
     @staticmethod
     def spline(points, segments=100, color=256, layer='0', linetype=None):
-        """
-        Create a new cubic-spline-entity, consisting of an approximation with a
+        """ Create a new cubic-spline-entity, consisting of an approximation with a
         polyline.
 
         :param points: breakpoints (knots) as 2D points (float-tuples), defines the
@@ -570,8 +537,7 @@ class DXFEngine(object):
 
     @staticmethod
     def bezier(color=256, layer='0', linetype=None):
-        """
-        Create a new cubic-bezier-entity, consisting of an approximation with a
+        """ Create a new cubic-bezier-entity, consisting of an approximation with a
         polyline.
 
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
@@ -584,8 +550,7 @@ class DXFEngine(object):
     @staticmethod
     def clothoid(start=(0, 0), rotation=0., length=1., paramA=1.0,
                  mirror='', segments=100, color=256, layer='0', linetype=None):
-        """
-        Create a new clothoid-entity, consisting of an approximation with a
+        """ Create a new clothoid-entity, consisting of an approximation with a
         polyline.
 
         :param start: insert point as 2D points (float-tuples)
@@ -605,8 +570,7 @@ class DXFEngine(object):
 
     @staticmethod
     def insert2(blockdef, insert=(0., 0.), attribs={}, **kwargs):
-        """
-        Insert a new block-reference with auto-creating of :ref:`ATTRIB` from
+        """ Insert a new block-reference with auto-creating of :ref:`ATTRIB` from
         :ref:`ATTDEF`, and setting attrib-text by the attribs-dict.
         (multi-insert is not supported)
 

@@ -3,9 +3,10 @@
 Views
 =====
 
-A view is a named 'look' at the drawing model. This supports users of CAD software
-to choose different views at the drawing model. To change the default view, add
-a view named ``'*ACTIVE'``.
+A view is a named 'look' at the drawing model. When you create a specific
+views by name, you can use them for layout or when you need to
+refer to specific details. A named view consists of a specific magnification,
+position, and orientation.
 
 Create a view::
 
@@ -36,13 +37,13 @@ is a shortcut for::
 View Mode Flags
 ---------------
 
-================================  ================================================
+================================  ============================================
 Flags                             Description
-================================  ================================================
-VMODE_TURNED_OFF                  ???
-VMODE_PERSPECTIVE_VIEW_ACTIVE     ???
-VMODE_FRONT_CLIPPING_ON           ???
-VMODE_BACK_CLIPPING_ON            ???
+================================  ============================================
+VMODE_TURNED_OFF                  view is turned off if bit is set
+VMODE_PERSPECTIVE_VIEW_ACTIVE     view is in perspective mode if bit is set
+VMODE_FRONT_CLIPPING_ON           front clipping is on if bit is set
+VMODE_BACK_CLIPPING_ON            back clipping is on if bit ist set
 VMODE_UCS_FOLLOW_MODE_ON          ???
 VMODE_FRONT_CLIP_NOT_AT_EYE       ???
-================================  ================================================
+================================  ============================================

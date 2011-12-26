@@ -41,8 +41,8 @@ name='polymesh.dxf'
 dwg = dxf.drawing(name) # create a drawing
 
 # add the active viewport
-dwg.add_viewport(
-    '*Active',
+dwg.add_vport(
+    '*ACTIVE',
     center_point=(0,0),
     height = 30,
     direction_point=(30,30,10)

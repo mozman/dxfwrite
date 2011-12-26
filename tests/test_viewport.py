@@ -8,7 +8,7 @@ __author__ = "mozman <mozman@gmx.at>"
 
 import unittest
 
-from dxfwrite.tableentries import Viewport
+from dxfwrite.tableentries import VPort
 from dxfwrite import dxfstr, DXFEngine
 
 class TestViewportTableEntry(unittest.TestCase):
@@ -21,11 +21,11 @@ class TestViewportTableEntry(unittest.TestCase):
              "3\n 75\n0\n 76\n0\n 77\n0\n 78\n0\n"
 
     def test_create_table_entry(self):
-        viewport = Viewport('Test')
+        viewport = VPort('Test')
         self.assertEqual(dxfstr(viewport), self.expected)
 
     def test_view_by_factory(self):
-        viewport = DXFEngine.viewport('Test')
+        viewport = DXFEngine.vport('Test')
         self.assertEqual(dxfstr(viewport), self.expected)
 
 if __name__=='__main__':

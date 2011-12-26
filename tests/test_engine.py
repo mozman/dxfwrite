@@ -27,7 +27,7 @@ class TestDXFEngine(unittest.TestCase):
         self.assertTrue(DXFEngine.view(name="TEST"))
 
     def test_viewport(self):
-        self.assertTrue(DXFEngine.viewport(name="TEST"))
+        self.assertTrue(DXFEngine.vport(name="TEST"))
 
     def test_ucs(self):
         self.assertTrue(DXFEngine.ucs(name="TEST"))

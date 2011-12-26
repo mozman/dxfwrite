@@ -69,7 +69,7 @@ def simple_faces():
 name = 'polyface.dxf'
 dwg = dxf.drawing(name) # create a drawing
 # add the active viewport
-dwg.add_viewport(
+dwg.add_vport(
     '*ACTIVE',
     center_point=(0, 0),
     height = 30,

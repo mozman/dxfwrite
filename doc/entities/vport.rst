@@ -1,7 +1,7 @@
-.. _viewport:
+.. _vport:
 
-Viewports
-=========
+Viewport
+========
 
 .. note:: Viewports in paper space are not supported (yet?), because the Viewport
     **ENTITY** is not supported at this time, this page only describes the
@@ -15,14 +15,14 @@ me how to do this in the DXF file.
 
 Create a viewport::
 
-    drawing.add_viewport(name, ...)
+    drawing.add_vport(name, ...)
 
 is a shortcut for::
 
-    viewport = DXFEngine.viewport(name, ...)
-    drawing.viewports.add(viewport)
+    vport = DXFEngine.vport(name, ...)
+    drawing.viewports.add(vport)
 
-.. method:: DXFEngine.viewport(name, **kwargs)
+.. method:: DXFEngine.vport(name, **kwargs)
 
     :param str name: viewport name
     :param int flags: standard flag values, bit-coded, default=0

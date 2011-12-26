@@ -1,11 +1,7 @@
 .. _vport:
 
-Viewport
-========
-
-.. note:: Viewports in paper space are not supported (yet?), because the Viewport
-    **ENTITY** is not supported at this time, this page only describes the
-    Viewport **TABLE ENTRIES**.
+Viewport (Table Entry)
+======================
 
 A viewport is a windows containing a view to the drawing model. You can change
 the default view, which will be displayed on opening the drawing with a CAD

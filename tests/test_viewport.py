@@ -24,9 +24,10 @@ class TestViewportTableEntry(unittest.TestCase):
         viewport = VPort('Test')
         self.assertEqual(dxfstr(viewport), self.expected)
 
-    def test_view_by_factory(self):
+    def test_vport_by_factory(self):
         viewport = DXFEngine.vport('Test')
         self.assertEqual(dxfstr(viewport), self.expected)
+
 
 if __name__=='__main__':
     unittest.main()

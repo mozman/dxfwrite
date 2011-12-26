@@ -65,6 +65,7 @@ DXF R12 Entities
    /entities/solid
    /entities/trace
    /entities/text
+   /entities/viewport
 
 Composite Entities
 ==================

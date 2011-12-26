@@ -96,7 +96,7 @@ Table Entries
     :param float view_twist: twist angle in degree, default=0
     :param int view_mode: view mode, bit-coded, default=0
 
-.. method:: DXFEngine.viewport(name, **kwargs)
+.. method:: DXFEngine.vport(name, **kwargs)
     :noindex:
 
     Create a new viewport table entry.

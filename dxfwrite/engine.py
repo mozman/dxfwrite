@@ -22,7 +22,7 @@ from dxfwrite.table import Table
 from dxfwrite.curves import Ellipse, Spline, Bezier, Clothoid
 
 from dxfwrite.tableentries import Linetype, LinePatternDef, Style, Layer
-from dxfwrite.tableentries import View, Viewport, UCS, AppID
+from dxfwrite.tableentries import View, VPort, UCS, AppID
 
 class DXFEngine(object):
     """ Factory, creates the dxf objects.
@@ -112,8 +112,8 @@ class DXFEngine(object):
         return View(name, **kwargs)
 
     @staticmethod
-    def viewport(name, **kwargs):
-        """ Create a new viewport.
+    def vport(name, **kwargs):
+        """ Create a new viewport table entry.
 
         :param str name: viewport name
         :param int flags: standard flag values, bit-coded, default=0
@@ -144,7 +144,7 @@ class DXFEngine(object):
         :param int snap_style: snap style, default=0
         :param int snap_isopair: snap isopair, default=0
         """
-        return Viewport(name, **kwargs)
+        return VPort(name, **kwargs)
 
     @staticmethod
     def ucs(name, **kwargs):

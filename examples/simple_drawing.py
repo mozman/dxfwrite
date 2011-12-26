@@ -34,8 +34,8 @@ drawing = dxf.drawing(name)
 # add a LAYER-tableentry called 'dxfwrite'
 drawing.add_layer('dxfwrite')
 # add a VIEWPORT-tableentry
-drawing.add_viewport(
-        '*Active',
+drawing.add_vport(
+        '*ACTIVE',
         center_point=(10,10),
         height = 30,
     )

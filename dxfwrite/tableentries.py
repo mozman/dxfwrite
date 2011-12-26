@@ -289,8 +289,8 @@ class View(_TableEntry):
         default.update(kwargs)
         super(View, self).__init__(name, **default)
 
-class Viewport(_TableEntry):
-    """ DXF VIEWPORT table entry - viewport definition
+class VPort(_TableEntry):
+    """ DXF VPORT table entry - viewport definition
     """
     TABLE_NAME = 'VPORT'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['VPORT']
@@ -352,7 +352,7 @@ class Viewport(_TableEntry):
             'snap_isopair': 0
         }
         default.update(kwargs)
-        super(Viewport, self).__init__(name, **default)
+        super(VPort, self).__init__(name, **default)
 
 class AppID(_TableEntry):
     TABLE_NAME = 'APPID'

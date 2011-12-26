@@ -90,7 +90,7 @@ class TestDrawing(unittest.TestCase):
 
     def test_add_viewport(self):
         dwg = dxf.drawing()
-        element = dwg.add_viewport('TEST')
+        element = dwg.add_vport('TEST')
         self.assertEqual(element['name'], 'TEST')
 
     def test_add_ucs(self):

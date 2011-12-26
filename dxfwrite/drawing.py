@@ -155,10 +155,10 @@ class Drawing(object):
         self.views.add(view)
         return view
 
-    def add_viewport(self, name, **kwargs):
-        viewport = DXFEngine.viewport(name, **kwargs)
-        self.viewports.add(viewport)
-        return viewport
+    def add_vport(self, name, **kwargs):
+        vport = DXFEngine.vport(name, **kwargs)
+        self.viewports.add(vport)
+        return vport
 
     def add_ucs(self, name, **kwargs):
         ucs = DXFEngine.ucs(name, **kwargs)

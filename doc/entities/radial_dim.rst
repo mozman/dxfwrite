@@ -5,9 +5,21 @@ RadialDimension
 
 Type: Composite Entity
 
-.. autoclass:: dxfwrite.dimlines.RadialDimension
+.. class:: RadialDimension
 
-.. automethod:: dxfwrite.dimlines.RadialDimension.__init__
+    Draw a radius dimension line from `target` in direction of `center` with
+    length drawing units. RadialDimension has a special tick!!
+
+.. method:: RadialDimension.__init__(center, target, length=1., dimstyle='Default', layer=None, roundval=None)
+
+    :param center: center point of radius
+    :param target: target point of radius
+    :param float length: length of radius arrow (drawing length)
+    :param str dimstyle: dimstyle name, 'Default' - style is the
+        default value
+    :param str layer: dimension line layer, override the default value
+        of dimstyle
+    :param roundval: count of decimal places
 
 Example
 -------

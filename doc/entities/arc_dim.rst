@@ -5,9 +5,25 @@ ArcDimension
 
 Type: Composite Entity
 
-.. autoclass:: dxfwrite.dimlines.ArcDimension
+.. class:: ArcDimension
 
-.. automethod:: dxfwrite.dimlines.ArcDimension.__init__
+    Arc is defined by start- and endpoint on arc and the centerpoint, or
+    by three points lying on the arc if acr3points is True. Measured length goes
+    from start- to endpoint. The dimension line goes through the dimlinepos.
+
+.. method:: ArcDimension.__init__(pos, center, start, end, arc3points=False, dimstyle='Default', layer=None, roundval=None)
+
+    :param pos: location as (x, y) tuple of dimension line, line goes through this point
+    :param center: center point of arc
+    :param start: start point of arc
+    :param end: end point of arc
+    :param bool arc3points: if **True** arc is defined by three points
+        on the arc (center, start, end)
+    :param str dimstyle: dimstyle name, 'Default' - style is the
+        default value
+    :param str layer: dimension line layer, override the default value
+        of dimstyle
+    :param int roundval: count of decimal places
 
 Example
 -------

@@ -31,10 +31,10 @@ Table Entries
 
     Create a new layer.
 
-    :param string name: layer name
+    :param str name: layer name
     :param int flags: standard flag values, bit-coded, default=0
     :param int color: color number, negative if layer is off, default=1
-    :param string linetype: linetype name, default="CONTINUOUS"
+    :param str linetype: linetype name, default="CONTINUOUS"
 
 
 .. seealso:: :ref:`Layer`
@@ -44,15 +44,15 @@ Table Entries
 
     Create a new textstyle.
 
-    :param string name: textstyle name
+    :param str name: textstyle name
     :param int flags: standard flag values, bit-coded, default=0
     :param int generation_flags: text generation flags, default = 0
     :param float height: fixed text height, 0 if not fixed = default
     :param last_height: last height used, default=1.
     :param float width: width factor, default=1.
     :param float oblique: oblique angle in degree, default=0.
-    :param string font: primary font filename, default="ARIAL"
-    :param string bigfont: big-font file name, default=""
+    :param str font: primary font filename, default="ARIAL"
+    :param str bigfont: big-font file name, default=""
 
 .. seealso:: :ref:`Textstyle`
 
@@ -61,12 +61,12 @@ Table Entries
 
     Create a new linetype.
 
-    :param string name: linetype name
+    :param str name: linetype name
     :param int flags: standard flag values, bit-coded, default=0
-    :param string description: descriptive text for linetype, default=""
+    :param str description: descriptive text for linetype, default=""
     :param pattern: line pattern definition, see method `DXFEngine.linepattern`
 
-.. seealso:: :ref:`Linetypes`
+.. seealso:: :ref:`Linetype`
 
 .. method:: DXFEngine.linepattern(pattern)
     :noindex:
@@ -81,7 +81,7 @@ Table Entries
 
     Create a new view.
 
-    :param string name: view name
+    :param str name: view name
     :param int flags: standard flag values, bit-coded, default=0
         STD_FLAGS_PAPER_SPACE, if set this is a paper space view.
     :param float height, width: view height and width, in DCS?!, default=1.0
@@ -109,7 +109,7 @@ Table Entries
     :param snap_base: snap base point, (xy-tuple), default=(0, 0)
     :param snap_spacing: snap spacing, X and Y (xy-tuple), default=(.1, .1)
     :param grid_spacing: grid spacing, X and Y (xy-tuple), default=(.1, .1)
-    :param direction_point: view direction from target point (xyz-tuple), default=(0, 0, 1)
+    :param direction_point: view from direction point to target point (xyz-tuple), default=(0, 0, 1)
     :param target_point: view target point (xyz-tuple), default=(0, 0, 0)
     :param aspect_ratio: viewport aspect ratio (float), default=1.
     :param float lens_length: lens length, default=50
@@ -135,16 +135,12 @@ viewmode flags for **view** and **viewport**:
 * VMODE_UCS_FOLLOW_MODE_ON
 * VMODE_FRONT_CLIP_NOT_AT_EYE
 
-.. note:: Viewports in paper space are not supported (yet?), because the Viewport
-    **ENTITY** is not supported at this time, this method creates Viewport
-    **TABLE ENTRIES**.
-
 .. method:: DXFEngine.ucs(name, **kwargs)
     :noindex:
 
     Create a new user-coordinate-system (UCS).
 
-    :param string name: ucs name
+    :param str name: ucs name
     :param int flags: standard flag values, bit-coded
     :param origin: origin in WCS (xyz-tuple), default=(0, 0, 0)
     :param xaxis: xaxis direction in WCS (xyz-tuple), default=(1, 0, 0)
@@ -172,17 +168,17 @@ DXF R12 Entities
 
     Create a new attribute definition, used in block-definitions.
 
-    :param string text: attribute default text
+    :param str text: attribute default text
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
-    :param string prompt: prompt text, like "insert a value:"
-    :param string tag: attribute tag string
+    :param str prompt: prompt text, like "insert a value:"
+    :param str tag: attribute tag string
     :param int flags: attribute flags, bit-coded, default=0
     :param int length: field length ??? see dxf-documentation
     :param float height: textheight in drawing units (default=1)
     :param float rotation: text rotation (default=0) (all DXF angles in degrees)
     :param float oblique: text oblique angle in degree, default=0
     :param float xscale: width factor (default=1)
-    :param string style: textstyle (default=STANDARD)
+    :param str style: textstyle (default=STANDARD)
     :param int mirror: bit coded flags
     :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
         ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
@@ -201,16 +197,16 @@ DXF R12 Entities
 
     Create a new attribute, used in the entities section.
 
-    :param string text: attribute text
+    :param str text: attribute text
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
-    :param string tag: attribute tag string
+    :param str tag: attribute tag string
     :param int flags: attribute flags, bit-coded, default=0
     :param int length: field length ??? see dxf-documentation
     :param float height: textheight in drawing units (default=1)
     :param float rotation: text rotation (default=0) (all DXF angles in degrees)
     :param float oblique: text oblique angle in degree, default=0
     :param float xscale: width factor (default=1)
-    :param string style: textstyle (default=STANDARD)
+    :param str style: textstyle (default=STANDARD)
     :param int mirror: bit coded flags
     :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
         ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
@@ -228,10 +224,10 @@ DXF R12 Entities
 
     Create a block definition, for the blocks section.
 
-    :param string name: blockname
+    :param str name: blockname
     :param basepoint: block base point (xy- or xyz-tuple), z-axis is 0. by default
     :param int flags: block type flags
-    :param string xref: xref pathname
+    :param str xref: xref pathname
 
 .. seealso:: :ref:`BLOCK`
 
@@ -262,7 +258,7 @@ DXF R12 Entities
 
     Insert a new block-reference.
 
-    :param string blockname: name of block definition
+    :param str blockname: name of block definition
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
     :param float xscale: x-scale factor, default=1.
     :param float yscale: y-scale factor, default=1.
@@ -351,7 +347,7 @@ DXF R12 Entities
 
     Insert a shape-reference.
 
-    :param string name: name of shape
+    :param str name: name of shape
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
     :param float xscale: x-scale factor, default=1.
     :param float rotation: rotation angle in degree, default=0
@@ -382,13 +378,13 @@ DXF R12 Entities
 
     Create a new text entity.
 
-    :param string text: the text to display
+    :param str text: the text to display
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
     :param float height: text height in drawing-units
     :param float rotation: text rotation in degree, default=0
     :param float xscale: text width factor, default=1
     :param float oblique: text oblique angle in degree, default=0
-    :param string style: text style name, default=STANDARD
+    :param str style: text style name, default=STANDARD
     :param int mirror: text generation flags, bit-coded, default=0
     :param int halign: horizontal justification type
     :param int valign: vertical justification type
@@ -403,6 +399,7 @@ DXF R12 Entities
 .. seealso:: :ref:`TEXT`
 
 .. method:: DXFEngine.viewport(center_point, width, height, **kwargs)
+    :noindex:
 
     Create a new viewport entity.
 
@@ -410,8 +407,8 @@ DXF R12 Entities
     :param float width: width in paper space units
     :param float height: height in paper space units
     :param int status: 0 for viewport off, >0 'stacking' order, 1 is the highest
-    :param target_view_point: as (x, y, z) tuple, default value is (0, 0, 0)
-    :param view_direction_vector:  as (x, y, z) tuple, default value is (0, 0, 1)
+    :param view_target_point: as (x, y, z) tuple, default value is (0, 0, 0)
+    :param view_direction_vector:  as (x, y, z) tuple, default value is (0, 0, 0)
     :param float view_twist_angle: in degrees, default value is 0
     :param float view_height: default value is 1
     :param view_center_point: as (x, y) tuple, default value is (0, 0)
@@ -451,7 +448,7 @@ Composite Entities
            second alignpoint because horizontal alignment FIT, ALIGN,
            BASELINE_MIDDLE is not supported.
 
-    :param string text: the text to display
+    :param str text: the text to display
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
     :param float linespacing: linespacing in percent of height, 1.5 = 150% =
         1+1/2 lines
@@ -459,11 +456,11 @@ Composite Entities
     :param float rotation: text rotion in dregree, default=0
     :param float xscale: text width factor, default=1
     :param float oblique: text oblique angle in degree, default=0
-    :param string style: text style name, default=STANDARD
+    :param str style: text style name, default=STANDARD
     :param int mirror: text generation flags, bit-coded, default=0
     :param int halign: horizontal justification type
     :param int valign: vertical justification type
-    :param string layer: layer name
+    :param str layer: layer name
     :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
     any combination of **valign** (TOP, MIDDLE, BOTTOM) and **halign** (LEFT,
@@ -489,8 +486,8 @@ Composite Entities
         block-definition. example: {'TAG1': 'TextOfTAG1'}, create and insert
         an attrib from an attdef (with tag-value == 'TAG1'), and set
         text-value of the attrib to value 'TextOfTAG1'.
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
+    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str layer: layer name
     :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
 
@@ -538,8 +535,8 @@ Composite Entities
          polyline will be created, and the rectangle consist only of the
          background filling (if bgcolor != `None`)
     :param int bgcolor: dxf color index, default is `None` (no background filling)
-    :param string layer: target layer, default is ``'0'``
-    :param string linetype: linetype name, None = **BYLAYER**
+    :param str layer: target layer, default is ``'0'``
+    :param str linetype: linetype name, None = **BYLAYER**
 
 .. seealso:: :ref:`Rectangle`
 
@@ -556,8 +553,8 @@ Composite Entities
     :param float endangle: in degree
     :param float rotation: angle between x-axis and ellipse-main-axis in degree
     :param int segments: count of line segments for polyline approximation
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
+    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str layer: layer name
     :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
 .. seealso:: :ref:`Ellipse`
@@ -571,8 +568,8 @@ Composite Entities
     :param points: breakpoints (knots) as 2D points (float-tuples), defines the
         curve, the curve goes through this points
     :param int segments: count of line segments for polyline approximation
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
+    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str layer: layer name
     :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
 .. seealso:: :ref:`Spline`
@@ -583,8 +580,8 @@ Composite Entities
     Create a new cubic-bezier-entity, consisting of an approximation with a
     polyline.
 
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
+    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str layer: layer name
     :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
 
@@ -604,8 +601,8 @@ Composite Entities
       ``'y'`` for mirror curve about y-axis,
       ``'xy'`` for mirror curve about x- and y-axis
     :param int segments: count of line segments for polyline approximation
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
+    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str layer: layer name
     :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
 .. seealso:: :ref:`Clothoid`

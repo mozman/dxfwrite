@@ -21,6 +21,7 @@ PUBLIC MEMBERS
 
 dimstyles
     dimstyle container
+
     - new(name, kwargs) to create a new dimstyle
     - get(name) to get a dimstyle, 'Default' if name does not exist
     - setup(drawing) create Blocks and Layers in drawing
@@ -120,23 +121,23 @@ class _DimStyles(object):
 
 
     def get(self, name):
-        """ get DimStyle()object by name """
+        """ Get DimStyle() object by name.
+        """
         return self._styles.get(name, self.default)
 
     def new(self, name, **kwargs):
-        """ create a new dimstyle """
+        """ Create a new dimstyle
+        """
         style = _DimStyle(name, **kwargs)
         self._styles[name] = style
         return style
 
     @staticmethod
     def setup(drawing):
-        """ insert necessary definition into drawing
+        """ Insert necessary definitions into drawing:
 
-        ticks
-            DIMTICK_ARCH, DIMTICK_DOT, DIMTICK_ARROW
-        layer
-            DIMENSIONS
+        - ticks: DIMTICK_ARCH, DIMTICK_DOT, DIMTICK_ARROW
+        - layers: DIMENSIONS
         """
         # default pen assignment:
         # 1 : 1.40mm - red
@@ -149,7 +150,7 @@ class _DimStyles(object):
         # 8, 9 : 2.00mm
         # >=10 : 1.40mm
         def block(name, elements):
-            """ create the block entity """
+            """ Create the block entity """
             tick = Block(name=name, basepoint=(0., 0.))
             for element in elements:
                 tick.add(element)
@@ -187,7 +188,8 @@ class _DimStyles(object):
 dimstyles = _DimStyles() # use this factory tu create new dimstyles
 
 class _DimensionBase(object):
-    """ Abstract base class for dimension lines """
+    """ Abstract base class for dimension lines.
+    """
     def __init__(self, dimstyle, layer, roundval):
         self.dimstyle = dimstyles.get(dimstyle)
         self.layer = layer
@@ -195,7 +197,7 @@ class _DimensionBase(object):
         self.data = DXFList()
 
     def prop(self, property_name):
-        """ Get dimension line properties by **property_name** with the
+        """ Get dimension line properties by `property_name` with the
         possibility to override several properties.
         """
         if property_name == 'layer':
@@ -206,7 +208,8 @@ class _DimensionBase(object):
             return self.dimstyle[property_name]
 
     def format_dimtext(self, dimvalue):
-        """ string format the dimension text """
+        """ Format the dimension text.
+        """
         ## TODO: concider roundhalf property
         dimtextfmt = "%." + str(self.prop('roundval')) + "f"
         dimtext = dimtextfmt % dimvalue
@@ -218,28 +221,32 @@ class _DimensionBase(object):
         return self.prop('prefix') + dimtext + self.prop('suffix')
 
     def __dxf__(self):
-        """ get the dxf string """
+        """ Get the dxf string.
+        """
         return dxfstr(self.__dxftags__())
     
     def __dxftags__(self):
-        """ Get dxf tags as cascading DXFList. """
+        """ Get dxf tags as cascading DXFList.
+        """
         self._build_dimline()
         return self.data
 
 
 class LinearDimension(_DimensionBase):
     """ Simple straight dimension line with two or more measure points, build
-    with basic dxf entities. This is NOT a dxf dimension entity. And This is
+    with basic DXF entities. This is NOT a dxf dimension entity. And This is
     a 2D element, so all z-values will be ignored!
     """
     def __init__(self, pos, measure_points, angle=0., dimstyle='Default',
                  layer=None, roundval=None):
-        """
-        :param pos: position of dimension line, line goes through this point
-        :param measure_points: list of points to dimension (two or more)
-        :param float angle: angle of dimension line
-        :param string dimstyle: dimstyle name, 'Default' - style is the default value
-        :param string layer: dimension line layer, override the default value of dimstyle
+        """ LinearDimension Constructor.
+
+        :param pos: location as (x, y) tuple of dimension line, line goes through this point
+        :param measure_points: list of points as (x, y) tuples to dimension (two or more)
+        :param float angle: angle (in degree) of dimension line
+        :param str dimstyle: dimstyle name, 'Default' - style is the default value
+        :param str layer: dimension line layer, override the default value of dimstyle
+        :param int roundval: count of decimal places
         """
         super(LinearDimension, self).__init__(dimstyle, layer, roundval)
         self.angle = angle
@@ -420,16 +427,18 @@ class AngularDimension(_DimensionBase):
 
     def __init__(self, pos, center, start, end,
                  dimstyle='angle.deg', layer=None, roundval=None):
-        """
-        :param pos: position of dimension line, line goes through this point
-        :param center: center point of angle
+        """ AngularDimension constructor.
+
+        :param pos: location as (x, y) tuple of dimension line, line goes through this point
+        :param center: center point as (x, y) tuple of angle
         :param start: line from center to start is the first side of the
             angle
         :param end: line from center to end is the second side of the angle
-        :param string dimstyle: dimstyle name, 'Default' - style is the
+        :param str dimstyle: dimstyle name, 'Default' - style is the
             default value
-        :param string layer: dimension line layer, override the default value
+        :param str layer: dimension line layer, override the default value
             of dimstyle
+        :param int roundval: count of decimal places
         """
         super(AngularDimension, self).__init__(dimstyle, layer, roundval)
         self.dimlinepos = vector2d(pos)
@@ -534,16 +543,17 @@ class ArcDimension(AngularDimension):
     def __init__(self, pos, center, start, end, arc3points=False,
                  dimstyle='Default', layer=None, roundval=None):
         """
-        :param pos: position of dimension line, line goes through this point
+        :param pos: location as (x, y) tuple of dimension line, line goes through this point
         :param center: center point of arc
         :param start: start point of arc
         :param end: end point of arc
         :param bool arc3points: if **True** arc is defined by three points
             on the arc (center, start, end)
-        :param string dimstyle: dimstyle name, 'Default' - style is the
+        :param str dimstyle: dimstyle name, 'Default' - style is the
             default value
-        :param string layer: dimension line layer, override the default value
+        :param str layer: dimension line layer, override the default value
             of dimstyle
+        :param int roundval: count of decimal places
         """
         super(ArcDimension, self).__init__(pos, center, start, end,
                                            dimstyle, layer, roundval)
@@ -569,7 +579,7 @@ class ArcDimension(AngularDimension):
         return self.format_dimtext(arc_length)
 
 class RadialDimension(_DimensionBase):
-    """ Draw a radius dimension line from target in direction of center with
+    """ Draw a radius dimension line from `target` in direction of `center` with
     length drawing units. RadialDimension has a special tick!!
     """
     def __init__(self, center, target, length=1.,
@@ -578,10 +588,11 @@ class RadialDimension(_DimensionBase):
         :param center: center point of radius
         :param target: target point of radius
         :param float length: length of radius arrow (drawing length)
-        :param string dimstyle: dimstyle name, 'Default' - style is the
+        :param str dimstyle: dimstyle name, 'Default' - style is the
             default value
-        :param string layer: dimension line layer, override the default value
+        :param str layer: dimension line layer, override the default value
             of dimstyle
+        :param roundval: count of decimal places
         """
         super(RadialDimension, self).__init__(dimstyle, layer, roundval)
         self.center = vector2d(center)

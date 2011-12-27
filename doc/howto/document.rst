@@ -4,7 +4,7 @@ Document Management
 How to start using dxfwrite?
 ----------------------------
 
-All DXF entities should be created by the :class:`~dxfwrite.engine.DXFEngine`
+All DXF entities should be created by the :class:`DXFEngine`
 object. To do that you have to import the DXF creation engine::
 
     from dxfwrite import DXFEngine
@@ -12,7 +12,7 @@ object. To do that you have to import the DXF creation engine::
 How to create a new DXF drawing?
 --------------------------------
 
-You can create a new DXF drawing by the :meth:`~dxfwrite.engine.DXFEngine.drawing` method::
+You can create a new DXF drawing by the :meth:`DXFEngine.drawing` method::
 
     drawing = DXFEngine.drawing('example.dxf')
 
@@ -37,7 +37,7 @@ How to create layers?
 ---------------------
 
 Layers are stored in the :attr:`layers` attribute in the
-:class:`~dxfwrite.drawing.Drawing` class.
+:class:`Drawing` class.
 
 To create new layers just use::
 
@@ -58,7 +58,7 @@ How to create a new Textstyle?
 ------------------------------
 
 Textstyles are stored in the :attr:`styles` attribute in the
-:class:`~dxfwrite.drawing.Drawing` class.
+:class:`Drawing` class.
 
 To create a new Textstyle use::
 
@@ -74,4 +74,4 @@ restrictive::
 
     drawing.add_xref('path/drawing.dxf')
 
-.. seealso:: :meth:`~dxfwrite.drawing.Drawing.add_xref`
+.. seealso:: :meth:`Drawing.add_xref`

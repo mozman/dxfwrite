@@ -18,9 +18,9 @@ multiple layout viewports in the layout.
     :param float width: width in paper space units
     :param float height: height in paper space units
     :param int status: 0 for viewport off, >0 'stacking' order, 1 is the highest
-    :param target_view_point: as (x, y, z) tuple, default value is (0, 0, 0)
-    :param view_direction_vector:  as (x, y, z) tuple, default value is (0, 0, 1)
-    :param float view_twist_angle: in degrees, default value is 0
+    :param view_target_point: as (x, y, z) tuple, default value is (0, 0, 0)
+    :param view_direction_vector:  as (x, y, z) tuple, default value is (0, 0, 0)
+    :param float view_twist_angle: in radians, default value is 0
     :param float view_height: default value is 1
     :param view_center_point: as (x, y) tuple, default value is (0, 0)
     :param float perspective_lens_length:  default value is 50
@@ -49,7 +49,43 @@ Flags                             Description
 VMODE_TURNED_OFF                  viewport is turned off if bit is set
 VMODE_PERSPECTIVE_VIEW_ACTIVE     viewport is in perspective mode if bit is set
 VMODE_FRONT_CLIPPING_ON           front clipping is on if bit is set
-VMODE_BACK_CLIPPING_ON            back clipping is on if bit ist set
+VMODE_BACK_CLIPPING_ON            back clipping is on if bit is set
 VMODE_UCS_FOLLOW_MODE_ON          ???
 VMODE_FRONT_CLIP_NOT_AT_EYE       ???
 ================================  =============================================
+
+Model space and paper space units
+---------------------------------
+
+.. seealso:: :ref:`paperspace`
+
+Placing the Viewport
+--------------------
+
+The location of the viewport in paper space is defined by the parameters `center_point`,
+`width` and `height` defines the size of the viewport, all values in paper space
+coordinates and units. If viewports are overlapping, the display order is defined by
+the `status` parameter (stacking order), viewports with `status=2` are covered by
+viewports with `status=1` (`status=1` is the highest display priority).
+
+The viewport content
+--------------------
+
+The viewport gets the content from the model space, the area to show is defined
+by the parameter `view_target_point` and `view_height`, because the aspect
+ratio of the viewport is fixed by the parameter `width` and `height`, there is **no**
+parameter view_width, all values in model space coordinates and units.
+
+Scaling factor
+--------------
+
+Calculate the scaling factor by `height` divided by `view_height`, example: display a 50.0m
+model space area in a 1.0m paper space area => 1.0/50.0 => 0.02. If you want a scaling
+factor of 1:50 (0.02) and the model space area to display is given,
+calculate the necessary viewport height by `view_height/50`, this is correct if the model
+space and the paper space has the same drawing units.
+
+Showing 3D content
+------------------
+
+**TODO**

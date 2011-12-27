@@ -1,13 +1,13 @@
 .. _vport:
 
-Viewport (Table Entry)
+VIEWPORT (Table Entry)
 ======================
 
 A viewport is a windows containing a view to the drawing model. You can change
 the default view, which will be displayed on opening the drawing with a CAD
 program, by adding a viewport named ``'*ACTIVE'``. In AutoCAD you can place
 multiple viewports in the main editor window (Left, Right, Top), but don't ask
-me how to do this in the DXF file.
+me how to do this in a DXF file.
 
 Create a viewport::
 
@@ -54,7 +54,7 @@ Flags                             Description
 VMODE_TURNED_OFF                  viewport is turned off if bit is set
 VMODE_PERSPECTIVE_VIEW_ACTIVE     viewport is in perspective mode if bit is set
 VMODE_FRONT_CLIPPING_ON           front clipping is on if bit is set
-VMODE_BACK_CLIPPING_ON            back clipping is on if bit ist set
+VMODE_BACK_CLIPPING_ON            back clipping is on if bit is set
 VMODE_UCS_FOLLOW_MODE_ON          ???
 VMODE_FRONT_CLIP_NOT_AT_EYE       ???
 ================================  =============================================

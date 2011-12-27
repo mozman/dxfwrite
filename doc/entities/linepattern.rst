@@ -1,7 +1,7 @@
 .. _Linetype:
 
-Linetypes
-=========
+LINETYPE
+========
 
 A Linetype defines a line pattern, which can be used by DXF entities. A Linepattern can contain
 solid line elements, points and gaps (see :ref:`Linepattern`).
@@ -47,7 +47,7 @@ The following Linetypes are predefined by dxfwrite::
 
 .. _Linepattern:
 
-Linepattern
+LINEPATTERN
 ===========
 
 Create a linepattern::

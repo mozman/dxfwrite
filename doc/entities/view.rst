@@ -1,7 +1,7 @@
 .. _view:
 
-Views
-=====
+VIEW
+====
 
 A view is a named 'look' at the drawing model. When you create a specific
 views by name, you can use them for layout or when you need to

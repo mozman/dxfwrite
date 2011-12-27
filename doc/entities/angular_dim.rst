@@ -5,9 +5,24 @@ AngularDimension
 
 Type: Composite Entity
 
-.. autoclass:: dxfwrite.dimlines.AngularDimension
+.. class:: AngularDimension
 
-.. automethod:: dxfwrite.dimlines.AngularDimension.__init__
+    Draw an angle dimensioning line at dimline `pos` from `start` to `end`,
+    dimension text is the angle build of the three points start-center-end.
+
+.. method:: AngularDimension.__init__(pos, center, start, end, dimstyle='angle.deg', layer=None, roundval=None)
+
+    :param pos: location as (x, y) tuple of dimension line, line goes
+        through this point
+    :param center: center point as (x, y) tuple of angle
+    :param start: line from center to start is the first side of the
+        angle
+    :param end: line from center to end is the second side of the angle
+    :param str dimstyle: dimstyle name, 'Default' - style is the
+        default value
+    :param str layer: dimension line layer, override the default value
+        of dimstyle
+    :param int roundval: count of decimal places
 
 Example
 -------

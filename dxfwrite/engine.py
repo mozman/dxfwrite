@@ -21,7 +21,7 @@ from dxfwrite.rect import Rectangle
 from dxfwrite.table import Table
 from dxfwrite.curves import Ellipse, Spline, Bezier, Clothoid
 
-from dxfwrite.tableentries import Linetype, LinePatternDef, Style, Layer
+from dxfwrite.tableentries import Linetype, Style, Layer
 from dxfwrite.tableentries import View, VPort, UCS, AppID
 
 class DXFEngine(object):
@@ -169,7 +169,7 @@ class DXFEngine(object):
         example linepattern([2.0, -0.25, 0, -0.25, 0.25, -0.25]), for format
         description see :ref:`Linepattern`.
         """
-        return LinePatternDef(pattern)
+        return Linetype.make_line_pattern_definition(pattern)
 
 #--- Entities
     @staticmethod

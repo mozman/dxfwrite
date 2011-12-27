@@ -19,3 +19,6 @@ class SubscriptAttributes(object):
             setattr(self, key, value)
         else:
             raise KeyError(key)
+
+    def __contains__(self, item):
+        return hasattr(self, item)

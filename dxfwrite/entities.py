@@ -12,6 +12,8 @@ import math
 
 from dxfwrite.base import *
 from dxfwrite.util import iterflatlist, set_flag
+from dxfwrite.mixins import SubscriptAttributes
+
 import dxfwrite.const as const
 
 _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
@@ -156,7 +158,7 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         'height': AttribDef(DXFFloat, 41, priority=106),
         'status': AttribDef(DXFFloat, 68, priority=107),
         'id': AttribDef(DXFFloat, 69, priority=108),
-        },
+        }, # and much more extended data, see class ViewportExtendedDXFTags()
 
     }
 
@@ -361,33 +363,28 @@ class Circle(_Entity):
         super(Circle, self).__init__(**default)
 
 class Insert(_Entity):
-    """ Insert a block reference, add attributes with add(attribute).
+    """ The INSERT entity insert a block reference to a drawing or block, you
+    can add attributes with the :meth:add() method.
 
-    The (Insert) attrib 'attribs_follow' is managed by the object itself, and
-    a DXFAtom('SEQEND') will be added to end of the attibs list.
     """
     DXF_ENTITY_NAME = 'INSERT'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['INSERT']
 
     def __init__(self, **kwargs):
         default = {
-            'insert': (0, 0),
+            'insert': (0, 0), # the default location
         }
         default.update(kwargs)
         super(Insert, self).__init__(**default)
         self.data = DXFList()
 
     def add(self, attrib, relative=True, block_basepoint=None):
-        """
-        Add attributes to a block reference. The position in attrib is
-        absolute in WCS, or relative to the block origin (rotation is relative
-        to the block x-axis).
-        Angles are treated in degrees (circle=360 deg) in dxf-format.
+        """ Add attributes to the block reference. The position in attrib is
+        an absolute location in WCS, or relative to the block origin (rotation
+        is relative to the block x-axis). All angles in degrees.
 
-        :param attrib: the dxf attrib object
-        :param relative: Insert attrib relative to the block origin (0, 0, 0),
-            this is perhaps not the insert point of the block!
-            The relative position will be taken from the attrib.
+        :param attrib: the :class:Attrib instance
+        :param bool relative: Insert the attrib relative to the block origin.
         :param block_basepoint: the basepoint of the block, its the basepoint
             for scaling and rotating of the attribute.
         """
@@ -404,11 +401,11 @@ class Insert(_Entity):
 
         def scale():
             scale_values = get_scale_values()
-            fontscaling(scale_values[0], scale_values[1])
+            font_scaling(scale_values[0], scale_values[1])
             return tuple( (attrib_insert[axis] * scale_values[axis]
                            for axis in range(len(attrib_insert))) )
 
-        def fontscaling(xscale, yscale):
+        def font_scaling(xscale, yscale):
             if yscale != 1.:
                 attrib['height'] = attrib['height'] * yscale
 
@@ -455,6 +452,12 @@ class Insert(_Entity):
         return self.data
 
 class Attdef(_Entity):
+    """ The ATTDEF entity defines the characteristic of an ATTRIB entity
+    (template). The Attdef object resides in the BLOCK definition entity::
+
+        blockdef.add(attdef)
+
+    """
     DXF_ENTITY_NAME = 'ATTDEF'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['ATTDEF']
 
@@ -471,11 +474,9 @@ class Attdef(_Entity):
         super(Attdef, self).__init__(**default)
 
     def new_attrib(self, **kwargs):
-        """
-        Create a new ATTRIB with attdef's attributs as default values.
+        """ Create a new ATTRIB entity with this ATTDEF entity as template.
 
-        :param kwargs: override the attdef default values.
-
+        :param kwargs: override the ATTDEF default values.
         """
         for key in self.attribs.keys():
             if key not in ('prompt', 'tag', 'insert', 'alignpoint'): # insert here attribs to ignore
@@ -489,6 +490,12 @@ class Attdef(_Entity):
         return Attrib(**kwargs)
 
 class Attrib(_Entity):
+    """ The ATTRIB entity creates a text entity, which is mostly is appended
+    to the INSERT entity. This are special text entities, because they can be
+    evaluated by CAD programs and they can be exported for further processing
+    by external programs (like Excel). They often (but must not) created by a
+    ATTDEF template entity, which resides in the BLOCK definition entity.
+    """
     DXF_ENTITY_NAME = 'ATTRIB'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['ATTRIB']
 
@@ -504,10 +511,16 @@ class Attrib(_Entity):
         super(Attrib, self).__init__(**default)
 
 class Block(_Entity):
+    """ BLOCK definition entity. This block definition can be referenced
+    (inserted) by the INSERT entity. It can contain ATTDEF entities, which are
+    templates for the ATTRIB entities used by the INSERT entity.
+    """
     DXF_ENTITY_NAME = 'BLOCK'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['BLOCK']
 
     def __init__(self, **kwargs):
+        """ Block constructor.
+        """
         default = {
             'name': 'empty',
             'flags': 0,
@@ -518,7 +531,10 @@ class Block(_Entity):
         self.data = DXFList()
 
     def find_attdef(self, tag):
-        for entity in iterflatlist(self.data): # flatten nested list
+        """ Find ATTDEF entities in the block definition, which can occur on
+        arbitrary places.
+        """
+        for entity in iterflatlist(self.data): # flat data list
             if isinstance(entity, _Entity) and \
                 (entity.DXF_ENTITY_NAME == 'ATTDEF') and \
                 (entity['tag'] == tag):
@@ -526,6 +542,9 @@ class Block(_Entity):
         raise KeyError("no attdef with tag '%s' found!" % str(tag))
 
     def add(self, entity):
+        """ Add DXF entities to the block definition, like you would do it at
+        drawings.
+        """
         self.data.append(entity)
 
     def extension_point(self):
@@ -546,27 +565,20 @@ class Block(_Entity):
         return self.data
 
 class Polyline(_Entity):
-    """ 3D polyline
+    """ POLYLINE entity to create 2D and 3D polylines (some vertices connected
+    by lines), but also to create Polymeshes and Polyfaces, see special
+    classes below.
 
-    MEMBERS
+    Public attributes:
 
-    vertices
-        list of vertices, has to have the __dxf__ interface and an append method
+    .. attribute:: vertices
 
-    PUBLIC METHODS
-
-    add_vertex
-        add one vertex
-    add_vertices
-        add a list of vertices
-    close
-        set close-status of polyline
     """
     DXF_ENTITY_NAME = 'POLYLINE'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
     def __init__(self, points=[], **kwargs):
-        """ polyline constructor
+        """ Polyline constructor.
 
         :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
         """
@@ -583,19 +595,19 @@ class Polyline(_Entity):
     def close(self, status=True):
         """ Close Polyline: first vertex is connected with last vertex.
 
-        :param bool status:  **True** close polyline; **False** open polyline
+        :param bool status: True for closed polyline; False for open polyline.
         """
         self['flags'] = set_flag(self['flags'], const.POLYLINE_CLOSED, status)
 
     def add_vertex(self, point, **kwargs):
-        """ Add a point to polyline.
+        """ Add a vertex located at point to the polyline.
 
-        :param point: is a 2D or 3D point, z-value of a 2D point is 0.
+        :param point: is a (x, y) or (x, y, z) tuple, z-value of a 2D point is 0.
         """
         self.vertices.append(Vertex(location=point, **kwargs))
 
     def add_vertices(self, points):
-        """ Add multiple points.
+        """ Add a list of vertices.
 
         :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
         """
@@ -615,27 +627,21 @@ class Polyline(_Entity):
     def get_data(self):
         return self.vertices
 
+
 class Polymesh(_Entity):
-    """ m(rows) x n(cols) polymesh, each col has m vertices and eachs row has n
-    vertices.
-
-    indices for a 3 x 2 mesh = (0,0)(0,1)|(1,0)(1,1)|(2,0)(2,1)
-
-    PUBLIC METHODS
-
-    set_mclosed(status)
-        set close-status of m-direction, if status is True mesh is closed in m-dir
-    set_nclosed(status)
-        set close-status of n-direction, if status is True mesh is closed in n-dir
-    set_vertex(row, col, point)
-        set vertex at pos(row, col) to point, point is a 2D or 3D point
-        z-value of 2D points is 0.
+    """ Special case of POLYLINE, creates a m(rows) x n(cols) Polymesh, each
+    column has m vertices and each row has n vertices. All mesh indices are
+    zero based.
     """
     DXF_ENTITY_NAME = 'POLYLINE' # a polymesh is also a polyline
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
     def __init__(self, nrows, ncols, **kwargs):
-        """ 2 <= nrows <= 256; 2 <= ncols <= 256
+        """ Polymesh constructor.
+
+        constraints: 2 <= nrows <= 256; 2 <= ncols <= 256
+        I do not check this, because it is a product specific limitation by
+        AutoCAD.
         """
         default = {
             'vertices_follow': 1,
@@ -660,7 +666,11 @@ class Polymesh(_Entity):
         return Vertex(location=point, flags=const.VTX_3D_POLYGON_MESH_VERTEX)
 
     def set_vertex(self, row, col, point):
-        """ row and col are zero-based indices, point is a tuple (x,y,z)
+        """ Set location of vertex (row, col).
+
+        :param int row: zero based mesh index
+        :param in col: zero based mesh index
+        :param point: vertex location as (x, y, z) tuple
         """
         self.vertices[(row, col)] = self._build_vertex(point)
 
@@ -676,13 +686,17 @@ class Polymesh(_Entity):
         data.append(DXFAtom('SEQEND'))
         return data
 
+
 class Polyface(_Entity):
-    """ freeform polymesh with arbitrary count of faces.
+    """ Another special case of POLYLINE, to create a freeform 3D object,
+    which consist of arbitrary count of faces.
     """
     DXF_ENTITY_NAME = 'POLYLINE' # a polyface is also a polyline
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
     def __init__(self, precision=6, **kwargs):
+        """ Polyface constructor.
+        """
         default = {
             'vertices_follow': 1,
             'flags': const.POLYLINE_POLYFACE,
@@ -707,7 +721,7 @@ class Polyface(_Entity):
     def add_face(self, vertices, color=0):
         """ This is the recommend method for adding faces.
 
-        :param vertices: is a list or tuple with 3 or 4 points (x,y,z).
+        :param vertices: is a list or tuples with 3 or 4 points (x, y, z).
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
         """
         # len-check prevents usage of generators!
@@ -717,14 +731,16 @@ class Polyface(_Entity):
             color)
 
     def add_vertex(self, point):
-        """ add point to vertices and return the index of the vertex.
+        """ Add a point to vertices and return the index of the vertex.
+
+        :param point: vertex location as (x, y, z) tuple
         """
         def key(point):
-            """ vertex key with reduced floating point precision, near points
+            """ Vertex key with reduced floating point precision, near points
             will reference the same vertex. This reduces the vertices count, but
-            it also reduces the accuracy of the model, use this wisly. You can
+            it also reduces the accuracy of the model, use this wisely. You can
             control the function by the parameter self.precision, which determines
-            the floting point precision.
+            the floating point precision.
 
             remember: only the key has reduced precision not the point itself. !!!
             """
@@ -739,7 +755,8 @@ class Polyface(_Entity):
         return index
 
     def add_face_by_indices(self, indices, color=0):
-        """ indices is a list or tuple of vertex indices (got from add_vertex). """
+        """ indices is a list or tuple of vertex indices (got from add_vertex).
+        """
         face = self._build_face(color)
         for (key, vertex_index) in enumerate(indices):
             face[key] = vertex_index + 1 # dxf index is 1 based
@@ -752,7 +769,11 @@ class Polyface(_Entity):
     def get_data(self):
         return DXFList( [self.vertices, self.faces, DXFAtom('SEQEND')] )
 
+
 class Vertex(_Entity):
+    """ The VERTEX entity is only for internal usage by Polyline, Polymesh and
+    Polyface.
+    """
     DXF_ENTITY_NAME = 'VERTEX'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['VERTEX']
 
@@ -763,7 +784,54 @@ class Vertex(_Entity):
         default.update(kwargs)
         super(Vertex, self).__init__(**default)
 
-class ViewPortExtendedData(object):
+
+class Viewport(_Entity):
+    """ The VIEWPORT entity creates viewports in paper space to the drawing
+    model space.
+    """
+    DXF_ENTITY_NAME = 'VIEWPORT'
+    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['VIEWPORT']
+
+    def __init__(self, center_point, width, height, **kwargs):
+        self.extended_dxf_tags = ViewportExtendedDXFTags()
+        default = {
+            'status': 1,
+            'id': 1,
+            }
+        default.update(kwargs)
+        super(Viewport, self).__init__(**default)
+        self.center_point = center_point
+        self.width = width
+        self.height = height
+
+    def get_data(self):
+        # build extended entity group
+        return self.extended_dxf_tags.get_dxf_tags()
+
+    def __getitem__(self, item):
+        if item in self.extended_dxf_tags:
+            return self.extended_dxf_tags[item]
+        else:
+            return super(Viewport, self).__getitem__(item)
+
+    def __setitem__(self, key, value):
+        if key in self.extended_dxf_tags:
+            self.extended_dxf_tags[key] = value
+        else:
+            super(Viewport, self).__setitem__(key, value)
+
+
+class ViewportExtendedDXFTags(SubscriptAttributes):
+    """ Helper class for Viewport().
+
+    This class defines the extended dxf tags, which can not be treated as AttibDef()
+    like the 'ordinary' dxf tags, because:
+
+        - the group codes of this tags are not unique (see: get_dxf_tags())
+        - this tags must occur in a particular order, the order of their appearing,
+          defines their meaning.
+
+    """
     def __init__(self):
         self.view_target_point =  (0., 0., 0.)
         self.view_direction_vector = (0., 0., 1.)
@@ -787,7 +855,7 @@ class ViewPortExtendedData(object):
         self.grid_spacing = (0.1, 0.1)
         self.hidden_plot = 0
 
-    def __dxftags__(self):
+    def get_dxf_tags(self):
         return DXFList(
             [
                 DXFString('ACAD', 1001),
@@ -824,45 +892,4 @@ class ViewPortExtendedData(object):
                 DXFString('}', 1002), # end viewport data
             ]
         )
-    def __contains__(self, item):
-        return hasattr(self, item)
-
-    def __getitem__(self, item):
-        return getattr(self, item)
-
-    def __setitem__(self, key, value):
-        setattr(self, key, value)
-
-class Viewport(_Entity):
-    DXF_ENTITY_NAME = 'VIEWPORT'
-    DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['VIEWPORT']
-
-    def __init__(self, center_point, width, height, **kwargs):
-        self._extended_data = ViewPortExtendedData()
-        default = {
-            'status': 1,
-            'id': 1,
-            }
-        default.update(kwargs)
-        super(Viewport, self).__init__(**default)
-        self.center_point = center_point
-        self.width = width
-        self.height = height
-
-    def get_data(self):
-        # build extended entity group
-        return self._extended_data.__dxftags__()
-
-    def __getitem__(self, item):
-        if item in self._extended_data:
-            return self._extended_data[item]
-        else:
-            return super(Viewport, self).__getitem__(item)
-
-    def __setitem__(self, key, value):
-        if key in self._extended_data:
-            self._extended_data[key] = value
-        else:
-            super(Viewport, self).__setitem__(key, value)
-
 

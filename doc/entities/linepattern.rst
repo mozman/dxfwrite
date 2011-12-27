@@ -58,7 +58,8 @@ Create a linepattern::
 .. method:: DXFEngine.linepattern(pattern)
 
     :param pattern: is a list of float values, elements > 0 are solid line segments,
-        elements < 0 are gaps and elements = 0 are points.
+        elements < 0 are gaps and elements = 0 are points. pattern[0] = total pattern
+        length in drawing units
 
-example linepattern([2.0, -0.25, 0, -0.25, 0.25])
+example linepattern([2.0, 1.25, -0.25, 0, -0.25])
 

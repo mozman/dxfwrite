@@ -9,7 +9,6 @@
 __author__ = "mozman <mozman@gmx.at>"
 
 from dxfwrite.base import *
-from dxfwrite.linepattern import LinePatternDef
 
 _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION = {
     'LTYPE': {
@@ -105,7 +104,8 @@ class _TableEntry(object):
             self[key] = value
 
     def is_valid_attribute_name(self, key):
-        """ True if an AttribDef for key exists. """
+        """ True if an AttribDef for key exists.
+        """
         return key in self.DXF_ATTRIBUTES
 
     def __setitem__(self, key, value):
@@ -125,16 +125,19 @@ class _TableEntry(object):
             raise KeyError("Invalid attribute '%s' for TableEntry '%s'." % (str(key), self.__class__.__name__))
 
     def _get_dxf_atom(self, attribname, value):
-        """ create an object for attribname by factory from attribute_definition """
+        """ Create an object for attribname by factory from attribute_definition.
+        """
         attrib = self.DXF_ATTRIBUTES[attribname]
         return attrib.factory(value, attrib.group_code)
 
     def _priority(self, key):
-        """ get priority of attribute key """
+        """ Get priority of attribute key.
+        """
         return self.DXF_ATTRIBUTES[key].priority
 
     def get_attribs(self):
-        """ get attribs sorted by priority """
+        """ Get attribs sorted by priority.
+        """
         priority_attribs = ( (self._priority(key), value)
                  for key, value in self.attribs.items() )
         return ( value for priority, value  in sorted(priority_attribs) )
@@ -151,22 +154,19 @@ class _TableEntry(object):
 
 class Linetype(_TableEntry):
     """ DXF LTYPE table entry - linetype definition
-
-    INIT-PARAMETER
-
-    name
-        linetype name
-    flags
-        Standard flags (bit-coded values): (see module flags.py STD_FLAGS_...)
-    description
-        descriptive text for linetype
-    pattern
-        LinePatternDef object
     """
     TABLE_NAME = 'LTYPE'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['LTYPE']
 
     def __init__(self, name, **kwargs):
+        """ Linetype Constructor.
+
+        :param str name: linetype name
+        :param int flags: Standard flags (bit-coded values): (see module flags.py STD_FLAGS_...)
+        :param str description: descriptive text for linetype
+        :param pattern: line pattern definition object (see: :meth:Linetype.make_line_pattern_definition)
+
+        """
         default = {
             'flags': 0,
             'description': ""
@@ -174,28 +174,41 @@ class Linetype(_TableEntry):
         default.update(kwargs)
         super(Linetype, self).__init__(name, **default)
 
+    @staticmethod
+    def make_line_pattern_definition(pattern):
+        """ Create a line pattern definition object for Linetype().
+
+        :param pattern: list of floats
+           pattern[0] = total pattern length in drawing units
+           pattern[n] = line segment, > 0 is line, < 0 is gap, 0.0 = dot
+        """
+        tags = DXFList()
+        count = len(pattern) - 1 # the number of linetype elements
+        tags.append(DXFInt(65, 72)) # Alignment code; value is always 65, ASCII for 'A'
+        tags.append(DXFInt(count, 73)) # the number of linetype elements
+        tags.append(DXFFloat(pattern[0])) # total pattern length
+        for element in pattern[1:]:
+            tags.append(DXFFloat(element, 49)) # line segment
+        return tags
+
 class Layer(_TableEntry):
     """ DXF LAYER table entry - layer definition
-
-    INIT-PARAMETER
-
-    name
-        layer name
-    flags
-        standard flag values, bit-coded
-        STD_FLAGS_LAYER_FROZEN = If set, layer is frozen
-        STD_FLAGS_LAYER_FROZEN_BY_DEFAULT = If set, layer is frozen by
-            default in new Viewports
-        STD_FLAGS_LAYER_LOCKED = If set, layer is locked
-    color
-        color-number (if negative, layer is off)
-    linetype
-        name of linetype (string)
     """
     TABLE_NAME = 'LAYER'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['LAYER']
 
     def __init__(self, name, **kwargs):
+        """ Layer Constructor.
+
+        :param str name: layer name
+        :param int flags: standard flag values, bit-coded
+            STD_FLAGS_LAYER_FROZEN = If set, layer is frozen
+            STD_FLAGS_LAYER_FROZEN_BY_DEFAULT = If set, layer is frozen by
+                default in new Viewports
+            STD_FLAGS_LAYER_LOCKED = If set, layer is locked
+        :param int color: DXF color index (if negative, layer is off)
+        :param str linetype: name of linetype
+        """
         default = {
             'flags': 0,
             'color': 1,
@@ -206,34 +219,25 @@ class Layer(_TableEntry):
 
 class Style(_TableEntry):
     """ DXF STYLE table entry - textstyle definition
-
-    INIT-PARAMETER
-
-    name
-        textstyle name
-    flags
-        standard flag values (int), bit-coded
-    generation_flags
-        text generation flags (int), default = 0
-        STYLE_TEXT_BACKWARD = Text is backward (mirrored in X)
-        STYLE_TEXT_UPSIDEDOWN = Text is upside down (mirrored in Y)
-    height
-        fixed text height, (float), 0 if not fixed = default
-    last_height
-        last height used (float), default=1.
-    width
-        width factor (float), default=1.
-    oblique
-        oblique angle in degree (float), default=0.
-    font
-        primary font filename (string), default="ARIAL"
-    bigfont
-        big-font file name(string), default=""
     """
     TABLE_NAME = 'STYLE'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['STYLE']
 
     def __init__(self, name, **kwargs):
+        """ Style constructor.
+
+        :param str name: textstyle name
+        :param int flags: standard flag values (int), bit-coded
+        :param int generation_flags: text generation flags , default = 0
+            STYLE_TEXT_BACKWARD = Text is backward (mirrored in X)
+            STYLE_TEXT_UPSIDEDOWN = Text is upside down (mirrored in Y)
+        :param float height: fixed text height, 0 if not fixed = default
+        :param float last_height:  last height used, default=1.
+        :param float width: width factor, default=1.
+        :param float oblique: oblique angle in degree, default=0.
+        :param str font: primary font filename, default="ARIAL"
+        :param str bigfont: big-font file name, default=""
+        """
         default = {
             'flags': 0,
             'height': 0,
@@ -367,22 +371,18 @@ class AppID(_TableEntry):
 
 class UCS(_TableEntry):
     """ DXF UCS - user coordinate system
-
-    INIT-PARAMETER
-
-    name
-        layer name
-    origin
-        origin in WCS
-    xaxis
-        xaxis direction in WCS
-    yaxis
-        yaxis direction in WCS
     """
     TABLE_NAME = 'UCS'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['UCS']
 
     def __init__(self, name, **kwargs):
+        """ UCS constructor.
+
+        :param str name: name of the UCS
+        :param origin: (x, y, z) tuple in WCS
+        :param xaxis: (x, y, z) vector for the x-axis direction in WCS
+        :param yaxis: (x, y, z) vector for the y-axis direction in WCS
+        """
         default = {
             'flags': 0,
             'origin': (0., 0., 0.),

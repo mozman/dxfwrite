@@ -16,6 +16,7 @@ if PYTHON3:
     from io import StringIO
     xrange = range
     unicode = str
+    basestring = str
 else:
     from StringIO import StringIO
 
@@ -88,17 +89,11 @@ DEFAULT_LINE_WEIGHTS = [
  2.11, # 26
 ]
 
-def is_string(value):
-    if PYTHON3:
-        return isinstance(value, str)
-    else:
-        return isinstance(value, basestring)
-
 def color_name(index):
     return 'Color_%d' % (index+1)
 
 def get_bool(value):
-    if is_string(value):
+    if isinstance(value, basestring):
         upperstr = value.upper()
         if upperstr == 'TRUE':
             value = True

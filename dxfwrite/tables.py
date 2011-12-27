@@ -8,18 +8,19 @@
 
 __author__ = "mozman <mozman@gmx.at>"
 
+__all__ = ['create_table']
+
 from dxfwrite.base import *
 
-class Tables(object):
-    """ Table factory. """
-    @staticmethod
-    def get(name):
-        if name == 'VPORT':
-            return Viewports()
-        elif name in ['LTYPE', 'LAYER', 'STYLE', 'VIEW', 'APPID', 'UCS']:
-            return _Table(name)
-        else:
-            raise ValueError("unknown table '%s'" % str(name))
+def create_table(name):
+    """ Table factory.
+    """
+    if name == 'VPORT':
+        return Viewports()
+    elif name in ['LTYPE', 'LAYER', 'STYLE', 'VIEW', 'APPID', 'UCS']:
+        return _Table(name)
+    else:
+        raise ValueError("unknown table '%s'" % str(name))
 
 class _Table(object):
     """ Base table class.

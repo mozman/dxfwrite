@@ -791,18 +791,23 @@ class Viewport(_Entity):
     """
     DXF_ENTITY_NAME = 'VIEWPORT'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['VIEWPORT']
+    viewport_id = 2 # notes to id:
+    # The id of the first viewport has to be 1, which is the definition of
+    # paper space, see also Drawing.default_settings. For the following
+    # viewports it seems only important, that the id is greater than 1.
 
     def __init__(self, center_point, width, height, **kwargs):
         self.extended_dxf_tags = ViewportExtendedDXFTags()
         default = {
             'status': 1,
-            'id': 1,
+            'id': Viewport.viewport_id,
+            'center_point': center_point,
+            'width': width,
+            'height': height,
             }
         default.update(kwargs)
         super(Viewport, self).__init__(**default)
-        self.center_point = center_point
-        self.width = width
-        self.height = height
+        Viewport.viewport_id += 1
 
     def get_data(self):
         # build extended entity group
@@ -833,11 +838,13 @@ class ViewportExtendedDXFTags(SubscriptAttributes):
 
     """
     def __init__(self):
+        # view_target_point & view_direction_vector defines the view direction
+        # only important for 3D model views
         self.view_target_point =  (0., 0., 0.)
-        self.view_direction_vector = (0., 0., 1.)
-        self.view_twist_angle = 0.
-        self.view_height = 1.
-        self.view_center_point = (0., 0.)
+        self.view_direction_vector = (0., 0., 0.)
+        self.view_twist_angle = 0. # in radians!!!
+        self.view_height = 1. # height of model space area
+        self.view_center_point = (0., 0.) # point in model space, which is displayed in the viewport center.
         self.perspective_lens_length = 50.
         self.front_clip_plane_z_value = 0.
         self.back_clip_plane_z_value = 0.

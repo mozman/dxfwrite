@@ -6,25 +6,26 @@
 # License: GPLv3
 
 __author__ = "mozman <mozman@gmx.at>"
-__all__ = ['Sections']
+
+__all__ = ['create_section']
 
 from dxfwrite.base import DXFAtom, DXFList, DXFName, dxfstr
-from dxfwrite.tables import Tables
+from dxfwrite.tables import create_table
 from dxfwrite import hdrvars
 
-class Sections(object):
-    @staticmethod
-    def get(name):
-        if name == 'HEADER':
-            return Header()
-        elif name == 'BLOCKS':
-            return Blocks()
-        elif name == 'ENTITIES':
-            return Entities()
-        elif name == 'TABLES':
-            return TablesSection()
-        else:
-            raise ValueError("unknown section '%s'" % str(name))
+def create_section(name):
+    """ Sections factory.
+    """
+    if name == 'HEADER':
+        return Header()
+    elif name == 'BLOCKS':
+        return Blocks()
+    elif name == 'ENTITIES':
+        return Entities()
+    elif name == 'TABLES':
+        return TablesSection()
+    else:
+        raise ValueError("unknown section '%s'" % str(name))
 
 class _Section(object):
     def __dxf__(self):
@@ -57,29 +58,28 @@ class Header(_Section):
                           ) )
 
     def __getitem__(self, key):
+        """ Get a header var by the subscript operator::
+
+                value = drawing.header[varname]
+        """
         return self.variables[key]
 
     def __setitem__(self, key, value):
+        """ Set a header var by the subscript operator::
+
+                drawing.header[varname] = value
+        """
         self.variables[key] = hdrvars.Factory[key](value)
-
-    # v 0.3.7: changed interface to header variables
-    # def get(self, varname)
-    #     now use: value = dwg.header[varname]
-    # def add(self, name, value)
-    #     now use: dwg.header[name] = value
-    # def add_vars(self, variables)
-    #     removed without replacement
-
 
 class TablesSection(_Section):
     def __init__(self):
-        self.linetypes = Tables.get('LTYPE')
-        self.layers = Tables.get('LAYER')
-        self.styles = Tables.get('STYLE')
-        self.views = Tables.get('VIEW')
-        self.viewports = Tables.get('VPORT')
-        self.appids = Tables.get('APPID')
-        self.ucs = Tables.get('UCS')
+        self.linetypes = create_table('LTYPE')
+        self.layers = create_table('LAYER')
+        self.styles = create_table('STYLE')
+        self.views = create_table('VIEW')
+        self.viewports = create_table('VPORT')
+        self.appids = create_table('APPID')
+        self.ucs = create_table('UCS')
 
     def _get_body(self):
         return DXFList( (DXFName('TABLES'),
@@ -103,13 +103,19 @@ class Blocks(_Section):
         return body
 
     def add(self, block):
+        """ Add a BLOCK definition entity to the blocks section.
+        """
         blockname = block['name']
         self.blocks[blockname] = block
 
     def find(self, blockname):
+        """ Get BLOCK definition entity by name.
+        """
         return self.blocks[blockname]
 
     def find_attdef(self, tag, blockname):
+        """ Get ATTDEF entity by tag.
+        """
         block = self.find(blockname)
         return block.find_attdef(tag)
 
@@ -122,4 +128,6 @@ class Entities(_Section):
                           self.entities))
 
     def add(self, entity):
+        """ Add a DXF entity to the entities section.
+        """
         self.entities.append(entity)

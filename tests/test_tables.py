@@ -8,47 +8,47 @@ __author__ = "mozman <mozman@gmx.at>"
 
 import unittest
 
-from dxfwrite.tables import Tables, Viewports
+from dxfwrite.tables import create_table, Viewports
 from dxfwrite import dxfstr
 
 class TestTables(unittest.TestCase):
     def test_empty_linetypes_table(self):
-        table = Tables().get('LTYPE')
+        table = create_table('LTYPE')
         dxf = dxfstr(table)
         self.assertEqual(dxf, "  0\nTABLE\n  2\nLTYPE\n 70\n0\n  0\nENDTAB\n")
 
     def test_empty_layers_table(self):
-        table = Tables().get('LAYER')
+        table = create_table('LAYER')
         dxf = dxfstr(table)
         self.assertEqual(dxf, "  0\nTABLE\n  2\nLAYER\n 70\n0\n  0\nENDTAB\n")
 
     def test_contains_layer(self):
-        table = Tables().get('LAYER')
+        table = create_table('LAYER')
         table.add( {'name': 'TEST'} )
         self.assertTrue('TEST' in table)
 
     def test_empty_styles_table(self):
-        table = Tables().get('STYLE')
+        table = create_table('STYLE')
         dxf = dxfstr(table)
         self.assertEqual(dxf, "  0\nTABLE\n  2\nSTYLE\n 70\n0\n  0\nENDTAB\n")
 
     def test_empty_views_table(self):
-        table = Tables().get('VIEW')
+        table = create_table('VIEW')
         dxf = dxfstr(table)
         self.assertEqual(dxf, "  0\nTABLE\n  2\nVIEW\n 70\n0\n  0\nENDTAB\n")
 
     def test_empty_viewports_table(self):
-        table = Tables().get('VPORT')
+        table = create_table('VPORT')
         dxf = dxfstr(table)
         self.assertEqual(dxf, "  0\nTABLE\n  2\nVPORT\n 70\n0\n  0\nENDTAB\n")
 
     def test_empty_ucs_table(self):
-        table = Tables().get('UCS')
+        table = create_table('UCS')
         dxf = dxfstr(table)
         self.assertEqual(dxf, "  0\nTABLE\n  2\nUCS\n 70\n0\n  0\nENDTAB\n")
 
     def test_tables_error(self):
-        self.assertRaises(ValueError, Tables.get, 'ERROR')
+        self.assertRaises(ValueError, create_table, 'ERROR')
 
 class TestViewPorts(unittest.TestCase):
     table1 = {'name': 'test'}

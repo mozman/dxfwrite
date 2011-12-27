@@ -63,3 +63,19 @@ Attribs of DXF entities can be changed by the index operator::
     drawing.add(text)
     drawing.save()
 
+Aligned Text
+------------
+
+Attention at aligned Text, if the horizontal align parameter `halign` = ``CENTER``,
+``RIGHT``, ``ALIGNED``, ``FIT``, ``BASELINE_MIDDLE`` or the vertical align parameter
+`valign` = ``TOP``, ``MIDDLE`` or ``BOTTOM``, the parameter `alignpoint` defines
+the text insert point (``CENTER``, ``TOP``, ...) or the second align point
+(``FIT``, ``ALIGNED``)::
+
+    from dxfwrite import DXFEngine as dxf
+    from dxfwrite.const import CENTER
+
+    drawing = dxf.drawing('drawing.dxf')
+    drawing.add(dxf.text('aligned Text', halign=CENTER, alignpoint=(10.0, 5.0)))
+    drawing.save()
+

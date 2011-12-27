@@ -104,7 +104,7 @@ class _TableEntry(object):
             self[key] = value
 
     def is_valid_attribute_name(self, key):
-        """ True if an AttribDef for key exists.
+        """ True if key is a valid DXF attribute.
         """
         return key in self.DXF_ATTRIBUTES
 
@@ -131,12 +131,12 @@ class _TableEntry(object):
         return attrib.factory(value, attrib.group_code)
 
     def _priority(self, key):
-        """ Get priority of attribute key.
+        """ Get priority of DXF attribute referenced by key.
         """
         return self.DXF_ATTRIBUTES[key].priority
 
     def get_attribs(self):
-        """ Get attribs sorted by priority.
+        """ Get DXF attributes sorted by priority.
         """
         priority_attribs = ( (self._priority(key), value)
                  for key, value in self.attribs.items() )
@@ -162,9 +162,11 @@ class Linetype(_TableEntry):
         """ Linetype Constructor.
 
         :param str name: linetype name
-        :param int flags: Standard flags (bit-coded values): (see module flags.py STD_FLAGS_...)
+        :param int flags: Standard flags (bit-coded values): (see aso: module
+            const.py STD_FLAGS_...)
         :param str description: descriptive text for linetype
-        :param pattern: line pattern definition object (see: :meth:Linetype.make_line_pattern_definition)
+        :param pattern: line pattern definition object (see also:
+            :method:Linetype.make_line_pattern_definition)
 
         """
         default = {
@@ -359,6 +361,8 @@ class VPort(_TableEntry):
         super(VPort, self).__init__(name, **default)
 
 class AppID(_TableEntry):
+    """ DXF AppID table entry - Application ID entries
+    """
     TABLE_NAME = 'APPID'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['APPID']
 
@@ -370,7 +374,7 @@ class AppID(_TableEntry):
         super(AppID, self).__init__(name, **default)
 
 class UCS(_TableEntry):
-    """ DXF UCS - user coordinate system
+    """ DXF UCS table entry - user coordinate system
     """
     TABLE_NAME = 'UCS'
     DXF_ATTRIBUTES = _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION['UCS']

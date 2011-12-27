@@ -12,7 +12,7 @@ import os
 
 from dxfwrite import DXFEngine
 from dxfwrite.base import *
-from dxfwrite.sections import Sections
+from dxfwrite.sections import create_section
 import dxfwrite.const as const
 import dxfwrite.std as std
 
@@ -24,14 +24,15 @@ class Drawing(object):
     """
     ENCODING = 'cp1252'
     def __init__(self, name='noname.dxf'):
-        """
-        :param string name: filename of drawing
+        """ Drawing constructor.
+
+        :param str name: filename of drawing
         """
         self.filename = name
-        self.header = Sections.get('HEADER')
-        self.tables = Sections.get('TABLES')
-        self.blocks = Sections.get('BLOCKS')
-        self.entities = Sections.get('ENTITIES')
+        self.header = create_section('HEADER')
+        self.tables = create_section('TABLES')
+        self.blocks = create_section('BLOCKS')
+        self.entities = create_section('ENTITIES')
         self.modelspace = ModelSpaceProxy(self.entities)
         self.paperspace = PaperSpaceProxy(self.entities)
         self._anonymous_counter = 0
@@ -51,7 +52,7 @@ class Drawing(object):
     def ucs(self): return self.tables.ucs
 
     def __dxf__(self):
-        """ Returns the drawing as string.
+        """ Returns the drawing DXF content as string.
         """
         return tags2str(self)
 
@@ -73,7 +74,7 @@ class Drawing(object):
         return entity
 
     def anonymous_blockname(self, typechar):
-        """ Create an anonymous block name
+        """ Create an anonymous block name.
 
         typechar
             U = *U### anonymous blocks
@@ -114,8 +115,13 @@ class Drawing(object):
         self.add_layer('TABLECONTENT')
         self.add_layer('TABLEGRID')
 
+        # Setup paper space, but I don't know the meaning of this VIEWPORT
+        # entity, also the dimensions of this viewport seems not really
+        # important, except status=1 and id=1.
+        self.paperspace.add(DXFEngine.viewport((0, 0), 1, 1, status=1, id=1))
+
     def save(self):
-        """ Write DXF data to file-system.
+        """ Write DXF data to file-system (Drawing.filename).
         """
         if PYTHON3:
             fileobj = open(self.filename, 'w', encoding=self.ENCODING, errors="replace")

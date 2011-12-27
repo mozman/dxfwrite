@@ -6,8 +6,7 @@
 # Copyright (C) 2010, Manfred Moitzi
 # License: GPLv3
 
-"""
-DXFEngine is the dedicated interface to dxfwrite
+""" DXFEngine is the dedicated interface to dxfwrite
 """
 
 __author__ = "mozman <mozman@gmx.at>"
@@ -25,15 +24,12 @@ from dxfwrite.tableentries import Linetype, Style, Layer
 from dxfwrite.tableentries import View, VPort, UCS, AppID
 
 class DXFEngine(object):
-    """ Factory, creates the dxf objects.
+    """ Factory, creates all the DXF entities.
 
     This is the dedicated interface to dxfwrite, all table entries and all
     all DXF entities should be created by the methods of this object.
     All methods are static methods, so this object hasn't to be instantiated.
     """
-
-    name = 'DXFWRITE'
-    """ Engine name for further distinctions of different creation engines. """
 
     @staticmethod
     def drawing(name='empty.dxf'):
@@ -52,10 +48,10 @@ class DXFEngine(object):
     def layer(name, **kwargs):
         """ Create a new layer.
 
-        :param string name: layer name
+        :param str name: layer name
         :param int flags: standard flag values, bit-coded, default=0
         :param int color: color number, negative if layer is off, default=1
-        :param string linetype: linetype name, default="CONTINUOUS"
+        :param str linetype: linetype name, default="CONTINUOUS"
 
         """
         return Layer(name, **kwargs)
@@ -64,15 +60,15 @@ class DXFEngine(object):
     def style(name, **kwargs):
         """ Create a new textstyle.
 
-        :param string name: textstyle name
+        :param str name: textstyle name
         :param int flags: standard flag values, bit-coded, default=0
         :param int generation_flags: text generation flags, default = 0
         :param float height: fixed text height, 0 if not fixed = default
         :param last_height: last height used, default=1.
         :param float width: width factor, default=1.
         :param float oblique: oblique angle in degree, default=0.
-        :param string font: primary font filename, default="ARIAL"
-        :param string bigfont: big-font file name, default=""
+        :param str font: primary font filename, default="ARIAL"
+        :param str bigfont: big-font file name, default=""
 
         """
         return Style(name, **kwargs)
@@ -81,9 +77,9 @@ class DXFEngine(object):
     def linetype(name, **kwargs):
         """ Create a new linetype.
 
-        :param string name: linetype name
+        :param str name: linetype name
         :param int flags: standard flag values, bit-coded, default=0
-        :param string description: descriptive text for linetype, default=""
+        :param str description: descriptive text for linetype, default=""
         :param pattern: :ref:`LinePatternDef`, line pattern definition, see method
                    DXFEngine.linepattern()
 
@@ -94,7 +90,7 @@ class DXFEngine(object):
     def view(name, **kwargs):
         """ Create a new view.
 
-        :param string name: view name
+        :param str name: view name
         :param int flags: standard flag values, bit-coded, default=0
             STD_FLAGS_PAPER_SPACE, if set this is a paper space view.
         :param float height, width: view height and width, in DCS?!, default=1.0
@@ -150,7 +146,7 @@ class DXFEngine(object):
     def ucs(name, **kwargs):
         """ Create a new user-coordinate-system (UCS).
 
-        :param string name: ucs name
+        :param str name: ucs name
         :param int flags: standard flag values, bit-coded
         :param origin: origin in WCS (xyz-tuple), default=(0, 0, 0)
         :param xaxis: xaxis direction in WCS (xyz-tuple), default=(1, 0, 0)
@@ -237,13 +233,13 @@ class DXFEngine(object):
     def text(text, insert=(0., 0.), height=1.0, **kwargs):
         """ Create a new text entity.
 
-        :param string text: the text to display
+        :param str text: the text to display
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
         :param float height: text height in drawing-units
         :param float rotation: text rotation in degree, default=0
         :param float xscale: text width factor, default=1
         :param float oblique: text oblique angle in degree, default=0
-        :param string style: text style name, default=STANDARD
+        :param str style: text style name, default=STANDARD
         :param int mirror: text generation flags, bit-coded, default=0
         :param int halign: horizontal justification type
         :param int valign: vertical justification type
@@ -262,7 +258,7 @@ class DXFEngine(object):
     def shape(name, insert=(0., 0.), **kwargs):
         """ Insert a shape-reference.
 
-        :param string name: name of shape
+        :param str name: name of shape
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
         :param float xscale: x-scale factor, default=1.
         :param float rotation: rotation angle in degree, default=0
@@ -275,7 +271,7 @@ class DXFEngine(object):
     def insert(blockname, insert=(0., 0.), **kwargs):
         """ Insert a new block-reference.
 
-        :param string blockname: name of block definition
+        :param str blockname: name of block definition
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
         :param float xscale: x-scale factor, default=1.
         :param float yscale: y-scale factor, default=1.
@@ -293,17 +289,17 @@ class DXFEngine(object):
     def attdef(tag, insert=(0., 0.), **kwargs):
         """ Create a new attribute definition, used in block-definitions.
 
-        :param string text: attribute default text
+        :param str text: attribute default text
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
-        :param string prompt: prompt text, like "insert a value:"
-        :param string tag: attribute tag string
+        :param str prompt: prompt text, like "insert a value:"
+        :param str tag: attribute tag string
         :param int flags: attribute flags, bit-coded, default=0
         :param int length: field length ??? see dxf-documentation
         :param float height: textheight in drawing units (default=1)
         :param float rotation: text rotation (default=0) (all DXF angles in degrees)
         :param float oblique: text oblique angle in degree, default=0
         :param float xscale: width factor (default=1)
-        :param string style: textstyle (default=STANDARD)
+        :param str style: textstyle (default=STANDARD)
         :param int mirror: bit coded flags
         :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
           ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
@@ -321,16 +317,16 @@ class DXFEngine(object):
     def attrib(text, insert=(0., 0.), **kwargs):
         """ Create a new attribute, used in the entities section.
 
-        :param string text: attribute text
+        :param str text: attribute text
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
-        :param string tag: attribute tag string
+        :param str tag: attribute tag string
         :param int flags: attribute flags, bit-coded, default=0
         :param int length: field length ??? see dxf-documentation
         :param float height: textheight in drawing units (default=1)
         :param float rotation: text rotation (default=0) (all DXF angles in degrees)
         :param float oblique: text oblique angle in degree, default=0
         :param float xscale: width factor (default=1)
-        :param string style: textstyle (default=STANDARD)
+        :param str style: textstyle (default=STANDARD)
         :param int mirror: bit coded flags
         :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
           ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
@@ -358,10 +354,10 @@ class DXFEngine(object):
     def block(name, basepoint=(0., 0.), **kwargs):
         """ Create a block definition, for the blocks section.
 
-        :param string name: blockname
+        :param str name: blockname
         :param basepoint: block base point (xy- or xyz-tuple), z-axis is 0. by default
         :param int flags: block type flags
-        :param string xref: xref pathname
+        :param str xref: xref pathname
 
         """
         return Block(name=name, basepoint=basepoint, **kwargs)
@@ -463,7 +459,7 @@ class DXFEngine(object):
            second alignpoint because horizontal alignment FIT, ALIGN,
            BASELINE_MIDDLE is not supported.
 
-        :param string text: the text to display
+        :param str text: the text to display
         :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
         :param float linespacing: linespacing in percent of height, 1.5 = 150% =
             1+1/2 lines
@@ -471,11 +467,11 @@ class DXFEngine(object):
         :param float rotation: text rotion in dregree, default=0
         :param float xscale: text width factor, default=1
         :param float oblique: text oblique angle in degree, default=0
-        :param string style: text style name, default=STANDARD
+        :param str style: text style name, default=STANDARD
         :param int mirror: text generation flags, bit-coded, default=0
         :param int halign: horizontal justification type
         :param int valign: vertical justification type
-        :param string layer: layer name
+        :param str layer: layer name
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
         any combination of **valign** (TOP, MIDDLE, BOTTOM) and **halign** (LEFT,
@@ -498,8 +494,8 @@ class DXFEngine(object):
              polyline will be created, and the rectangle consist only of the
              background filling (if bgcolor != `None`)
         :param int bgcolor: dxf color index, default is `None` (no background filling)
-        :param string layer: target layer, default is ``'0'``
-        :param string linetype: linetype name, None = **BYLAYER**
+        :param str layer: target layer, default is ``'0'``
+        :param str linetype: linetype name, None = **BYLAYER**
 
         """
         return Rectangle(insert, width, height, **kwargs)
@@ -544,8 +540,8 @@ class DXFEngine(object):
         :param float endangle: in degree
         :param float rotation: angle between x-axis and ellipse-main-axis in degree
         :param int segments: count of line segments for polyline approximation
-        :param string linetype: linetype name, if not defined = **BYLAYER**
-        :param string layer: layer name
+        :param str linetype: linetype name, if not defined = **BYLAYER**
+        :param str layer: layer name
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
         """
@@ -560,8 +556,8 @@ class DXFEngine(object):
         :param points: breakpoints (knots) as 2D points (float-tuples), defines the
             curve, the curve goes through this points
         :param int segments: count of line segments for polyline approximation
-        :param string linetype: linetype name, if not defined = **BYLAYER**
-        :param string layer: layer name
+        :param str linetype: linetype name, if not defined = **BYLAYER**
+        :param str layer: layer name
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
         """
@@ -573,8 +569,8 @@ class DXFEngine(object):
         polyline.
 
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
-        :param string layer: layer name
-        :param string linetype: linetype name, if not defined = **BYLAYER**
+        :param str layer: layer name
+        :param str linetype: linetype name, if not defined = **BYLAYER**
 
         """
         return Bezier(color, layer, linetype)
@@ -589,11 +585,11 @@ class DXFEngine(object):
         :param float rotation: in degrees
         :param float length: length of curve in drawing units
         :param float paramA: clothoid parameter A
-        :param string mirror: ``'x'`` for mirror curve about x-axis, ``'y'``
+        :param str mirror: ``'x'`` for mirror curve about x-axis, ``'y'``
             for mirror curve about y-axis, or ``'xy'``
         :param int segments: count of line segments for polyline approximation
-        :param string linetype: linetype name, if not defined = **BYLAYER**
-        :param string layer: layer name
+        :param str linetype: linetype name, if not defined = **BYLAYER**
+        :param str layer: layer name
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
         """
@@ -616,8 +612,8 @@ class DXFEngine(object):
             block-definition. example: {'TAG1': 'TextOfTAG1'}, create and insert
             an attrib from an attdef (with tag-value == 'TAG1'), and set
             text-value of the attrib to value 'TextOfTAG1'.
-        :param string linetype: linetype name, if not defined = **BYLAYER**
-        :param string layer: layer name
+        :param str linetype: linetype name, if not defined = **BYLAYER**
+        :param str layer: layer name
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
         """

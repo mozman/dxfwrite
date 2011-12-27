@@ -261,11 +261,6 @@ class TestCtbExport(unittest.TestCase):
 
 
 class TestFunctions(unittest.TestCase):
-    def test_is_string(self):
-        self.assertTrue(is_string('a string'))
-        self.assertTrue(is_string('üöä'))
-        self.assertFalse(is_string(1))
-
     def test_color_name(self):
         self.assertEqual(color_name(0), 'Color_1')
 

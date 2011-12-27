@@ -1,6 +1,6 @@
 .. _Textstyle:
 
-Textstyle
+TEXTSTYLE
 =========
 
 The DXF format assigns text properties to individual lines of text based on text styles.

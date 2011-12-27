@@ -5,14 +5,28 @@ LinearDimension
 
 Type: Composite Entity
 
-.. autoclass:: dxfwrite.dimlines.LinearDimension
+.. class:: LinearDimension
 
-.. automethod:: dxfwrite.dimlines.LinearDimension.__init__
+    Simple straight dimension line with two or more measure points, build
+    with basic DXF entities. This is NOT a dxf dimension entity. And This is
+    a 2D element, so all z-values will be ignored!
+
+.. method:: LinearDimension.__init__(pos, measure_points, angle=0., dimstyle='Default', layer=None, roundval=None)
+
+    :param pos: location as (x, y) tuple of dimension line, line goes through this point
+    :param measure_points: list of points as (x, y) tuples to dimension (two or more)
+    :param float angle: angle (in degree) of dimension line
+    :param str dimstyle: dimstyle name, 'Default' - style is the default value
+    :param str layer: dimension line layer, override the default value of dimstyle
+    :param int roundval: count of decimal places
 
 Methods
 -------
 
-.. automethod:: dxfwrite.dimlines.LinearDimension.set_text
+.. method:: LinearDimension.set_text(section, text)
+
+    Set and override the text of the dimension text for the given dimension
+    line section.
 
 Properties
 ----------

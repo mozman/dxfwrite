@@ -77,3 +77,4 @@ Simplified usage of attribs::
     blockref = DXFEngine.insert2(block, insert=(10,10), attribs={'NAME': 'Rect'})
     # 4. add block-reference to dxf-drawing
     dwg.add(blockref)
+

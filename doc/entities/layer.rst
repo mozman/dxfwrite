@@ -1,6 +1,6 @@
 .. _Layer:
 
-Layer
+LAYER
 =====
 
 Every object has a layer as one of its properties. You may be familiar with

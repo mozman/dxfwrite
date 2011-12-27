@@ -9,7 +9,7 @@ __author__ = "mozman <mozman@gmx.at>"
 
 from dxfwrite.base import DXFList, DXFInt, DXFFloat
 
-class LinePatternDef(DXFList):
+class DeleteMe_LinePatternDef(DXFList):
     """
     Line pattern definition for Linetype().
 
@@ -18,7 +18,7 @@ class LinePatternDef(DXFList):
        linedef[n] = line segment, > 0 is line, < 0 is gap, 0.0 = dot
     """
     def __init__(self, linedef):
-        count = len(linedef)-1 # the number of linetype elements
+        count = len(linedef) - 1 # the number of linetype elements
         self.append(DXFInt(65, 72)) # Alignment code; value is always 65, ASCII for 'A'
         self.append(DXFInt(count, 73)) # the number of linetype elements
         self.append(DXFFloat(linedef[0])) # total pattern length

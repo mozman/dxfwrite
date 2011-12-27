@@ -34,6 +34,7 @@ supported DXF R12 entities
  * TRACE
  * TEXT
  * VERTEX (only for internal use, see Polyline, Polyface and Polymesh objects)
+ * VIEWPORT
 
 not supported DXF R12 entities
 ------------------------------
@@ -52,7 +53,7 @@ emulated entities from DXF R13 and later
 composite entities
 ------------------
 
- * MText -- multi line text
+ * MText -- multi-line text
  * LinearDimension
  * AngularDimension
  * ArcDimension
@@ -82,7 +83,7 @@ a simple example::
     ctb.save('new.ctb')
 
 Installation
-============
+------------
 
 with pip::
 
@@ -93,15 +94,15 @@ or from source::
     python setup.py install
 
 Documentation
-=============
+-------------
 
 http://dxfwrite.readthedocs.org
 http://packages.python.org/dxfwrite/
 
-Good Luck! Feedback is greatly appreciated.
-
-mozman <mozman@gmx.at>
-
-dxfwrite can be found on bitbucket.org at:
+The source code repository of dxfwrite can be found at bitbucket.org:
 
 http://bitbucket.org/mozman/dxfwrite
+
+Feedback is greatly appreciated.
+
+mozman <mozman@gmx.at>

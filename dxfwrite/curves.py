@@ -106,7 +106,7 @@ class Bezier(_BaseCurve):
         self.points.append( (point, None, tangent, None) )
 
     def append(self, point, tangent1, tangent2=None, segments=20):
-        """Append a control point with two control tangents.
+        """ Append a control point with two control tangents.
 
         :param point: the control point as 2D point
         :param tangent1: first control tangent as 2D vector *left* of point
@@ -130,7 +130,7 @@ class Bezier(_BaseCurve):
                 yield Bezier.Segment(start_point, end_point,
                                      start_tangent, end_tangent, count)
         else:
-            raise ValueError('Tow or more points needed!')
+            raise ValueError('Two or more points needed!')
 
     def __dxftags__(self):
         polyline = Polyline(layer=self.layer, color=self.color,
@@ -184,7 +184,7 @@ class Clothoid(_BaseCurve):
                 x, y = vadd(self.start, point)
                 yield (x, y, zaxis)
 
-        zaxis = 0. if len(self.start)<3 else self.start[2]
+        zaxis = 0. if len(self.start) < 3 else self.start[2]
         rotation = radians(self.rotation)
         clothoid = _ClothoidValues(self.paramA)
         points = clothoid.approximate(self.length, self.segments)

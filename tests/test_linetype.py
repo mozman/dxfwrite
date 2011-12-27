@@ -8,11 +8,11 @@ __author__ = "mozman <mozman@gmx.at>"
 
 import unittest
 
-from dxfwrite.tableentries import Linetype, LinePatternDef
+from dxfwrite.tableentries import Linetype
 from dxfwrite import DXFEngine, dxfstr
 
 class TestLinetypeTableEntry(unittest.TestCase):
-    pattern = LinePatternDef([0.6, 0.5, -0.1])
+    pattern = Linetype.make_line_pattern_definition([0.6, 0.5, -0.1])
     expected = "  0\nLTYPE\n  2\nDASHED\n 70\n0\n  3\nstrichliert\n%s" % dxfstr(pattern)
     def test_linepattern(self):
         expected = " 72\n65\n 73\n2\n 40\n0.6\n" \

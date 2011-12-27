@@ -35,5 +35,13 @@ class TestSubscriptAttributes(unittest.TestCase):
         with self.assertRaises(KeyError):
             obj['does not exist'] = 'can only modify existing attributes'
 
+    def test_in_operator(self):
+        obj = MyClass()
+        self.assertTrue('test1' in obj)
+
+    def test_not_in_operator(self):
+        obj = MyClass()
+        self.assertTrue('xyz' not in obj)
+
 if __name__ == '__main__':
     unittest.main()

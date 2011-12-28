@@ -16,12 +16,12 @@ flexibility in the form of text strings that can be different in each block inse
 
 #. First you have to create the :ref:`ATTDEF`.
 #. Next you will create the block and add the :ref:`ATTDEF` with the
-   **block.add(attdef)** method.
-#. Create a block-reference **blockref=DXFEngine.insert(blockname, insert)** by
+   `block.add(attdef)` method.
+#. Create a block-reference `blockref=DXFEngine.insert(blockname, insert)` by
    :ref:`INSERT`.
-#. Create an **attrib = attdef.new_attrib(kwargs)**
-#. Add **attrib** to block-reference by **blockref.add(attrib)**
-#. Add **blockref** to the dxf-drawing, **drawing.add(blockref)**
+#. Create an `attrib = attdef.new_attrib(kwargs)`
+#. Add `attrib` to block-reference by `blockref.add(attrib)`
+#. Add `blockref` to the dxf-drawing, `drawing.add(blockref)`
 
 When you create attributes you can put them on their own layer. This makes it
 easy to hide them or display them by turning the layer they are on off. This is
@@ -38,16 +38,16 @@ The process for doing this is somewhat complex and depends on the used CAD-Appli
 
     Create a new attribute, used in the entities section.
 
-    :param string text: attribute text
+    :param str text: attribute text
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
-    :param string tag: attribute tag string
+    :param str tag: attribute tag string
     :param int flags: attribute flags, bit-coded, default=0
     :param int length: field length ??? see dxf-documentation
     :param float height: textheight in drawing units (default=1)
     :param float rotation: text rotation (default=0) (all DXF angles in degrees)
     :param float oblique: text oblique angle in degree, default=0
     :param float xscale: width factor (default=1)
-    :param string style: textstyle (default=STANDARD)
+    :param str style: textstyle (default=STANDARD)
     :param int mirror: bit coded flags
     :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
         ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
@@ -87,9 +87,9 @@ Common Keyword Arguments for all Basic DXF R12 Entities
 keyword             description
 =================== =========================================================
 layer               Layer name as string
-linetype            Linetype name as string, if not defined = **BYLAYER**
-color               as integer in range [1..255], 0 = **BYBLOCK**,
-                    256 = **BYLAYER**
+linetype            Linetype name as string, if not defined = `BYLAYER`
+color               as integer in range [1..255], 0 = `BYBLOCK`,
+                    256 = `BYLAYER`
 thickness           Thickness as float
 paper_space         0 = entity is in model_space, 1 = entity is in
                     paper_space

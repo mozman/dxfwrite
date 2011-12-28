@@ -21,9 +21,9 @@ http://en.wikipedia.org/wiki/Clothoid
       ``'y'`` for mirror curve about y-axis,
       ``'xy'`` for mirror curve about x- and y-axis
     :param int segments: count of line segments for polyline approximation
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param str linetype: linetype name, if not defined = `BYLAYER`
+    :param str layer: layer name
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 Example
 -------

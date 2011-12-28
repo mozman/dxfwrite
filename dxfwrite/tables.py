@@ -44,6 +44,11 @@ class _Table(object):
     def __contains__(self, name):
         return name in self._entries
 
+    def __getitem__(self, name):
+        """ Get table entry by `name` -> TableEntry.
+        """
+        return self._entries[name]
+
     def clear(self):
         self._entries.clear()
 
@@ -51,7 +56,8 @@ class _Table(object):
         return self._entries.values()
 
     def add(self, entry):
-        """ add ONE entry """
+        """ Add a table entry.
+        """
         self._entries[entry['name']] = entry
 
 class Viewports(_Table):
@@ -61,6 +67,11 @@ class Viewports(_Table):
         # use a list() instead of a dict().
         self._entries = []
 
+    def __getitem__(self, name):
+        """ Get all table entries `name`, because multiple entries are possible -> list
+        """
+        return [entry for entry in self._entries if entry['name'] == name]
+
     def _get_values(self):
         return self._entries
 
@@ -69,3 +80,4 @@ class Viewports(_Table):
 
     def clear(self):
         self._entries = []
+

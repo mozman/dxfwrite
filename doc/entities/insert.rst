@@ -9,7 +9,7 @@ Insert a new block-reference, for block definitions see :ref:`BLOCK`.
 
 .. method:: DXFEngine.insert(blockname, insert=(0., 0.), **kwargs)
 
-    :param string blockname: name of block definition
+    :param str blockname: name of block definition
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
     :param float xscale: x-scale factor, default=1.
     :param float yscale: y-scale factor, default=1.
@@ -27,9 +27,9 @@ Common Keyword Arguments for all Basic DXF R12 Entities
 keyword             description
 =================== =========================================================
 layer               Layer name as string
-linetype            Linetype name as string, if not defined = **BYLAYER**
-color               as integer in range [1..255], 0 = **BYBLOCK**,
-                    256 = **BYLAYER**
+linetype            Linetype name as string, if not defined = `BYLAYER`
+color               as integer in range [1..255], 0 = `BYBLOCK`,
+                    256 = `BYLAYER`
 thickness           Thickness as float
 paper_space         0 = entity is in model_space, 1 = entity is in
                     paper_space

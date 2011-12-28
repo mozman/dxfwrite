@@ -47,6 +47,34 @@ LAYER_FROZEN_BY_DEFAULT            If set, layer is frozen by default
 LAYER_LOCKED                       If set, layer is locked
 =================================  ===================================
 
+Get :class:`Layer` ``'name'`` from Drawing::
+
+    layer = drawing.layers['name']
+    layer.off()
+
+.. class:: Layer
+
+    Defines the layer properties. Get/set properties by the subscript operator `[ ]`.
+
+    - ``layer['name']``
+    - ``layer['flags']`` (for status change see also special methods below)
+    - ``layer['color']``
+    - ``layer['linetype']``
+
+.. method:: Layer.on()
+
+.. method:: Layer.off()
+
+.. method:: Layer.freeze()
+
+.. method:: Layer.thaw()
+
+.. method:: Layer.lock()
+
+.. method:: Layer.unlock()
+
+
+
 Example::
 
     from dxfwrite import DXFEngine as dxf

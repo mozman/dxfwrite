@@ -13,15 +13,14 @@ http://en.wikipedia.org/wiki/Spline_%28mathematics%29
 
 .. method:: DXFEngine.spline(points, segments=100, **kwargs)
 
-    Create a new cubic-spline-entity, consisting of an approximation with a
-    polyline.
+    Create a new cubic-spline-entity, curve shape is an approximation by :ref:`POLYLINE`.
 
     :param points: breakpoints (knots) as 2D points (float-tuples), defines the
         curve, the curve goes through this points
     :param int segments: count of line segments for polyline approximation
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param str linetype: linetype name, if not defined = `BYLAYER`
+    :param str layer: layer name
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 
 Example

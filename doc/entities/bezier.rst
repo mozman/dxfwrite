@@ -13,9 +13,9 @@ http://en.wikipedia.org/wiki/B%C3%A9zier_curve
 
 .. method:: bezier(color=const.BYLAYER, layer='0', linetype=None)
 
-    :param int color: as integer in range [1..255], 0 = BYBLOCK, 256 = BYLAYER
-    :param string layer: Layer name as string
-    :param string linetype:  Linetype name as string, if not defined = BYLAYER
+    :param int color: in range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
+    :param str layer: layer name
+    :param str linetype:  linetype name, if not defined = `BYLAYER`
 
 Methods
 -------

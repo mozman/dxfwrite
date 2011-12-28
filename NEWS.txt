@@ -12,6 +12,7 @@ Version 1.1.0 - ...
   * view docs also on dxfwrite.readthedocs.org
   * added some docs
   * changed clothoid mirror parameters
+  * added Layer() methods: on(), off(), freeze(), thaw(), lock(), unlock()
 
 Version 1.0.2 - 08 December 2011
 

@@ -3,21 +3,22 @@
 VIEWPORT (Entity)
 =================
 
-A viewport is a windows containing a view to the drawing model.
+A viewport is a window showing a part of the model space.
 
 You can create a single layout viewport that fits the entire layout or create
-multiple layout viewports in the layout.
+multiple layout viewports in the paper space (layout).
 
 .. note:: It is important to create layout viewports on their own layer. When you are
     ready to plot, you can turn off the layer and plot the layout without plotting
-    the boundaries of the layout viewports.
+    the boundaries of the layout viewports. `dxfwrite` uses the layer `VIEWPORTS`
+    as default layer for viewports.
 
 .. method:: DXFEngine.viewport(center_point, width, height, **kwargs)
 
-    :param center_point: center point of entity in paper space coordinates as (x, y, z) tuple
-    :param float width: width in paper space units
-    :param float height: height in paper space units
-    :param int status: 0 for viewport off, >0 'stacking' order, 1 is the highest
+    :param center_point: center point of viewport in paper space as (x, y, z) tuple
+    :param float width: width of viewport in paper space
+    :param float height: height of viewport in paper space
+    :param int status: 0 for viewport is off, >0 'stacking' order, 1 is highest priority
     :param view_target_point: as (x, y, z) tuple, default value is (0, 0, 0)
     :param view_direction_vector:  as (x, y, z) tuple, default value is (0, 0, 0)
     :param float view_twist_angle: in radians, default value is 0
@@ -54,6 +55,18 @@ VMODE_UCS_FOLLOW_MODE_ON          ???
 VMODE_FRONT_CLIP_NOT_AT_EYE       ???
 ================================  =============================================
 
+Common Keyword Arguments for all Basic DXF R12 Entities
+-------------------------------------------------------
+
+=================== =========================================================
+keyword             description
+=================== =========================================================
+layer               Layer name as string
+linetype            Linetype name as string, if not defined = `BYLAYER`
+color               as integer in range [1..255], 0 = `BYBLOCK`,
+                    256 = `BYLAYER`
+=================== =========================================================
+
 Model space and paper space units
 ---------------------------------
 
@@ -66,7 +79,9 @@ The location of the viewport in paper space is defined by the parameters `center
 `width` and `height` defines the size of the viewport, all values in paper space
 coordinates and units. If viewports are overlapping, the display order is defined by
 the `status` parameter (stacking order), viewports with `status=2` are covered by
-viewports with `status=1` (`status=1` is the highest display priority).
+viewports with `status=1` (`status=1` is the highest display priority). The
+viewport is always placed in the paper space by default (`paper_space` parameter
+is 1), placing in model space is possible, but does not display any content.
 
 The viewport content
 --------------------
@@ -88,4 +103,34 @@ space and the paper space has the same drawing units.
 Showing 3D content
 ------------------
 
-**TODO**
+- Define the `view_target_point` parameter, this is the point you look at.
+- Define the `view_direction_vector`, this is just a direction vector, the
+  real location in space is not important.
+- The `view_center_point` shifts the viewport,
+- and `view_height` determines the model space area to display in the viewport
+
+Example (see also `examples\\viewports_in_paperspace.py`)::
+
+    drawing.add(
+        DXFEngine.viewport(
+            # location of the viewport in paper space
+            center_point=(16, 10),
+            # viewport width in paper space
+            width=4,
+            # viewport height in paper space
+            height=4,
+            # the model space point you look at
+            view_target_point=(40, 40, 0),
+            # view_direction_vector determines the view direction,
+            # and it just a VECTOR, the view direction is from the location
+            # of view_direction_vector to (0, 0, 0)
+            view_direction_vector=(-1, -1, 1),
+            # now we have a view plane (viewport) with its origin (0, 0) in
+            # the view target point and view_center_point shifts
+            # the center of the viewport
+            view_center_point=(0, 0),
+            view_height=30))
+
+
+.. image:: viewport.png
+

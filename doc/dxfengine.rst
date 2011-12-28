@@ -1,7 +1,7 @@
 DXFEngine
 =========
 
-DXFEngine is the dxf entity creation engine, main interface for dxfwrite.
+DXFEngine is the dxf entity creation factory, the dxfwrite interface.
 
 .. class:: DXFEngine
 
@@ -126,7 +126,7 @@ Table Entries
     :param int snap_style: snap style, default=0
     :param int snap_isopair: snap isopair, default=0
 
-viewmode flags for **view** and **viewport**:
+viewmode flags for `view` and `viewport`:
 
 * VMODE_TURNED_OFF
 * VMODE_PERSPECTIVE_VIEW_ACTIVE
@@ -322,7 +322,7 @@ DXF R12 Entities
     nrows and ncols >=2 and <= 256, greater meshes have to be divided into
     smaller meshes.
 
-    The flags-bit **POLYLINE_3D_POLYMESH** is set.
+    The flags-bit `POLYLINE_3D_POLYMESH` is set.
 
     :param int nrows: count of vertices in m-direction, nrows >=2 and <= 256
     :param int ncols: count of vertices in n-direction, ncols >=2 and <= 256
@@ -393,7 +393,7 @@ DXF R12 Entities
         alignpoint specify the alignment point (or the second alignment
         point for ALIGN or FIT).
 
-    any combination of **valign** (TOP, MIDDLE, BOTTOM) and **halign** (LEFT,
+    any combination of `valign` (TOP, MIDDLE, BOTTOM) and `halign` (LEFT,
     CENTER, RIGHT) is valid.
 
 .. seealso:: :ref:`TEXT`
@@ -403,10 +403,10 @@ DXF R12 Entities
 
     Create a new viewport entity.
 
-    :param center_point: center point of entity in paper space coordinates as (x, y, z) tuple
-    :param float width: width in paper space units
-    :param float height: height in paper space units
-    :param int status: 0 for viewport off, >0 'stacking' order, 1 is the highest
+    :param center_point: center point of viewport in paper space as (x, y, z) tuple
+    :param float width: width of viewport in paper space
+    :param float height: height of viewport in paper space
+    :param int status: 0 for viewport is off, >0 'stacking' order, 1 is highest priority
     :param view_target_point: as (x, y, z) tuple, default value is (0, 0, 0)
     :param view_direction_vector:  as (x, y, z) tuple, default value is (0, 0, 0)
     :param float view_twist_angle: in degrees, default value is 0
@@ -437,7 +437,7 @@ Composite Entities
 .. method:: DXFEngine.mtext(text, insert, linespacing=1.5, **kwargs)
     :noindex:
 
-    Create a multi-line text buildup **MText** with simple :ref:`TEXT`
+    Create a multi-line text buildup `MText` with simple :ref:`TEXT`
     entities.
 
     Mostly the same kwargs like :ref:`TEXT`.
@@ -461,9 +461,9 @@ Composite Entities
     :param int halign: horizontal justification type
     :param int valign: vertical justification type
     :param str layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
-    any combination of **valign** (TOP, MIDDLE, BOTTOM) and **halign** (LEFT,
+    any combination of `valign` (TOP, MIDDLE, BOTTOM) and `halign` (LEFT,
     CENTER, RIGHT) is valid.
 
 
@@ -486,9 +486,9 @@ Composite Entities
         block-definition. example: {'TAG1': 'TextOfTAG1'}, create and insert
         an attrib from an attdef (with tag-value == 'TAG1'), and set
         text-value of the attrib to value 'TextOfTAG1'.
-    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str linetype: linetype name, if not defined = `BYLAYER`
     :param str layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 
 .. seealso:: :ref:`Insert2`
@@ -514,8 +514,8 @@ Composite Entities
     :param insert: insert point as 2D or 3D point
     :param int nrows: row count
     :param int ncols: column count
-    :param bool default_grid: if **True** always a solid line grid will
-        be drawn, if **False**, only explicit defined borders will be
+    :param bool default_grid: if `True` always a solid line grid will
+        be drawn, if `False`, only explicit defined borders will be
         drawn, default grid has a priority of 50.
 
 .. seealso:: :ref:`Table`
@@ -529,22 +529,21 @@ Composite Entities
     :param float width: width in drawing units
     :param float height: height in drawing units
     :param float rotation: in degree (circle = 360 degree)
-    :param int halign: **LEFT**, **CENTER**, **RIGHT**
-    :param int valign: **TOP**, **MIDDLE**, **BOTTOM**
-    :param int color: dxf color index, default is **BYLAYER**, if color is None, no
+    :param int halign: `LEFT`, `CENTER`, `RIGHT`
+    :param int valign: `TOP`, `MIDDLE`, `BOTTOM`
+    :param int color: dxf color index, default is `BYLAYER`, if color is None, no
          polyline will be created, and the rectangle consist only of the
          background filling (if bgcolor != `None`)
     :param int bgcolor: dxf color index, default is `None` (no background filling)
     :param str layer: target layer, default is ``'0'``
-    :param str linetype: linetype name, None = **BYLAYER**
+    :param str linetype: linetype name, None = `BYLAYER`
 
 .. seealso:: :ref:`Rectangle`
 
 .. method:: DXFEngine.ellipse(center, rx, ry, startangle=0., endangle=360., rotation=0., segments=100, **kwargs)
     :noindex:
 
-    Create a new ellipse-entity, consisting of an approximation with a
-    polyline.
+    Create a new ellipse-entity, curve shape is an approximation by :ref:`POLYLINE`.
 
     :param center: center point (xy- or xyz-tuple), z-axis is 0 by default
     :param float rx: radius in x-axis
@@ -553,36 +552,34 @@ Composite Entities
     :param float endangle: in degree
     :param float rotation: angle between x-axis and ellipse-main-axis in degree
     :param int segments: count of line segments for polyline approximation
-    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str linetype: linetype name, if not defined = `BYLAYER`
     :param str layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 .. seealso:: :ref:`Ellipse`
 
 .. method:: DXFEngine.spline(points, segments=100, **kwargs)
     :noindex:
 
-    Create a new cubic-spline-entity, consisting of an approximation with a
-    polyline.
+    Create a new cubic-spline-entity, curve shape is an approximation by :ref:`POLYLINE`.
 
     :param points: breakpoints (knots) as 2D points (float-tuples), defines the
         curve, the curve goes through this points
     :param int segments: count of line segments for polyline approximation
-    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str linetype: linetype name, if not defined = `BYLAYER`
     :param str layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 .. seealso:: :ref:`Spline`
 
 .. method:: DXFEngine.bezier(**kwargs)
     :noindex:
 
-    Create a new cubic-bezier-entity, consisting of an approximation with a
-    polyline.
+    Create a new cubic-bezier-entity, curve shape is an approximation by :ref:`POLYLINE`.
 
-    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str linetype: linetype name, if not defined = `BYLAYER`
     :param str layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 
 .. seealso:: :ref:`Bezier`
@@ -590,8 +587,7 @@ Composite Entities
 .. method:: DXFEngine.clothoid(start=(0, 0), rotation=0., length=1., paramA=1.0, mirror="", segments=100, **kwargs)
     :noindex:
 
-    Create a new clothoid-entity, consisting of an approximation with a
-    polyline.
+    Create a new clothoid-entity, curve shape is an approximation by :ref:`POLYLINE`.
 
     :param start: insert point as 2D points (float-tuples)
     :param float rotation: in degrees
@@ -601,8 +597,8 @@ Composite Entities
       ``'y'`` for mirror curve about y-axis,
       ``'xy'`` for mirror curve about x- and y-axis
     :param int segments: count of line segments for polyline approximation
-    :param str linetype: linetype name, if not defined = **BYLAYER**
+    :param str linetype: linetype name, if not defined = `BYLAYER`
     :param str layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 .. seealso:: :ref:`Clothoid`

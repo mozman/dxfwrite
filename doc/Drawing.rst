@@ -9,9 +9,9 @@ Drawing
     and blocks. The tables-attribute contains the layers, styles, linetypes and
     other tables.
     
-.. method:: Drawing.__init__
+.. method:: Drawing.__init__(name='noname.dxf')
 
-    :param string name: filename of drawing
+    :param str name: filename of drawing
 
 Methods
 -------
@@ -48,7 +48,7 @@ Methods
 
 .. method:: Drawing.add_viewport(name, **kwargs)
 
-    Define a new viewport. For valid keyword args see: :ref:`Viewport`
+    Define a new viewport. For valid keyword args see: :ref:`Vport`
 
 .. method:: Drawing.add_xref(filepath, insert=(0., 0., 0.), layer='0')
 

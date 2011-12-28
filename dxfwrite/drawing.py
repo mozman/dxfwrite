@@ -114,6 +114,7 @@ class Drawing(object):
         self.add_layer('TABLEBACKGROUND')
         self.add_layer('TABLECONTENT')
         self.add_layer('TABLEGRID')
+        self.add_layer('VIEWPORTS', color=7)
 
         # Setup paper space, but I don't know the meaning of this VIEWPORT
         # entity, also the dimensions of this viewport seems not really

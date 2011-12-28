@@ -10,7 +10,7 @@ linear segments. You can create open or closed regular or irregular polylines.
 
 Polylines are always 3D-polylines, 2D-polylines are not directly
 supported, but you can modify the created polylines by clearing the flag
-**POLYLINE_3D_POLYLINE** to get a 2D polyline.
+`POLYLINE_3D_POLYLINE` to get a 2D polyline.
 
 .. method:: DXFEngine.polyline(points=[], **kwargs)
 
@@ -37,9 +37,9 @@ Common Keyword Arguments for all Basic DXF R12 Entities
 keyword             description
 =================== =========================================================
 layer               Layer name as string
-linetype            Linetype name as string, if not defined = **BYLAYER**
-color               as integer in range [1..255], 0 = **BYBLOCK**,
-                    256 = **BYLAYER**
+linetype            Linetype name as string, if not defined = `BYLAYER`
+color               as integer in range [1..255], 0 = `BYBLOCK`,
+                    256 = `BYLAYER`
 thickness           Thickness as float
 paper_space         0 = entity is in model_space, 1 = entity is in
                     paper_space
@@ -56,7 +56,7 @@ Flag                                Description
 POLYLINE_CLOSED                     This is a closed Polyline (or a
                                     polygon mesh closed in the M
                                     direction)
-POLYLINE_MESH_CLOSED_M_DIRECTION    equals **POLYLINE_CLOSED**
+POLYLINE_MESH_CLOSED_M_DIRECTION    equals `POLYLINE_CLOSED`
 POLYLINE_CURVE_FIT_VERTICES_ADDED   Curve-fit vertices have been added
 POLYLINE_SPLINE_FIT_VERTICES_ADDED  Spline-fit vertices have been added
 POLYLINE_3D_POLYLINE                This is a 3D Polyline
@@ -100,7 +100,7 @@ Methods
 
     Close Polyline: first vertex is connected with last vertex.
 
-    :param bool status:  **True** close polyline; **False** open polyline
+    :param bool status:  `True` close polyline; `False` open polyline
 
 Example::
 

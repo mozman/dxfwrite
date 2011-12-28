@@ -12,7 +12,7 @@ from dxfwrite.entities import Viewport
 from dxfwrite import dxfstr, DXFEngine
 
 class TestViewportEntity(unittest.TestCase):
-    expected = "  0\nVIEWPORT\n  8\n0\n 10\n0.0\n 20\n0.0\n 30\n0.0\n 40\n3.0\n"\
+    expected = "  0\nVIEWPORT\n  8\nVIEWPORTS\n 67\n1\n 10\n0.0\n 20\n0.0\n 30\n0.0\n 40\n3.0\n"\
     " 41\n2.0\n 68\n1\n 69\n1\n" \
     "1001\nACAD\n1000\nMVIEW\n1002\n{\n" \
     "1070\n16\n" \

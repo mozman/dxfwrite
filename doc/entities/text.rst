@@ -9,13 +9,13 @@ A simple one line text.
 
 .. method:: DXFEngine.text(text, insert=(0., 0.), height=1.0, **kwargs)
 
-    :param string text: the text to display
+    :param str text: the text to display
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
     :param float height: text height in drawing-units
     :param float rotation: text rotation in degree, default=0
     :param float xscale: text width factor, default=1
     :param float oblique: text oblique angle in degree, default=0
-    :param string style: text style name, default=STANDARD
+    :param str style: text style name, default=STANDARD
     :param int mirror: text generation flags, bit-coded, default=0
     :param int halign: horizontal justification type
     :param int valign: vertical justification type
@@ -32,9 +32,9 @@ Common Keyword Arguments for all Basic DXF R12 Entities
 keyword             description
 =================== =========================================================
 layer               Layer name as string
-linetype            Linetype name as string, if not defined = **BYLAYER**
-color               as integer in range [1..255], 0 = **BYBLOCK**,
-                    256 = **BYLAYER**
+linetype            Linetype name as string, if not defined = `BYLAYER`
+color               as integer in range [1..255], 0 = `BYBLOCK`,
+                    256 = `BYLAYER`
 thickness           Thickness as float
 paper_space         0 = entity is in model_space, 1 = entity is in
                     paper_space

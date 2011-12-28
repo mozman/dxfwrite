@@ -33,10 +33,10 @@ Add entities to a block definition::
 
 .. method:: DXFEngine.block(name, basepoint=(0., 0.), **kwargs)
 
-    :param string name: blockname
+    :param str name: blockname
     :param basepoint: block base point (xy- or xyz-tuple), z-axis is 0. by default
     :param int flags: block type flags
-    :param string xref: xref pathname
+    :param str xref: xref pathname
 
 where entity can be every drawing entity like circle, line, polyline, attribute,
 text, ...
@@ -72,8 +72,9 @@ Common Keyword Arguments for all Basic DXF R12 Entities
 keyword             description
 =================== =========================================================
 layer               Layer name as string
-linetype            Linetype name as string, if not defined = BYLAYER
-color               as integer in range [1..255], 0 = BYBLOCK, 256 = BYLAYER
+linetype            Linetype name as string, if not defined = `BYLAYER`
+color               as integer in range [1..255], 0 = `BYBLOCK`,
+                    256 = `BYLAYER`
 thickness           Thickness as float
 paper_space         0 = entity is in model_space, 1 = entity is in
                     paper_space

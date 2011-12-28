@@ -9,6 +9,8 @@
 __author__ = "mozman <mozman@gmx.at>"
 
 from dxfwrite.base import *
+from dxfwrite import const
+from dxfwrite.util import set_flag
 
 _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION = {
     'LTYPE': {
@@ -218,6 +220,28 @@ class Layer(_TableEntry):
         }
         default.update(kwargs)
         super(Layer, self).__init__(name, **default)
+
+    def freeze(self):
+        self['flags']= set_flag(self['flags'], const.STD_FLAGS_LAYER_FROZEN, True)
+
+    def thaw(self):
+        self['flags']= set_flag(self['flags'], const.STD_FLAGS_LAYER_FROZEN, False)
+
+    def lock(self):
+        self['flags']= set_flag(self['flags'], const.STD_FLAGS_LAYER_LOCKED, True)
+
+    def unlock(self):
+        self['flags']= set_flag(self['flags'], const.STD_FLAGS_LAYER_LOCKED, False)
+
+    def on(self):
+        color = self['color']
+        if color < 0:
+            self['color'] = color * -1
+
+    def off(self):
+        color = self['color']
+        if color > 0:
+            self['color'] = color * -1
 
 class Style(_TableEntry):
     """ DXF STYLE table entry - textstyle definition

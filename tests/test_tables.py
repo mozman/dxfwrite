@@ -27,6 +27,11 @@ class TestTables(unittest.TestCase):
         table.add( {'name': 'TEST'} )
         self.assertTrue('TEST' in table)
 
+    def test_get_layer(self):
+        table = create_table('LAYER')
+        table.add( {'name': 'TEST'} )
+        self.assertEqual(table['TEST']['name'], 'TEST')
+
     def test_empty_styles_table(self):
         table = create_table('STYLE')
         dxf = dxfstr(table)
@@ -62,6 +67,12 @@ class TestViewPorts(unittest.TestCase):
             count += 1
             self.assertEqual(table['name'], 'test')
         self.assertEqual(count, 2)
+
+    def test_get_tables_with_same_names(self):
+        vport = Viewports()
+        vport.add(self.table1)
+        vport.add(self.table2)
+        self.assertEqual(len(vport['test']), 2)
 
         
 if __name__=='__main__':

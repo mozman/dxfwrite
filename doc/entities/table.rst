@@ -25,8 +25,8 @@ block reference (ATTRIB-entity).
     :param insert: insert point as 2D or 3D point
     :param int nrows: row count
     :param int ncols: column count
-    :param bool default_grid: if **True** always a solid line grid will
-        be drawn, if **False**, only explicit defined borders will be
+    :param bool default_grid: if `True` always a solid line grid will
+        be drawn, if `False`, only explicit defined borders will be
         drawn, default grid has a priority of 50.
 
 
@@ -53,8 +53,8 @@ Methods
     content, text can be a multi-line text, use ``'\\n'`` as line
     separator.
 
-    The cell spans over **span** cells and has the cell style with the
-    name **style**.
+    The cell spans over `span` cells and has the cell style with the
+    name `style`.
 
 .. method:: Table.block_cell(row, col, blockdef, span=(1, 1), attribs={}, style='default')
 
@@ -96,7 +96,7 @@ Methods
 
     :param bool status: True for visible, else False
     :param int color: dxf color index
-    :param string linetype: linetype name, BYLAYER if None
+    :param str linetype: linetype name, BYLAYER if None
     :param int priority: drawing priority - higher values covers lower values
 
     see also :ref:`BorderStyle`.

@@ -24,17 +24,17 @@ or Preset).
 
 .. method:: DXFEngine.attdef(tag, insert=(0., 0.), **kwargs)
 
-    :param string text: attribute default text
+    :param str text: attribute default text
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
-    :param string prompt: prompt text, like "insert a value:"
-    :param string tag: attribute tag string
+    :param str prompt: prompt text, like "insert a value:"
+    :param str tag: attribute tag string
     :param int flags: attribute flags, bit-coded, default=0
     :param int length: field length ??? see dxf-documentation
     :param float height: textheight in drawing units (default=1)
     :param float rotation: text rotation (default=0) (all DXF angles in degrees)
     :param float oblique: text oblique angle in degree, default=0
     :param float xscale: width factor (default=1)
-    :param string style: textstyle (default=STANDARD)
+    :param str style: textstyle (default=STANDARD)
     :param int mirror: bit coded flags
     :param int halign: horizontal justification type, LEFT, CENTER, RIGHT,
         ALIGN, FIT, BASELINE_MIDDLE (default LEFT)
@@ -76,8 +76,9 @@ Common Keyword Arguments for all Basic DXF R12 Entities
 keyword             description
 =================== =========================================================
 layer               Layer name as string
-linetype            Linetype name as string, if not defined = BYLAYER
-color               as integer in range [1..255], 0 = BYBLOCK, 256 = BYLAYER
+linetype            Linetype name as string, if not defined = `BYLAYER`
+color               as integer in range [1..255], 0 = `BYBLOCK`,
+                    256 = `BYLAYER`
 thickness           Thickness as float
 paper_space         0 = entity is in model_space, 1 = entity is in
                     paper_space

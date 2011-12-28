@@ -786,8 +786,8 @@ class Vertex(_Entity):
 
 
 class Viewport(_Entity):
-    """ The VIEWPORT entity creates viewports in paper space to the drawing
-    model space.
+    """ The VIEWPORT entity creates viewports in paper space, this viewports
+    shows a part of the model space. It is a tool to design the drawing layout.
     """
     DXF_ENTITY_NAME = 'VIEWPORT'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['VIEWPORT']
@@ -799,8 +799,10 @@ class Viewport(_Entity):
     def __init__(self, center_point, width, height, **kwargs):
         self.extended_dxf_tags = ViewportExtendedDXFTags()
         default = {
-            'status': 1,
-            'id': Viewport.viewport_id,
+            'status': 1, # by default highest priority (stack order)
+            'id': Viewport.viewport_id, # with auto increment, user should not care about it
+            'layer': "VIEWPORTS", # use separated layer to turn off for plotting
+            'paper_space': 1, # should always be placed in the paper space
             'center_point': center_point,
             'width': width,
             'height': height,

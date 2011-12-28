@@ -20,9 +20,9 @@ http://en.wikipedia.org/wiki/Ellipse
     :param float endangle: in degree
     :param float rotation: angle between x-axis and ellipse-main-axis in degree
     :param int segments: count of line segments for polyline approximation
-    :param string linetype: linetype name, if not defined = **BYLAYER**
-    :param string layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param str linetype: linetype name, if not defined = `BYLAYER`
+    :param str layer: layer name
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 Example
 -------

@@ -22,9 +22,9 @@ Insert a new block-reference with auto-creating of :ref:`ATTRIB` from
         block-definition. example: {'TAG1': 'TextOfTAG1'}, create and insert
         an attrib from an attdef (with tag-value == 'TAG1'), and set
         text-value of the attrib to value 'TextOfTAG1'.
-    :param string linetype: linetype name, if not defined = **BYLAYER**
+    :param string linetype: linetype name, if not defined = `BYLAYER`
     :param string layer: layer name
-    :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
+    :param int color: range [1..255], 0 = `BYBLOCK`, 256 = `BYLAYER`
 
 Example
 -------

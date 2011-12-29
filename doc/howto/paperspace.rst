@@ -12,7 +12,7 @@ The paper space is separated from the model space by the common DXF entity
 attribute `paper_space`. If this attribute is ``'0'`` the entity is placed in
 model space, if the attribute is ``'1'``, the entity is placed in paper space.
 
-.. note:: In the DXF R12 format exists is only **one** paper space.
+.. note:: In the DXF R12 format exists only **one** paper space.
 
 How to add entities to paper space?
 -----------------------------------

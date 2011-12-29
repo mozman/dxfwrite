@@ -22,8 +22,8 @@ usage::
 First create a :ref:`Drawing`, then create various
 drawing entities by :class:`DXFEngine` and add them to the
 drawing with the :meth:`Drawing.add` method. :ref:`Layers <Layer>`,
-:ref:`Textstyles <Textstyle>`, :ref:`Views <view>` and
-:ref:`Viewports <vport>` were also created by the :class:`DXFEngine` object.
+:ref:`Textstyles <Textstyle>`, :ref:`Linetypes <Linetype>`, :ref:`Views <view>`
+and :ref:`Viewports <vport>` were also created by the :class:`DXFEngine` factory.
 
 Contents
 ========

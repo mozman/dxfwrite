@@ -2,17 +2,20 @@
 News
 ====
 
-Version 1.1.0 - ...
+Version 1.1.0 - 29 December 2011
 
   * rewrite of DXF-String building process
   * refactored MText class
   * changed Viewport table entry to VPort and DXFEngine.viewport to
     DXFEngine.vport. This was necessary to implement the VIEWPORT (Entity)
   * added VIEWPORT (Entity) to create viewports in paper space
-  * view docs also on dxfwrite.readthedocs.org
+  * view docs also on http://dxfwrite.readthedocs.org
   * added some docs
   * changed clothoid mirror parameters
-  * added Layer() methods: on(), off(), freeze(), thaw(), lock(), unlock()
+  * added methods to class `Layer`: on(), off(), freeze(), thaw(), lock(), unlock()
+  * tested on Win7 32 Bit with CPython-2.7, CPython-3.2 and pypy-1.7,
+    IronPython 2.7 failed tests - unicode issues
+  * tested on Ubuntu 11.10 64 Bit with CPython-2.7, CPython-3.2 and pypy-1.7
 
 Version 1.0.2 - 08 December 2011
 
@@ -37,7 +40,7 @@ Version 1.0.0 - 11 March 2011
   * further compatibility-tests only for CPython 2.7 & CPython 3.2+
   * added Drawing.add_xref(filename), for usage see examples/xref.py
   * adding relative attributes by Insert.add() consider the xy-scaling
-  * added **Howtos** section to documentation
+  * added `Howtos` section to documentation
 
 Version 0.3.6 - 14 November 2010
 

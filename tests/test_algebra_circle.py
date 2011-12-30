@@ -17,8 +17,8 @@ class Test_Circle(unittest.TestCase):
         self.assertAlmostEqual(point[0], 0., places=3)
         self.assertAlmostEqual(point[1], 5., places=3)
         point = circle.get_point(HALF_PI/2)
-        self.assertAlmostEquals(point[0], 3.5355, places=3)
-        self.assertAlmostEquals(point[1], 3.5355, places=3)
+        self.assertAlmostEqual(point[0], 3.5355, places=3)
+        self.assertAlmostEqual(point[1], 3.5355, places=3)
 
     def test_within(self):
         circle = Circle((0.,0.), 5)

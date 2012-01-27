@@ -92,7 +92,7 @@ usage::
     block = dxf.block(name='BLOCK1')
 
     # add block-definition to drawing
-    drawing.block.add(block)
+    drawing.blocks.add(block)
 
     # create a block-reference
     blockref = dxf.insert(blockname='BLOCK1', insert=(10, 10))

@@ -15,7 +15,7 @@ from dxfwrite.engine import DXFEngine
 version = (1, 2, 0)
 VERSION = "%d.%d.%d"  % version
 
-CYEAR = "2010, 2011"
+CYEAR = "2010-2012"
 AUTHOR_NAME = "Manfred Moitzi"
 AUTHOR_EMAIL = "mozman@gmx.at"
 LICENSE = "MIT License"

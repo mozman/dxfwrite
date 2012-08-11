@@ -3,7 +3,7 @@
 # Purpose: read, create and write acad ctb files
 # Created: 23.03.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 # IMPORTANT: use only standard 7-Bit ascii code
 

@@ -3,7 +3,7 @@
 # Purpose: try viewports in paperspace
 # Created: 27.12.2011
 # Copyright (C) 2011, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 __author__ = "mozman <mozman@gmx.at>"
 

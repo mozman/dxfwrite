@@ -3,7 +3,7 @@
 # Purpose: 2d clothoid
 # module belongs to package: dxfwrite.py
 # Created: 26.03.2010
-# License: GPLv3
+# License: MIT License
 
 __author__ = "mozman <mozman@gmx.at>"
 

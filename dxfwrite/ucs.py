@@ -3,7 +3,7 @@
 # Purpose: user coordinate system
 # module belongs to package dxfwrite
 # Created: 27.03.2010
-# License: GPLv3
+# License: MIT License
 
 __author__ = "mozman <mozman@gmx.at>"
 

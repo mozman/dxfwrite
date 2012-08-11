@@ -2,7 +2,7 @@
 #coding:utf-8
 # Created: 21.03.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 __author__ = "mozman <mozman@gmx.at>"
 

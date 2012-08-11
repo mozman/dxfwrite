@@ -3,7 +3,7 @@
 # Purpose: try paperspace
 # Created: 26.03.2011
 # Copyright (C) , Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 __author__ = "mozman <mozman@gmx.at>"
 

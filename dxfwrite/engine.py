@@ -4,7 +4,7 @@
 # module belongs to package: dxfwrite
 # Created: 14.02.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 """ DXFEngine is the dedicated interface to dxfwrite
 """

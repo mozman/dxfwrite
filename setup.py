@@ -4,7 +4,7 @@
 # Purpose: setup
 # Created: 14.03.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 import os
 from distutils.core import setup
@@ -29,7 +29,7 @@ setup(name='dxfwrite',
     long_description=read('README.txt')+read('NEWS.txt'),
     keywords=['DXF', 'CAD'],
     platforms="OS Independent",
-    license="GPLv3",
+    license="MIT License",
     classifiers=[
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: GNU General Public License (GPL)",
@@ -37,6 +37,7 @@ setup(name='dxfwrite',
     "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.2",
+    "Programming Language :: Python :: 3.3",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Intended Audience :: Developers",

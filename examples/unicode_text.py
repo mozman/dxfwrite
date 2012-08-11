@@ -4,7 +4,7 @@
 # Purpose: Using unicode text in the drawing
 # Created: 22.11.2011
 # Copyright (C) 2010, Toni Ruža
-# License: GPLv3
+# License: MIT License
 
 from __future__ import unicode_literals
 

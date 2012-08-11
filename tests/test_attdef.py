@@ -3,7 +3,7 @@
 # Purpose: test dxfwrite.entities.Attdef()
 # Created: 21.02.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 __author__ = "mozman <mozman@gmx.at>"
 

@@ -4,7 +4,7 @@
 # Purpose: xref example
 # Created: 27.02.2011
 # Copyright (C) , Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 import sys
 import os

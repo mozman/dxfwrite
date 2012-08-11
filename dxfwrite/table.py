@@ -4,7 +4,7 @@
 # module belongs to package: dxfwrite.py
 # Created: 18.03.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 """
 Table object like a HTML-Table, buildup with DXF R12 entities.
 

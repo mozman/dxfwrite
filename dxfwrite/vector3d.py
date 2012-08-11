@@ -4,7 +4,7 @@
 # Purpose: 3d vectormath
 # module belongs to package dxfwrite
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 """
 3d vector math module
 """

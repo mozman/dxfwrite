@@ -4,7 +4,7 @@
 # module belongs to package dxfwrite
 # Created: 16.03.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 """
 2d vector math module
 """

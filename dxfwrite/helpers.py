@@ -3,7 +3,7 @@
 # Purpose: normalize dxf chunks
 # Created: 24.02.2011
 # Copyright (C) 2011, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 __author__ = "mozman <mozman@gmx.at>"
 

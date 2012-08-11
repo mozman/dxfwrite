@@ -2,7 +2,7 @@
 #coding:utf-8
 # Purpose: algebra lib to calculate with geometric forms
 # Created: 27.03.2010
-# License: GPLv3
+# License: MIT License
 
 
 
@@ -17,7 +17,7 @@ from dxfwrite.algebra.cspline import CubicSpline
 
 __version__ = "v0.2 - 2010.03.27"
 __author__ = "mozman <mozman@gmx.at>"
-__license__ = "GPLv3"
+__license__ = "MIT License"
 
 __doc__ = """A library to calculate with geometric forms.
 

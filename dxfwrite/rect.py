@@ -4,7 +4,7 @@
 # module belongs to package: dxfwrite.py
 # Created: 09.03.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 """
 2D Rectangle, with optional background filling
 """

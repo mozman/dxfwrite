@@ -5,7 +5,7 @@
 # module belongs to package: dxfwrite.py
 # Created: 13.03.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 """ Implements a 2D-ray class - same as algebra.Ray2D, but without the
 dependency from the algebra package.

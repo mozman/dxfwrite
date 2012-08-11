@@ -5,7 +5,7 @@
 # module belongs to package: dxfwrite.py
 # Created: 10.03.2010
 # Copyright (C) 2010, Manfred Moitzi
-# License: GPLv3
+# License: MIT License
 
 """ Simple 2D dimension lines build with basic dxf entities, but not the basic
 dxf dimension-entity!

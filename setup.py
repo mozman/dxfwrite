@@ -32,7 +32,7 @@ setup(name='dxfwrite',
     license="MIT License",
     classifiers=[
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",

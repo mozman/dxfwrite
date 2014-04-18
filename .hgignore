@@ -3,6 +3,7 @@ build/*
 dist/*
 doc/_build/*
 .tox/*
+.idea/*
 *.err
 *.dxf
 *.orig

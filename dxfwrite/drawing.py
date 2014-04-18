@@ -104,6 +104,7 @@ class Drawing(object):
         self.header['$INSBASE'] = (0, 0, 0)
         self.header['$EXTMIN'] = (0, 0, 0)
         self.header['$EXTMAX'] = (100, 100, 0)
+        self.header['$UNITMODE'] = 0  # for metric units in viewers
 
         for ltype in self.std_linetypes():
             self.linetypes.add(ltype)
@@ -178,12 +179,12 @@ class Drawing(object):
         return [DXFEngine.linetype(
             name, description=desc,
             pattern=DXFEngine.linepattern(pat))
-                for name, desc, pat in std.linetypes()]
+            for name, desc, pat in std.linetypes()]
 
     def std_styles(self):
         """ Create standard text styles.
         """
-        return [DXFEngine.style(name, font=f) for name, f in std.styles() ]
+        return [DXFEngine.style(name, font=f) for name, f in std.styles()]
 
     def add_xref(self, filepath, insert=(0., 0., 0.), layer='0'):
         """ Create a simple XREF reference, `filepath` is the referenced

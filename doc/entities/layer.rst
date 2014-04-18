@@ -15,7 +15,7 @@ usually belong on three separate layers, for a couple of reasons:
 * Layers provide the most efficient way of controlling object color and linetype
 
 First you have to create layers, assigning them names and properties such as
-color and linetype. Then you can assign those layers to other darwing entities.
+color and linetype. Then you can assign those layers to other drawing entities.
 To assign a layer just use its name as string.
 
 Create a layer::

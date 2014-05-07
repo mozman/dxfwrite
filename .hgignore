@@ -1,0 +1,19 @@
+syntax: glob
+build/*
+dist/*
+doc/_build/*
+.tox/*
+.idea/*
+*.err
+*.dxf
+*.orig
+*.bak
+*.pyc
+*.dwg
+*.dwl
+*.mtl
+*.obj
+*.*~
+*.wpr
+MANIFEST
+.coverage

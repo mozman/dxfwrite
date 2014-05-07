@@ -1,0 +1,82 @@
+
+News
+====
+
+Version 1.2.0 - 2012-08-01
+
+  * License changed to MIT License
+  * tested on Win7 with: CPython2.7, CPython3.2, CPython3.3 beta, pypy-1.9
+
+Version 1.1.0 - 2011-12-29
+
+  * rewrite of DXF-String building process
+  * refactored MText class
+  * changed Viewport table entry to VPort and DXFEngine.viewport to
+    DXFEngine.vport. This was necessary to implement the VIEWPORT (Entity)
+  * added VIEWPORT (Entity) to create viewports in paper space
+  * view docs also on http://dxfwrite.readthedocs.org
+  * added some docs
+  * changed clothoid mirror parameters
+  * added methods to class `Layer`: on(), off(), freeze(), thaw(), lock(), unlock()
+  * tested on Win7 32 Bit with CPython-2.7, CPython-3.2 and pypy-1.7,
+    IronPython 2.7 failed tests - unicode issues
+  * tested on Ubuntu 11.10 64 Bit with CPython-2.7, CPython-3.2 and pypy-1.7
+
+Version 1.0.2 - 2011-12-08
+
+  * raw unicode encoding by Toni Ruža - use any unicode character for text and table-entries.
+
+Version 1.0.1 - 2011-03-26
+
+  * added easy usage of modelspace/paperspace, see examples/paperspace.py
+  * BUGFIX: removed dict-comprehension in module htmlcolors.py for
+    backward-compatibility to Python 2.5 and 2.6, works with pypy 1.4.1
+
+Version 1.0.0 - 2011-03-11
+
+  * changed: set DXF Header variables now looks like dwg.header['$VAR'] = value,
+    see http://packages.python.org/dxfwrite/headervars.html
+  * splitted makedxfexamples.py into several files and moved them into the
+    subdir 'examples'
+  * curves.Ellpise: radiusx -> rx; radiusy -> ry
+  * moved documentation to: http://packages.python.org/dxfwrite,
+    and using Sphinx (http://sphinx.pocoo.org)
+  * tested with Python 3.2 - OK
+  * further compatibility-tests only for CPython 2.7 & CPython 3.2+
+  * added Drawing.add_xref(filename), for usage see examples/xref.py
+  * adding relative attributes by Insert.add() consider the xy-scaling
+  * added `Howtos` section to documentation
+
+Version 0.3.6 - 2010-11-14
+
+  * moved dxfwrite.drawing.ENCODING to class Drawing
+  * Python 3.1 support
+
+Version 0.3.5 - 2010-09-10
+
+  * new: package and tests run with Python 2.7
+
+Version 0.3.4 - 2010-08-29
+
+  * status: 5 - Production/Stable
+  * new: package and tests run with Python 2.5 (tests need unittest2)
+
+Version 0.3.3 - 2010-04-27
+
+  * BUGFIX: makedxfexamples.py - attdef keyword error
+
+Version 0.3.2 - 2010-04-27
+
+  * BUGFIX: Drawing.__dxf__() - StringIO() does not support 'with' statement
+
+Version 0.3.1 - 2010-04-24
+
+  * new: insert2, insert block reference with automatic attrib filling
+  * changed interface for DXFEngine.attrib()
+
+Version 0.3.0b1 - 2010-03-28
+
+  * new: subpackage algebra: circle, ray, clothoid, cspline, bezier (27.03.2010)
+  * new: Spline, Bezier, Clothoid and Ellipse - curves (27.03.2010)
+  * new: acadctb.py to read, write and create AutoCAD ctb-files (25.03.2010)
+  * splitted buildups.py into mtext.py and rect.py

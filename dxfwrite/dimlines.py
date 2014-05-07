@@ -31,12 +31,12 @@ __author__ = "mozman <mozman@gmx.at>"
 
 from math import radians, degrees, pi
 
-from dxfwrite.vector2d import *
-from dxfwrite import DXFList, dxfstr
-from dxfwrite.algebra import Ray2D
-from dxfwrite.entities import Line, Text, Block, Insert, Solid, Arc, Circle
-import dxfwrite.const as const
-from dxfwrite.util import to_unicode
+from .vector2d import *
+from . import DXFList, dxfstr
+from .algebra import Ray2D
+from .entities import Line, Text, Block, Insert, Solid, Arc, Circle
+from . import const
+from .util import to_unicode
 
 __all__ = ['LinearDimension', 'AngularDimension', 'ArcDimension',
            'RadialDimension', 'dimstyles']

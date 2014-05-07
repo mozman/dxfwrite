@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(curdir, os.path.pardir)))
 import dxfwrite
 from dxfwrite import DXFEngine as dxf
 
+
 def create_xref(xrefname):
     dwg = dxf.drawing(xrefname)
     for x in range(6):
@@ -22,11 +23,13 @@ def create_xref(xrefname):
     dwg.add(dxf.text('I AM THE XREF', (0.25, 0.25), height=0.5, color=6))
     dwg.save()
 
+
 def get_host_dwg(drawingname):
     dwg = dxf.drawing(drawingname)
     dwg.add(dxf.text('I AM THE HOST DRAWING', (-0.5, 1.5), 0.5, color=2))
     dwg.add(dxf.rectangle((-1,-1), 10, 3, color=2))
     return dwg
+
 
 def use_xref_manual(drawingname, xrefname):
     dwg = get_host_dwg(drawingname)
@@ -45,6 +48,7 @@ def use_xref_manual(drawingname, xrefname):
     dwg.add(dxf.insert('xref', layer='XREF'))
     dwg.save()
 
+
 def use_xref_shortcut(drawingname, xrefname):
     dwg = get_host_dwg(drawingname)
     # AutoCAD 2010 can not resolve XREFS in DXF R12 Format :-(,
@@ -53,6 +57,7 @@ def use_xref_shortcut(drawingname, xrefname):
     # no control over flags, layer, linetype, ...
     dwg.add_xref(xrefname)
     dwg.save()
+
 
 xrefname = 'xref_drawing.dxf'
 create_xref(xrefname)

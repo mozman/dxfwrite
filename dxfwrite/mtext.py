@@ -19,9 +19,10 @@ __author__ = "mozman <mozman@gmx.at>"
 import math
 
 import dxfwrite
-from dxfwrite.base import DXFList, dxfstr
-from dxfwrite.entities import Text
-from dxfwrite.mixins import SubscriptAttributes
+from .base import DXFList, dxfstr
+from .entities import Text
+from .mixins import SubscriptAttributes
+
 
 class MText(SubscriptAttributes):
     """ MultiLine-Text buildup with simple Text-Entities.

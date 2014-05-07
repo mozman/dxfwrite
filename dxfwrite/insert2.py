@@ -13,10 +13,11 @@ and setting attrib-text by the attribs-dict.
 
 __author__ = "mozman <mozman@gmx.at>"
 
-from dxfwrite.entities import Insert
-import dxfwrite.const as const
+from .entities import Insert
+from . import const
 
 __all__ = ['Insert2']
+
 
 class Insert2(object):
     """

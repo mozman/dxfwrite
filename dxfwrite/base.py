@@ -8,11 +8,12 @@
 
 __author__ = "mozman <mozman@gmx.at>"
 
-from dxfwrite.util import izip, PYTHON3, to_string, is_string, iterflatlist
+from .util import izip, PYTHON3, to_string, is_string, iterflatlist
 if PYTHON3:
     xrange = range
 
-from dxfwrite.vector3d import cross_product, unit_vector
+from .vector3d import cross_product, unit_vector
+
 
 def dxfstr(obj):
     """ Create the DXF string by calling the __dxf__() method.
@@ -25,6 +26,7 @@ def dxfstr(obj):
     """
     return obj.__dxf__()
 
+
 def iterdxftags(dxfobj):
     if hasattr(dxfobj, '__dxftags__'):
         for tag in dxfobj.__dxftags__():
@@ -32,6 +34,7 @@ def iterdxftags(dxfobj):
                     yield subtag
     else:
         yield dxfobj
+
 
 def tags2str(dxfobj):
     """ Creates the DXF string by collecting the DXF tags at first, by iterating over all dxf tags.
@@ -43,7 +46,8 @@ def tags2str(dxfobj):
 
     """
     return "".join( (tag.__dxf__() for tag in iterdxftags(dxfobj)) )
-    
+
+
 def writetags(fileobj, dxfobj, encoding=None):        
     if PYTHON3 or (encoding is None):
         write = lambda tag: fileobj.write(tag)
@@ -53,8 +57,10 @@ def writetags(fileobj, dxfobj, encoding=None):
     for dxftag in iterdxftags(dxfobj):
         write(dxftag.__dxf__())
 
+
 class DXFValidationError(Exception):
     pass
+
 
 class _DXFType(object):
     _group_code_types = None
@@ -133,6 +139,7 @@ class _DXFType(object):
         for code in xrange(begin, end):
             self._group_code_types[code] = type_str
 
+
 class DXFAtom(object):
     """ The basic dxf object """
     _dxftype = _DXFType()
@@ -184,6 +191,7 @@ class DXFAtom(object):
         return (self.group_code == atom.group_code) and \
                (self.value == atom.value)
 
+
 class DXFList(list):
     """ Collection of DXFAtoms. """
     def __dxf__(self):
@@ -210,35 +218,42 @@ class DXFList(list):
                 pass
         return False
 
+
 class DXFString(DXFAtom):
     """ String with group code 1 """
     def __init__(self, value, group_code=1):
         super(DXFString, self).__init__(to_string(value), group_code)
+
 
 class DXFName(DXFAtom):
     """ String with group code 2 """
     def __init__(self, value, group_code=2):
         super(DXFName, self).__init__(to_string(value), group_code)
 
+
 class DXFFloat(DXFAtom):
     """ float with group code 40 """
     def __init__(self, value, group_code=40):
         super(DXFFloat, self).__init__(float(value), group_code)
+
 
 class DXFAngle(DXFAtom):
     """ float with group code 50, angle in degrees """
     def __init__(self, value, group_code=50):
         super(DXFAngle, self).__init__(float(value), group_code)
 
+
 class DXFInt(DXFAtom):
     """ 16 bit integer with group code 70 """
     def __init__(self, value, group_code=70):
         super(DXFInt, self).__init__(int(value), group_code)
 
+
 class DXFBool(DXFAtom):
     """ Integer 0 or 1 """
     def __init__(self, value=1, group_code=290):
         super(DXFBool, self).__init__(int(value), group_code)
+
 
 class DXFPoint(object):
     """ 3D point with 3 float coordinates """
@@ -301,10 +316,12 @@ class DXFPoint(object):
         # several serious problems.
         return tuple(self['xyz'[:len(self.point)]])
 
+
 class DXFPoint2D(DXFPoint):
     """ only output x and y axis! """
     def __dxf__(self):
         return "".join([coord.__dxf__() for coord in self.point[:2]])
+
 
 class DXFPoint3D(DXFPoint):
     """ An assurd 3D point """
@@ -313,8 +330,10 @@ class DXFPoint3D(DXFPoint):
             coords = (coords[0], coords[1], 0.)
         super(DXFPoint3D, self).__init__(coords, index_shift)
 
+
 def PassThroughFactory(value, group_code):
     return value
+
 
 class AttribDef(object):
     """ Attribute definition
@@ -344,6 +363,7 @@ class AttribDef(object):
 _LIMIT = 1./64.
 _WY = (0., 1., 0.)
 _WZ = (0., 0., 1.)
+
 
 def get_OCS(zvector):
     """Get the Object-Coordinate-System (a.k.a. ECS Entity-C-S).

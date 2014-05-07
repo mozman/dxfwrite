@@ -12,7 +12,7 @@ import math
 from array import array
 from itertools import repeat
 
-from dxfwrite.util import izip
+from ..util import izip
 
 def _coords(points, index=0):
     return array('f' , (point[index] for point in points))

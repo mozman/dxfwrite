@@ -14,6 +14,7 @@ PYTHON3 = sys.version_info[0] > 2
 if PYTHON3:
     from io import StringIO
     izip = zip
+
     def is_string(value):
         return isinstance(value, str)
 
@@ -29,9 +30,10 @@ if PYTHON3:
                 return str(escaped_value.replace(b'\\u', b'\\U+'), 'utf-8')
             else:
                 return value
-else: # PYTHON2
+else:  # PYTHON2
     from itertools import izip
     from StringIO import StringIO
+
     def is_string(value):
         return isinstance(value, basestring)
 
@@ -50,17 +52,21 @@ else: # PYTHON2
 
 # end of Python 2/3 adaption
 
+
 def int2hex(value):
     return hex(value)[2:].upper()
 
+
 def hex2int(string):
     return int(string, 16)
+
 
 def set_flag(value, bitmask, switch_on=True):
     if switch_on:
         return value | bitmask
     else:
         return value & ~bitmask
+
 
 def iterflatlist(alist):
     for element in alist:

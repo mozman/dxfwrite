@@ -22,9 +22,10 @@ except ImportError:
 import dxfwrite
 from dxfwrite import DXFEngine as dxf
 
+
 def color_name(dxf_index):
     try:
-        if dxf_index==7:
+        if dxf_index == 7:
             return 'BLACK/WHITE'
         else:
             rgb = colors.get_rgb(dxf_index)

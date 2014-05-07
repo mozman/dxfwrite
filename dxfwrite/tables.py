@@ -10,7 +10,7 @@ __author__ = "mozman <mozman@gmx.at>"
 
 __all__ = ['create_table']
 
-from dxfwrite.base import *
+from .base import *
 
 def create_table(name):
     """ Table factory.

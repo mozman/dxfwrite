@@ -7,6 +7,7 @@
 
 __author__ = "mozman <mozman@gmx.at>"
 
+
 def normalize_dxf_chunk(dxfstr):
     def round_floats_but_not_ints(tag, places=7):
         try:

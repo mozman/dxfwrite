@@ -8,7 +8,7 @@
 __author__ = "mozman <mozman@gmx.at>"
 
 from functools import partial
-from dxfwrite.base import DXFString, DXFInt, DXFFloat, DXFPoint2D, DXFPoint3D
+from .base import DXFString, DXFInt, DXFFloat, DXFPoint2D, DXFPoint3D
 
 Factory = {
     '$ACADVER': partial(DXFString, group_code=1),

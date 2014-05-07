@@ -7,6 +7,7 @@
 
 __author__ = "mozman <mozman@gmx.at>"
 
+
 class SubscriptAttributes(object):
     def __getitem__(self, item):
         if hasattr(self, item):

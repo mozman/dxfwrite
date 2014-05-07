@@ -48,8 +48,8 @@ FILL_STYLE_SQUARE_DOTS = 71
 FILL_STYLE_VERICAL_BARS = 72
 FILL_STYLE_OBJECT = 73
 
-DITHERING_ON = 1 # bit coded color_policy
-GRAYSCALE_ON = 2 # bit coded color_policy
+DITHERING_ON = 1  # bit coded color_policy
+GRAYSCALE_ON = 2  # bit coded color_policy
 
 AUTOMATIC = 0
 OBJECT_LINEWEIGHT = 0
@@ -60,34 +60,35 @@ OBJECT_COLOR2 = -1006632961
 STYLE_COUNT = 255
 
 DEFAULT_LINE_WEIGHTS = [
- 0.00, # 0
- 0.05, # 1
- 0.09, # 2
- 0.10, # 3
- 0.13, # 4
- 0.15, # 5
- 0.18, # 6
- 0.20, # 7
- 0.25, # 8
- 0.30, # 9
- 0.35, # 10
- 0.40, # 11
- 0.45, # 12
- 0.50, # 13
- 0.53, # 14
- 0.60, # 15
- 0.65, # 16
- 0.70, # 17
- 0.80, # 18
- 0.90, # 19
- 1.00, # 20
- 1.06, # 21
- 1.20, # 22
- 1.40, # 23
- 1.58, # 24
- 2.00, # 25
- 2.11, # 26
+    0.00,  # 0
+    0.05,  # 1
+    0.09,  # 2
+    0.10,  # 3
+    0.13,  # 4
+    0.15,  # 5
+    0.18,  # 6
+    0.20,  # 7
+    0.25,  # 8
+    0.30,  # 9
+    0.35,  # 10
+    0.40,  # 11
+    0.45,  # 12
+    0.50,  # 13
+    0.53,  # 14
+    0.60,  # 15
+    0.65,  # 16
+    0.70,  # 17
+    0.80,  # 18
+    0.90,  # 19
+    1.00,  # 20
+    1.06,  # 21
+    1.20,  # 22
+    1.40,  # 23
+    1.58,  # 24
+    2.00,  # 25
+    2.11,  # 26
 ]
+
 
 def color_name(index):
     return 'Color_%d' % (index+1)
@@ -102,6 +103,7 @@ def get_bool(value):
         else:
             raise ValueError("Unknown bool value '%s'." % str(value))
     return value
+
 
 class UserStyle(object):
     def __init__(self, index, init_dict={}, parent=None):
@@ -141,14 +143,14 @@ class UserStyle(object):
         self._mode_color = OBJECT_COLOR
 
     def set_lineweight(self, lineweight):
-        """Set lineweight. Use 0.0 to set lineweight by object.
+        """Set lightweight. Use 0.0 to set lightweight by object.
 
-        lineweight in mm! not the lineweight index
+        lightweight in mm! not the lightweight index
         """
         self.lineweight = self.parent.get_lineweight_index(lineweight)
 
     def get_lineweight(self):
-        """Returns the lineweight in millimeters.
+        """Returns the lightweight in millimeters.
 
         returns 0.0 for: use object lineweight
         """
@@ -168,7 +170,6 @@ class UserStyle(object):
 
     def get_dxf_color_index(self):
         return self.index+1
-
 
     def get_dithering(self):
         return bool(self._color_policy & DITHERING_ON)
@@ -212,6 +213,7 @@ class UserStyle(object):
         fileobj.write('  end_style=%d\n' % self.end_style)
         fileobj.write('  join_style=%d\n' % self.join_style)
         fileobj.write(' }\n')
+
 
 class UserStyles(object):
     """UserStyle container"""
@@ -386,7 +388,6 @@ class UserStyles(object):
         set_lineweights(parser.get('custom_lineweight_table', None))
         set_styles(parser.get('plot_style', {}))
 
-
     def _compress(self, fileobj, body):
         """Compress ctb-file-body and write it to <fileobj>."""
         def writestr(s):
@@ -402,6 +403,7 @@ class UserStyles(object):
         fileobj.write(pack('LLL', adler_chksum, len(body), len(comp_body)))
         fileobj.write(comp_body)
 
+
 def read(fileobj):
     """Read a ctb-file from the file-like object <fileobj>.
     Returns a UserStyle object.
@@ -413,6 +415,7 @@ def read(fileobj):
     styles.parse(content)
     return styles
 
+
 def load(filename):
     """Load the ctb-file <filename>."""
     fileobj = open(filename, 'rb')
@@ -420,11 +423,13 @@ def load(filename):
     fileobj.close()
     return ctbfile
 
+
 def _decompress(fileobj):
     """Read and decompress the file content of the file-like object <fileobj>."""
     content = fileobj.read()
     text = zlib.decompress(content[60:])
     return text[:-1] # truncate trailing \nul
+
 
 class CtbParser(object):
     """A very simple ctb-file parser. Ctb-files are created by programms, so the
@@ -463,9 +468,9 @@ class CtbParser(object):
             data = dict()
             while not end_of_list():
                 name = get_name(line_index)
-                line_index, value = get_value(line_index) # get value or sub-list
+                line_index, value = get_value(line_index)  # get value or sub-list
                 data[name] = value
-            return line_index+1, data # skip '}' - end of list
+            return line_index+1, data  # skip '}' - end of list
 
         def get_value(line_index):
             """Get value of line <line_index> or the list that starts in line
@@ -496,18 +501,31 @@ class CtbParser(object):
     def get(self, name, default):
         return self.data.get(name, default)
 
+# Magic Number: (thx to Rammi)
+# Take color from layer, ignore other bytes.
+COLOR_BY_LAYER = 0xc0
+# Take color from insertion, ignore other bytes
+COLOR_BY_BLOCK = 0xc1
+# RGB value, other bytes are R,G,B.
+COLOR_RGB = 0xc2
+# ACI, AutoCAD color index, other bytes are 0,0,index
+COLOR_ACI = 0xc3
+
 def int2color(color):
     """Convert color integer value from ctb-file to rgb-tuple plus a magic number.
     """
-    magic = (color & 0xff000000) >> 24 # is 0xc3 or 0xc2 don't know what this value means
+    # Take color from layer, ignore other bytes.
+    magic = (color & 0xff000000) >> 24
     red = (color & 0xff0000) >> 16
     green = (color & 0xff00) >> 8
     blue = color & 0xff
     return (red, green, blue, magic)
 
+
 def mode_color2int(red, green, blue, magic=0xc2):
     """Convert rgb-tuple to an int value."""
     return -color2int(red, green, blue, magic)
+
 
 def color2int(red, green, blue, magic):
     """Convert rgb-tuple to an int value."""

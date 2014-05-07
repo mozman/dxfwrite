@@ -7,7 +7,7 @@
 
 __author__ = "mozman <mozman@gmx.at>"
 
-from dxfwrite.std import DXFColorIndex
+from .std import DXFColorIndex
 
 allplan_default_color_table = [
     (255, 255, 255), # 0

@@ -9,9 +9,10 @@ __author__ = "mozman <mozman@gmx.at>"
 
 __all__ = ['create_section']
 
-from dxfwrite.base import DXFAtom, DXFList, DXFName, dxfstr
-from dxfwrite.tables import create_table
-from dxfwrite import hdrvars
+from .base import DXFAtom, DXFList, DXFName, dxfstr
+from .tables import create_table
+from . import hdrvars
+
 
 def create_section(name):
     """ Sections factory.
@@ -27,6 +28,7 @@ def create_section(name):
     else:
         raise ValueError("unknown section '%s'" % str(name))
 
+
 class _Section(object):
     def __dxf__(self):
         return dxfstr(self.__dxftags__())
@@ -38,9 +40,9 @@ class _Section(object):
             DXFAtom('ENDSEC')
         ))
 
-
     def _get_body(self):
         """ abstract """
+
 
 class Header(_Section):
     def __init__(self, default_vars=None):
@@ -71,6 +73,7 @@ class Header(_Section):
         """
         self.variables[key] = hdrvars.Factory[key](value)
 
+
 class TablesSection(_Section):
     def __init__(self):
         self.linetypes = create_table('LTYPE')
@@ -82,15 +85,16 @@ class TablesSection(_Section):
         self.ucs = create_table('UCS')
 
     def _get_body(self):
-        return DXFList( (DXFName('TABLES'),
-                          self.linetypes,
-                          self.layers,
-                          self.styles,
-                          self.views,
-                          self.appids,
-                          self.viewports,
-                          self.ucs,
-                          ) )
+        return DXFList((DXFName('TABLES'),
+                        self.linetypes,
+                        self.layers,
+                        self.styles,
+                        self.views,
+                        self.appids,
+                        self.viewports,
+                        self.ucs,
+        ))
+
 
 class Blocks(_Section):
     def __init__(self):

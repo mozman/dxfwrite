@@ -11,17 +11,18 @@
 
 __author__ = "mozman <mozman@gmx.at>"
 
-from dxfwrite.entities import Line, Point, Solid, Face3D, Text, Arc, Circle
-from dxfwrite.entities import Trace, Polyline, Polymesh, Polyface
-from dxfwrite.entities import Insert, Block, Attdef, Attrib, Shape, Viewport
-from dxfwrite.mtext import MText
-from dxfwrite.insert2 import Insert2
-from dxfwrite.rect import Rectangle
-from dxfwrite.table import Table
-from dxfwrite.curves import Ellipse, Spline, Bezier, Clothoid
+from .entities import Line, Point, Solid, Face3D, Text, Arc, Circle
+from .entities import Trace, Polyline, Polymesh, Polyface
+from .entities import Insert, Block, Attdef, Attrib, Shape, Viewport
+from .mtext import MText
+from .insert2 import Insert2
+from .rect import Rectangle
+from .table import Table
+from .curves import Ellipse, Spline, Bezier, Clothoid
 
-from dxfwrite.tableentries import Linetype, Style, Layer
-from dxfwrite.tableentries import View, VPort, UCS, AppID
+from .tableentries import Linetype, Style, Layer
+from .tableentries import View, VPort, UCS, AppID
+
 
 class DXFEngine(object):
     """ Factory, creates all the DXF entities.

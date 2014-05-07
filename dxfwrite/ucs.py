@@ -9,7 +9,7 @@ __author__ = "mozman <mozman@gmx.at>"
 
 import math
 
-from dxfwrite.util import normal_vector, unit_vector, normalize_angle, get_angle
+from .util import normal_vector, unit_vector, normalize_angle, get_angle
 
 HALF_PI = math.pi / 2.
 

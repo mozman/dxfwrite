@@ -10,7 +10,7 @@ __author__ = "mozman <mozman@gmx.at>"
 
 from array import array
 
-from dxfwrite.htmlcolors import get_color_tuple_by_name
+from .htmlcolors import get_color_tuple_by_name
 
 # dxf default pen assignment:
 # 1 : 1.40mm - red
@@ -33,7 +33,7 @@ from dxfwrite.htmlcolors import get_color_tuple_by_name
 # 7 : 0.25mm - white/black
 # >=8 : 0.25
 
-dxf_default_color_table = [ # [0] is a dummy value, valid dxf color index = [1..255]
+dxf_default_color_table = [  # [0] is a dummy value, valid dxf color index = [1..255]
     (0, 0, 0), (255, 0, 0), (255, 255, 0), (0, 255, 0), (0, 255, 255), (0, 0, 255),
     (255, 0, 255), (255, 255, 255), (65, 65, 65), (128, 128, 128), (255, 0, 0),
     (255, 170, 170), (189, 0, 0), (189, 126, 126), (129, 0, 0), (129, 86, 86),
@@ -91,6 +91,7 @@ LW_DXF = [1.40, 1.40, 0.35, 0.70, 0.50, 0.13, 1.00, 0.25, 2.00, 2.00]
 LW_ISO = [0.25, 0.50, 0.35, 1.00, 0.70, 0.70, 0.18, 0.25]
 LW_DIN = LW_ISO
 
+
 class DXFLineweight(object):
 
     def __init__(self, lineweights=LW_DXF, user_styles=None):
@@ -123,6 +124,7 @@ RED = 0
 GREEN = 1
 BLUE = 2
 
+
 class DXFColorIndex(object):
     def __init__(self, color_table=dxf_default_color_table, user_styles=None,
                  start_index=1):
@@ -130,7 +132,7 @@ class DXFColorIndex(object):
         # because of special meaning of color indices 0=BYBLOCK, 256=BYLAYER
         self.color_table = color_table[:]
         self.color_map = self.generate_color_map(self.color_table)
-        self.start_index = start_index # first dxf color element[0] is a dummy value
+        self.start_index = start_index  # first dxf color element[0] is a dummy value
         if user_styles is not None:
             self.add_user_styles(user_styles)
 
@@ -142,7 +144,7 @@ class DXFColorIndex(object):
                 yield (lastindex - index, color)
 
         color_map = dict(iter_colors_backwards())
-        if 0 in color_map: # index 0 means BYBLOCK
+        if 0 in color_map:  # index 0 means BYBLOCK
             del color_map[0]
         return color_map
 
@@ -210,8 +212,9 @@ class DXFColorIndex(object):
         colortuple = get_color_tuple_by_name(colorname)
         return self.get_dxf_color_index(colortuple)
 
+
 def linetypes():
-    """ Creates a list of standard linetypes.
+    """ Creates a list of standard line types.
     """
     # dxf linetype definition
     # name, description, elements:

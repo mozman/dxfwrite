@@ -27,10 +27,10 @@ if sys.version_info[0] > 2:
 
 from copy import deepcopy
 
-import dxfwrite.const as const
-from dxfwrite.base import DXFList, dxfstr
-from dxfwrite.entities import Line, Solid, Insert
-from dxfwrite.mtext import MText
+from . import const
+from .base import DXFList, dxfstr
+from .entities import Line, Solid, Insert
+from .mtext import MText
 
 __all__ = ['Table', 'CustomCell']
 

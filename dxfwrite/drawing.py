@@ -10,11 +10,12 @@ __author__ = "mozman <mozman@gmx.at>"
 
 import os
 
-from dxfwrite import DXFEngine
-from dxfwrite.base import *
-from dxfwrite.sections import create_section
-import dxfwrite.const as const
-import dxfwrite.std as std
+from . import DXFEngine
+from .base import *
+from .sections import create_section
+from . import const
+from . import std
+
 
 class Drawing(object):
     """ The Drawing object manages all the necessary sections, like header, tables

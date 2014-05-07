@@ -13,12 +13,13 @@ __author__ = "mozman <mozman@gmx.at>"
 
 import math
 
-from dxfwrite import const
-from dxfwrite.vector2d import *
-from dxfwrite.algebra import rotate_2d
-from dxfwrite.base import DXFList, dxfstr
-from dxfwrite.entities import Polyline, Solid
-from dxfwrite.mixins import SubscriptAttributes
+from . import const
+from .vector2d import *
+from .algebra import rotate_2d
+from .base import DXFList, dxfstr
+from .entities import Polyline, Solid
+from .mixins import SubscriptAttributes
+
 
 class Rectangle(SubscriptAttributes):
     """ 2D Rectangle, consisting of a polyline and a solid as background filling.
@@ -54,8 +55,8 @@ class Rectangle(SubscriptAttributes):
         points = [(0., 0.), (self.width, 0.), (self.width, self.height),
                   (0., self.height)]
         align_vector = self._get_align_vector()
-        self.points = [vadd(self.insert, # move to insert point
-                            rotate_2d( # rotate at origin
+        self.points = [vadd(self.insert,  # move to insert point
+                            rotate_2d(  # rotate at origin
                                 vadd(point, align_vector), self.rotation))
                        for point in points]
 
@@ -64,14 +65,14 @@ class Rectangle(SubscriptAttributes):
             dx = -self.width/2.
         elif self.halign == const.RIGHT:
             dx = -self.width
-        else: # const.LEFT
+        else:  # const.LEFT
             dx = 0.
 
         if self.valign == const.MIDDLE:
             dy = -self.height/2.
         elif self.valign == const.BOTTOM:
             dy = -self.height
-        else: #const.TOP
+        else:  # const.TOP
             dy = 0.
 
         return (dx, dy)

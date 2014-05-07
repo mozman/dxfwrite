@@ -10,9 +10,9 @@ __author__ = "mozman <mozman@gmx.at>"
 
 import math
 
-from dxfwrite.base import *
-from dxfwrite.util import iterflatlist, set_flag
-from dxfwrite.mixins import SubscriptAttributes
+from .base import *
+from .util import iterflatlist, set_flag
+from .mixins import SubscriptAttributes
 
 import dxfwrite.const as const
 

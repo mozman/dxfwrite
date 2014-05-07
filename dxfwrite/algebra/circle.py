@@ -9,8 +9,8 @@ __author__ = "mozman <mozman@gmx.at>"
 
 import math
 
-from dxfwrite.vector2d import distance, midpoint
-from dxfwrite.algebra import Ray2D, equals_almost
+from ..vector2d import distance, midpoint
+from ..algebra import Ray2D, equals_almost
 
 HALF_PI = math.pi / 2.
 

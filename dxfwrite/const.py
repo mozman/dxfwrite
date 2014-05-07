@@ -61,7 +61,7 @@ PAPER_SPACE = STD_FLAGS_PAPER_SPACE
 
 # Orthographic type of UCS GROUPCODE 79:
 UCS_NOT_ORTHOGRAPHIC = 0
-UCS_TOP =  1
+UCS_TOP = 1
 UCS_BOTTOM = 2
 UCS_FRONT = 3
 UCS_BACK = 4
@@ -88,8 +88,8 @@ BLK_REFERENCED = 64              # This definition is a referenced external refe
 LEFT = 0
 CENTER = 1
 RIGHT = 2
-ALIGNED = 3 # if vertical alignment = 0
-BASELINE_MIDDLE = 4 # if vertical alignment = 0
+ALIGNED = 3  # if vertical alignment = 0
+BASELINE_MIDDLE = 4  # if vertical alignment = 0
 FIT = 5     # if vertical alignment = 0
 
 # vertical
@@ -100,10 +100,10 @@ TOP = 3
 
 # Entities: ATTDEF, ATTRIB
 # 70 flags
-ATTRIB_IS_INVISIBLE = 1 # does not display
+ATTRIB_IS_INVISIBLE = 1  # does not display
 ATTRIB_IS_CONST = 2
 ATTRIB_REQUIRE_VERIFICATION = 4
-ATTRIB_IS_PRESET = 8 # no prompt on insert
+ATTRIB_IS_PRESET = 8  # no prompt on insert
 
 # Entities: 3DFACE
 # 70 flags
@@ -142,12 +142,12 @@ POLYMESH_BEZIER_SURFACE = 8
 
 #Entity: Vertex
 # 70 flags
-VTX_EXTRA_VERTEX_CREATED = 1 ## Extra vertex created by curve-fitting
-VTX_CURVE_FIT_TANGENT = 2    ## Curve-fit tangent defined for this vertex.
+VTX_EXTRA_VERTEX_CREATED = 1  # Extra vertex created by curve-fitting
+VTX_CURVE_FIT_TANGENT = 2     # Curve-fit tangent defined for this vertex.
 ## A curve-fit tangent direction of 0 may be omitted from the DXF output, but is
 ## significant if this bit is set.
 ## 4 = unused, never set in dxf files
-VTX_SPLINE_VERTEX_CREATED = 8 ##Spline vertex created by spline-fitting
+VTX_SPLINE_VERTEX_CREATED = 8  # Spline vertex created by spline-fitting
 VTX_SPLINE_FRAME_CONTROL_POINT = 16
 VTX_3D_POLYLINE_VERTEX = 32
 VTX_3D_POLYGON_MESH_VERTEX = 64

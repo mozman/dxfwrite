@@ -8,9 +8,9 @@
 
 __author__ = "mozman <mozman@gmx.at>"
 
-from dxfwrite.base import *
-from dxfwrite import const
-from dxfwrite.util import set_flag
+from .base import *
+from . import const
+from .util import set_flag
 
 _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION = {
     'LTYPE': {

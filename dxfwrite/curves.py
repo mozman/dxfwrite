@@ -153,9 +153,9 @@ class Spline(_BaseCurve):
     def __dxftags__(self):
         spline = CubicSpline(self.points)
         polyline = Polyline(spline.approximate(self.segments),
-                            layer = self.layer,
+                            layer=self.layer,
                             color=self.color,
-                            linetype = self.linetype)
+                            linetype=self.linetype)
         return polyline.__dxftags__()
 
 

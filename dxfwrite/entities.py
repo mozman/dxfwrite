@@ -224,7 +224,7 @@ class _Entity(object):
         """ get attribs sorted by priority """
         priority_attribs = [ (self._priority(key), value)
                  for key, value in self.attribs.items() ]
-        return [ value for priority, value  in sorted(priority_attribs) ]
+        return [ value for priority, value in sorted(priority_attribs) ]
 
     def get_data(self): # abstract
         # example: block->content, polyline->vertices, faces, insert->attribs

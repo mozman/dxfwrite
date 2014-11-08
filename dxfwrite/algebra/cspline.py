@@ -14,8 +14,10 @@ from itertools import repeat
 
 from ..util import izip
 
+
 def _coords(points, index=0):
-    return array('f' , (point[index] for point in points))
+    return array('f', (point[index] for point in points))
+
 
 class CubicSpline(object):
     def __init__(self, points):
@@ -28,8 +30,8 @@ class CubicSpline(object):
 
         Generates <segments>+1 2D points (float, float).
         """
-        return izip(self._cubic_spline(_coords(self.breakpoints, 0), segments), # x-coords
-                    self._cubic_spline(_coords(self.breakpoints, 1), segments)) # y-coords
+        return izip(self._cubic_spline(_coords(self.breakpoints, 0), segments),  # x-coords
+                    self._cubic_spline(_coords(self.breakpoints, 1), segments))  # y-coords
 
     def _create_array(self):
         return array('f', repeat(0.0, self.count))
@@ -47,8 +49,8 @@ class CubicSpline(object):
             delta_t = self._create_array()
             D = self._create_array()
             for i in nrange:
-                delta_t[i] = t[i] - t[i-1];
-                D[i] = (f[i] - f[i-1])/ delta_t[i]
+                delta_t[i] = t[i] - t[i-1]
+                D[i] = (f[i] - f[i-1])/delta_t[i]
             delta_t[0] = t[2] - t[0]
             return delta_t, D
 

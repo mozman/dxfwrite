@@ -106,6 +106,14 @@ class Drawing(object):
         self.header['$EXTMIN'] = (0, 0, 0)
         self.header['$EXTMAX'] = (100, 100, 0)
         self.header['$UNITMODE'] = 0  # for metric units in viewers
+        self.header['$AUNITS'] = 0  # only for CAD programs relevant; DXF stores always in degrees (AutoCAD)
+        # 0 = degrees (circle = 360 deg)
+        # 1 = degree/minutes/seconds
+        # 2 = gradians (circle = 400 grad)
+        # 3 = radians (circle = 2*PI)
+        # 4 = surveyor's units
+        self.header['$ANGBASE'] = 0  # Angle 0 direction; 0=x-axis
+        self.header['$ANGDIR'] = 0  # 0=counter-clockwise; 1 = clockwise
 
         for ltype in self.std_linetypes():
             self.linetypes.add(ltype)

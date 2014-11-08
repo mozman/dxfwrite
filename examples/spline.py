@@ -22,7 +22,8 @@ from dxfwrite import DXFEngine as dxf
 
 name = 'spline.dxf'
 dwg = dxf.drawing(name)
-spline_points = [(0.0, 0.0), (1., 2.), (3., 1.), (5., 3.)]
+#spline_points = [(0.0, 0.0), (1., 2.), (3., 1.), (5., 3.)]
+spline_points = [(0.0, 0.0), (2., 2.), (3., 2.), (5., 0.)]
 dwg.add(dxf.spline(spline_points, color=7))
 for point in spline_points:
     dwg.add(dxf.circle(radius=0.1, center=point, color=1))

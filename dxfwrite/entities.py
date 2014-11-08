@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Purpose: entities R12
 # module belongs to package: dxfwrite.py
 # Created: 09.02.2010
@@ -20,40 +20,40 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
     'LINE': {
         'start': AttribDef(DXFPoint3D, 0, priority=100),
         'end': AttribDef(DXFPoint3D, 1, 101),
-        },
+    },
     'POINT': {
         'point': AttribDef(DXFPoint3D, 0, priority=100),
         'orientation': AttribDef(DXFAngle, 50, 101),
-        },
+    },
     'CIRCLE': {
         'center': AttribDef(DXFPoint3D, 0, priority=100),
         'radius': AttribDef(DXFFloat, 40, 101),
-        },
+    },
     'ARC': {
         'center': AttribDef(DXFPoint3D, 0, priority=100),
         'radius': AttribDef(DXFFloat, 40, 101),
         'startangle': AttribDef(DXFFloat, 50, 102),
         'endangle': AttribDef(DXFFloat, 51, 103),
-        },
+    },
     'SHAPE': {
         'insert': AttribDef(DXFPoint3D, 0, 100),
         'name': AttribDef(DXFString, 2, 110),
         'rotation': AttribDef(DXFAngle, 50, 115),
         'xscale': AttribDef(DXFFloat, 41, 120),
         'oblique': AttribDef(DXFAngle, 51, 125),
-        },
-    'SOLID': { # drawing order 0->1->2->3->0
-        0: AttribDef(DXFPoint3D, 0, priority=100),
-        1: AttribDef(DXFPoint3D, 1, 101),
-        2: AttribDef(DXFPoint3D, 3, 102), # (13, 23, 33) is drawn before (12, 22, 32) !!!
-        3: AttribDef(DXFPoint3D, 2, 103),
-        },
-    'TRACE': { # drawing order 0->1->2->3->0
-        0: AttribDef(DXFPoint3D, 0, priority=100),
-        1: AttribDef(DXFPoint3D, 1, 101),
-        2: AttribDef(DXFPoint3D, 3, 102),# (13, 23, 33) is drawn before (12, 22, 32) !!!
-        3: AttribDef(DXFPoint3D, 2, 103),
-        },
+    },
+    'SOLID': {  # drawing order 0->1->2->3->0
+                0: AttribDef(DXFPoint3D, 0, priority=100),
+                1: AttribDef(DXFPoint3D, 1, 101),
+                2: AttribDef(DXFPoint3D, 3, 102),  # (13, 23, 33) is drawn before (12, 22, 32) !!!
+                3: AttribDef(DXFPoint3D, 2, 103),
+    },
+    'TRACE': {  # drawing order 0->1->2->3->0
+                0: AttribDef(DXFPoint3D, 0, priority=100),
+                1: AttribDef(DXFPoint3D, 1, 101),
+                2: AttribDef(DXFPoint3D, 3, 102),  # (13, 23, 33) is drawn before (12, 22, 32) !!!
+                3: AttribDef(DXFPoint3D, 2, 103),
+    },
     'TEXT': {
         'insert': AttribDef(DXFPoint3D, 0, priority=100),
         'height': AttribDef(DXFFloat, 40, 105),
@@ -66,14 +66,14 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         'halign': AttribDef(DXFInt, 72, 140),
         'valign': AttribDef(DXFInt, 73, 145),
         'alignpoint': AttribDef(DXFPoint3D, 1, 150),
-        },
+    },
     'BLOCK': {
         'name': AttribDef(DXFString, 2, priority=100),
         'name2': AttribDef(DXFString, 3, 105),
         'flags': AttribDef(DXFInt, 70, 110),
         'basepoint': AttribDef(DXFPoint3D, 0, 115),
         'xref': AttribDef(DXFString, 1, 120),
-        },
+    },
     'INSERT': {
         'attribs_follow': AttribDef(DXFInt, 66, priority=100),
         'blockname': AttribDef(DXFName, 2, 105),
@@ -86,8 +86,8 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         'rows': AttribDef(DXFInt, 71, 140),
         'colspacing': AttribDef(DXFFloat, 44, 145),
         'rowspacing': AttribDef(DXFFloat, 45, 150),
-        },
-    'ATTRIB' : {
+    },
+    'ATTRIB': {
         'insert': AttribDef(DXFPoint3D, 0, priority=100),
         'height': AttribDef(DXFFloat, 40, 105),
         'text': AttribDef(DXFString, 1, 107),
@@ -102,8 +102,8 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         'halign': AttribDef(DXFInt, 72, 150),
         'valign': AttribDef(DXFInt, 74, 155),
         'alignpoint': AttribDef(DXFPoint3D, 1, 160),
-        },
-    'ATTDEF' : {
+    },
+    'ATTDEF': {
         'insert': AttribDef(DXFPoint3D, 0, priority=100),
         'height': AttribDef(DXFFloat, 40, 105),
         'text': AttribDef(DXFString, 1, 107),
@@ -118,18 +118,18 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         'mirror': AttribDef(DXFInt, 71, 145),
         'halign': AttribDef(DXFInt, 72, 150),
         'valign': AttribDef(DXFInt, 74, 155),
-        'alignpoint':AttribDef(DXFPoint3D, 1, 160),
-        },
-    '3DFACE': { # drawing order 0->1->2->3->0
-        0: AttribDef(DXFPoint3D, 0, priority=100),
-        1: AttribDef(DXFPoint3D, 1, 101),
-        2: AttribDef(DXFPoint3D, 2, 102),
-        3: AttribDef(DXFPoint3D, 3, 103),
-        'flags': AttribDef(DXFInt, 70, 110),
-        },
-    'POLYLINE':{
-        'vertices_follow': AttribDef(DXFInt, 66, priority=100), # always 1
-        'polyline_elevation': AttribDef(DXFPoint3D, 0, priority=105), # there is also a common attrib elevation!!
+        'alignpoint': AttribDef(DXFPoint3D, 1, 160),
+    },
+    '3DFACE': {  # drawing order 0->1->2->3->0
+                 0: AttribDef(DXFPoint3D, 0, priority=100),
+                 1: AttribDef(DXFPoint3D, 1, 101),
+                 2: AttribDef(DXFPoint3D, 2, 102),
+                 3: AttribDef(DXFPoint3D, 3, 103),
+                 'flags': AttribDef(DXFInt, 70, 110),
+    },
+    'POLYLINE': {
+        'vertices_follow': AttribDef(DXFInt, 66, priority=100),  # always 1
+        'polyline_elevation': AttribDef(DXFPoint3D, 0, priority=105),  # there is also a common attrib elevation!!
         'flags': AttribDef(DXFInt, 70, priority=110),
         'startwidth': AttribDef(DXFFloat, 40, priority=115),
         'endwidth': AttribDef(DXFFloat, 41, priority=120),
@@ -138,8 +138,8 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         'msmooth_density': AttribDef(DXFInt, 73, priority=135),
         'nsmooth_density': AttribDef(DXFInt, 74, priority=140),
         'smooth_surface': AttribDef(DXFInt, 75, priority=145),
-        },
-    'VERTEX':{
+    },
+    'VERTEX': {
         'location': AttribDef(DXFPoint3D, 0, priority=100),
         'startwidth': AttribDef(DXFFloat, 40, priority=105),
         'endwidth': AttribDef(DXFFloat, 41, priority=110),
@@ -147,20 +147,21 @@ _DXF12_ENTITY_ATTRIBUTE_DEFINITION = {
         'flags': AttribDef(DXFFloat, 70, priority=120),
         'curve_fit_tangent_direction': AttribDef(DXFAngle, 50, priority=125),
         # vertex used to describe a face, face is drawn in order 0->1->2->3:
-        0: AttribDef(DXFFloat, 71, priority=130), # face[0] .. first vertex
-        1: AttribDef(DXFFloat, 72, priority=131), # face[1] .. second vertex
-        2: AttribDef(DXFFloat, 73, priority=132), # face[2] .. third vertex
-        3: AttribDef(DXFFloat, 74, priority=133), # face[3] .. fourth vertex
-        },
-    'VIEWPORT':{
+        0: AttribDef(DXFFloat, 71, priority=130),  # face[0] .. first vertex
+        1: AttribDef(DXFFloat, 72, priority=131),  # face[1] .. second vertex
+        2: AttribDef(DXFFloat, 73, priority=132),  # face[2] .. third vertex
+        3: AttribDef(DXFFloat, 74, priority=133),  # face[3] .. fourth vertex
+    },
+    'VIEWPORT': {
         'center_point': AttribDef(DXFPoint3D, 0, 101),
         'width': AttribDef(DXFFloat, 40, priority=105),
         'height': AttribDef(DXFFloat, 41, priority=106),
         'status': AttribDef(DXFFloat, 68, priority=107),
         'id': AttribDef(DXFFloat, 69, priority=108),
-        }, # and much more extended data, see class ViewportExtendedDXFTags()
+    },  # and much more extended data, see class ViewportExtendedDXFTags()
 
-    }
+}
+
 
 def _add_common_attribs(attribute_definition):
     common_attribs = {
@@ -175,7 +176,9 @@ def _add_common_attribs(attribute_definition):
     for entry in attribute_definition.values():
         entry.update(common_attribs)
 
+
 _add_common_attribs(_DXF12_ENTITY_ATTRIBUTE_DEFINITION)
+
 
 class _Entity(object):
     DXF_ENTITY_NAME = 'ABSTRACT'
@@ -183,7 +186,7 @@ class _Entity(object):
 
     def __init__(self, **kwargs):
         self.attribs = {}
-        self['layer'] = '0' # set default layer
+        self['layer'] = '0'  # set default layer
         # set attribs from kwargs
         for key, value in kwargs.items():
             # linetype can be None which means BYLAYER!
@@ -197,7 +200,7 @@ class _Entity(object):
 
     def __setitem__(self, key, value):
         if self.is_valid_attribute_name(key):
-            self.attribs[key] = self._get_dxf_atom(key, value) # factory is called
+            self.attribs[key] = self._get_dxf_atom(key, value)  # factory is called
         else:
             raise KeyError("Invalid attribute '%s' for Entity '%s'." % (str(key), self.__class__.__name__))
 
@@ -205,9 +208,9 @@ class _Entity(object):
         if self.is_valid_attribute_name(key):
             element = self.attribs[key]
             try:
-                return element.value # DXFAtom
+                return element.value  # DXFAtom
             except AttributeError:
-                return element # DXFList or list or tuple or DXFPoint
+                return element  # DXFList or list or tuple or DXFPoint
         else:
             raise KeyError("Invalid attribute '%s' for Entity '%s'." % (str(key), self.__class__.__name__))
 
@@ -222,11 +225,11 @@ class _Entity(object):
 
     def get_attribs(self):
         """ get attribs sorted by priority """
-        priority_attribs = [ (self._priority(key), value)
-                 for key, value in self.attribs.items() ]
-        return [ value for priority, value in sorted(priority_attribs) ]
+        priority_attribs = [(self._priority(key), value)
+                            for key, value in self.attribs.items()]
+        return [value for priority, value in sorted(priority_attribs)]
 
-    def get_data(self): # abstract
+    def get_data(self):  # abstract
         # example: block->content, polyline->vertices, faces, insert->attribs
         return DXFList()
 
@@ -234,7 +237,7 @@ class _Entity(object):
         """ Validate object before dxf output. """
         return True
 
-    def extension_point(self): # abstract
+    def extension_point(self):  # abstract
         """ general extension point, first call in __dxftags__.
         """
         pass
@@ -244,12 +247,12 @@ class _Entity(object):
         return dxfstr(self.__dxftags__())
 
     def __dxftags__(self):
-        self.extension_point() # last chance to manipulate the entity
+        self.extension_point()  # last chance to manipulate the entity
         if self.valid():
             dxftags = DXFList()
             dxftags.append(DXFAtom(self.DXF_ENTITY_NAME))
-            dxftags.extend(self.get_attribs()) # attribs sorted by priority
-            dxftags.extend(self.get_data()) # example: block->content, polyline->vertices, faces, insert->attribs
+            dxftags.extend(self.get_attribs())  # attribs sorted by priority
+            dxftags.extend(self.get_data())  # example: block->content, polyline->vertices, faces, insert->attribs
             return dxftags
         else:
             raise DXFValidationError("invalid or missing attributes in object '%s'." % self.__class__.__name__)
@@ -261,8 +264,8 @@ class Line(_Entity):
 
     def __init__(self, **kwargs):
         default = {
-            'start': (0,0),
-            'end': (0,0),
+            'start': (0, 0),
+            'end': (0, 0),
         }
         default.update(kwargs)
         super(Line, self).__init__(**default)
@@ -274,10 +277,11 @@ class Point(_Entity):
 
     def __init__(self, **kwargs):
         default = {
-            'point': (0,0),
+            'point': (0, 0),
         }
         default.update(kwargs)
         super(Point, self).__init__(**default)
+
 
 class Solid(_Entity):
     DXF_ENTITY_NAME = 'SOLID'
@@ -288,14 +292,14 @@ class Solid(_Entity):
         self.set_points(points)
 
     def set_points(self, points):
-        for key, point in enumerate( points):
+        for key, point in enumerate(points):
             self[key] = point
 
     def extension_point(self):
         if 3 not in self.attribs:
-            try: # set point self[3] equal to point self[2]
-                self[3] = self[2]['xyz'] # has to be a tuple
-            except KeyError: # valid() fails if self[2] does not exist
+            try:  # set point self[3] equal to point self[2]
+                self[3] = self[2]['xyz']  # has to be a tuple
+            except KeyError:  # valid() fails if self[2] does not exist
                 pass
 
     def valid(self):
@@ -304,13 +308,16 @@ class Solid(_Entity):
                 return False
         return True
 
+
 class Trace(Solid):
     DXF_ENTITY_NAME = 'TRACE'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['TRACE']
 
+
 class Face3D(Solid):
     DXF_ENTITY_NAME = '3DFACE'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['3DFACE']
+
 
 class Shape(_Entity):
     DXF_ENTITY_NAME = 'SHAPE'
@@ -319,9 +326,10 @@ class Shape(_Entity):
     def __init__(self, **kwargs):
         default = {
             'insert': (0, 0),
-            }
+        }
         default.update(kwargs)
         super(Shape, self).__init__(**default)
+
 
 class Text(_Entity):
     DXF_ENTITY_NAME = 'TEXT'
@@ -332,9 +340,10 @@ class Text(_Entity):
             'insert': (0, 0),
             'height': 1,
             'text': 'Text',
-            }
+        }
         default.update(kwargs)
         super(Text, self).__init__(**default)
+
 
 class Arc(_Entity):
     DXF_ENTITY_NAME = 'ARC'
@@ -342,13 +351,14 @@ class Arc(_Entity):
 
     def __init__(self, **kwargs):
         default = {
-            'center': (0,0),
+            'center': (0, 0),
             'radius': 1,
             'startangle': 0,
             'endangle': 360,
         }
         default.update(kwargs)
         super(Arc, self).__init__(**default)
+
 
 class Circle(_Entity):
     DXF_ENTITY_NAME = 'CIRCLE'
@@ -362,6 +372,7 @@ class Circle(_Entity):
         default.update(kwargs)
         super(Circle, self).__init__(**default)
 
+
 class Insert(_Entity):
     """ The INSERT entity insert a block reference to a drawing or block, you
     can add attributes with the :meth:add() method.
@@ -372,7 +383,7 @@ class Insert(_Entity):
 
     def __init__(self, **kwargs):
         default = {
-            'insert': (0, 0), # the default location
+            'insert': (0, 0),  # the default location
         }
         default.update(kwargs)
         super(Insert, self).__init__(**default)
@@ -388,12 +399,13 @@ class Insert(_Entity):
         :param block_basepoint: the basepoint of the block, its the basepoint
             for scaling and rotating of the attribute.
         """
+
         def move_attrib_insert_point_to_basepoint(reverse=False):
             if block_basepoint is None:
                 return attrib_insert
             direction = -1 if reverse else +1
-            return tuple( (attrib_insert[axis] - block_basepoint[axis] * direction
-                           for axis in range(len(attrib_insert))) )
+            return tuple((attrib_insert[axis] - block_basepoint[axis] * direction
+                          for axis in range(len(attrib_insert))))
 
         def get_scale_values():
             scale1 = DXFFloat(1.)
@@ -402,14 +414,14 @@ class Insert(_Entity):
         def scale():
             scale_values = get_scale_values()
             font_scaling(scale_values[0], scale_values[1])
-            return tuple( (attrib_insert[axis] * scale_values[axis]
-                           for axis in range(len(attrib_insert))) )
+            return tuple((attrib_insert[axis] * scale_values[axis]
+                          for axis in range(len(attrib_insert))))
 
         def font_scaling(xscale, yscale):
             if yscale != 1.:
                 attrib['height'] = attrib['height'] * yscale
 
-            distort = round(xscale/yscale, 5)
+            distort = round(xscale / yscale, 5)
             if distort != 1.0:
                 attrib['xscale'] = attrib['xscale'] * distort
 
@@ -420,8 +432,8 @@ class Insert(_Entity):
 
         def get_world_coordinates():
             basepoint = (0., 0., 0.) if block_basepoint is None else block_basepoint
-            return tuple( (insert_insert[axis] + attrib_insert[axis] - basepoint[axis]
-                           for axis in range(len(insert_insert))) )
+            return tuple((insert_insert[axis] + attrib_insert[axis] - basepoint[axis]
+                          for axis in range(len(insert_insert))))
 
         if relative is True:
             angel0 = DXFAngle(0.)
@@ -451,6 +463,7 @@ class Insert(_Entity):
                 self.data.append(DXFAtom('SEQEND'))
         return self.data
 
+
 class Attdef(_Entity):
     """ The ATTDEF entity defines the characteristic of an ATTRIB entity
     (template). The Attdef object resides in the BLOCK definition entity::
@@ -463,7 +476,7 @@ class Attdef(_Entity):
 
     def __init__(self, **kwargs):
         default = {
-            'insert': (0,0),
+            'insert': (0, 0),
             'height': 1,
             'text': 'Attrib',
             'prompt': 'Input:',
@@ -479,15 +492,16 @@ class Attdef(_Entity):
         :param kwargs: override the ATTDEF default values.
         """
         for key in self.attribs.keys():
-            if key not in ('prompt', 'tag', 'insert', 'alignpoint'): # insert here attribs to ignore
-                kwargs.setdefault(key, self[key]) # set key only if not present
-        kwargs['tag'] = self['tag'] # has to be the same tag
+            if key not in ('prompt', 'tag', 'insert', 'alignpoint'):  # insert here attribs to ignore
+                kwargs.setdefault(key, self[key])  # set key only if not present
+        kwargs['tag'] = self['tag']  # has to be the same tag
         # special case for dxfpoints
         for pointname in ('insert', 'alignpoint'):
             if (pointname not in kwargs) and \
-               (pointname in self.attribs):
-                kwargs[pointname] = self[pointname]['xyz'] # get the tuple(x,y,z)
+                    (pointname in self.attribs):
+                kwargs[pointname] = self[pointname]['xyz']  # get the tuple(x,y,z)
         return Attrib(**kwargs)
+
 
 class Attrib(_Entity):
     """ The ATTRIB entity creates a text entity, which is mostly is appended
@@ -501,14 +515,15 @@ class Attrib(_Entity):
 
     def __init__(self, **kwargs):
         default = {
-            'insert': (0,0),
+            'insert': (0, 0),
             'height': 1,
             'text': 'Attrib',
             'tag': 'ATTRIB',
             'flags': 0,
-            }
+        }
         default.update(kwargs)
         super(Attrib, self).__init__(**default)
+
 
 class Block(_Entity):
     """ BLOCK definition entity. This block definition can be referenced
@@ -524,7 +539,7 @@ class Block(_Entity):
         default = {
             'name': 'empty',
             'flags': 0,
-            'basepoint': (0,0),
+            'basepoint': (0, 0),
         }
         default.update(kwargs)
         super(Block, self).__init__(**default)
@@ -534,10 +549,10 @@ class Block(_Entity):
         """ Find ATTDEF entities in the block definition, which can occur on
         arbitrary places.
         """
-        for entity in iterflatlist(self.data): # flat data list
+        for entity in iterflatlist(self.data):  # flat data list
             if isinstance(entity, _Entity) and \
-                (entity.DXF_ENTITY_NAME == 'ATTDEF') and \
-                (entity['tag'] == tag):
+                    (entity.DXF_ENTITY_NAME == 'ATTDEF') and \
+                    (entity['tag'] == tag):
                 return entity
         raise KeyError("no attdef with tag '%s' found!" % str(tag))
 
@@ -564,6 +579,7 @@ class Block(_Entity):
     def get_data(self):
         return self.data
 
+
 class Polyline(_Entity):
     """ POLYLINE entity to create 2D and 3D polylines (some vertices connected
     by lines), but also to create Polymeshes and Polyfaces, see special
@@ -577,11 +593,13 @@ class Polyline(_Entity):
     DXF_ENTITY_NAME = 'POLYLINE'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
-    def __init__(self, points=[], **kwargs):
+    def __init__(self, points=None, **kwargs):
         """ Polyline constructor.
 
         :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
         """
+        if points is None:
+            points = []
         default = {
             'vertices_follow': 1,
             'polyline_elevation': (0, 0, 0),
@@ -605,7 +623,7 @@ class Polyline(_Entity):
         :param point: is a (x, y) or (x, y, z) tuple, z-value of a 2D point is 0.
         """
         if not kwargs.get('layer'):
-            kwargs['layer']=self['layer']
+            kwargs['layer'] = self['layer']
         self.vertices.append(Vertex(location=point, **kwargs))
 
     def add_vertices(self, points):
@@ -635,7 +653,7 @@ class Polymesh(_Entity):
     column has m vertices and each row has n vertices. All mesh indices are
     zero based.
     """
-    DXF_ENTITY_NAME = 'POLYLINE' # a polymesh is also a polyline
+    DXF_ENTITY_NAME = 'POLYLINE'  # a polymesh is also a polyline
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
     def __init__(self, nrows, ncols, **kwargs):
@@ -659,6 +677,7 @@ class Polymesh(_Entity):
         flags = self['flags']
         self['flags'] = set_flag(flags, const.POLYLINE_MESH_CLOSED_M_DIRECTION,
                                  status)
+
     def set_nclosed(self, status):
         flags = self['flags']
         self['flags'] = set_flag(flags, const.POLYLINE_MESH_CLOSED_N_DIRECTION,
@@ -678,11 +697,11 @@ class Polymesh(_Entity):
         self.vertices[(row, col)] = self._build_vertex(point)
 
     def get_vertices(self):
-        vertex0 = Vertex(location=(0,0,0)) # default point
-        return ( self.vertices.get( (row,col), vertex0)
+        vertex0 = Vertex(location=(0, 0, 0))  # default point
+        return ( self.vertices.get((row, col), vertex0)
                  for row in xrange(self['mcount'])
                  for col in xrange(self['ncount'])
-                 )
+        )
 
     def get_data(self):
         data = DXFList(self.get_vertices())
@@ -694,7 +713,7 @@ class Polyface(_Entity):
     """ Another special case of POLYLINE, to create a freeform 3D object,
     which consist of arbitrary count of faces.
     """
-    DXF_ENTITY_NAME = 'POLYLINE' # a polyface is also a polyline
+    DXF_ENTITY_NAME = 'POLYLINE'  # a polyface is also a polyline
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['POLYLINE']
 
     def __init__(self, precision=6, **kwargs):
@@ -715,11 +734,12 @@ class Polyface(_Entity):
         return Vertex(location=point,
                       layer=self['layer'],
                       flags=const.VTX_3D_POLYGON_MESH_VERTEX + \
-                      const.VTX_3D_POLYFACE_MESH_VERTEX)
+                            const.VTX_3D_POLYFACE_MESH_VERTEX)
 
     def _build_face(self, color):
         return Vertex(flags=const.VTX_3D_POLYFACE_MESH_VERTEX, color=color,
                       layer=self['layer'])
+
     # do not delete 'location' for the face-vertex, it is needed,
     # even though it is always (0,0,0), tested with AutoCAD
 
@@ -740,6 +760,7 @@ class Polyface(_Entity):
 
         :param point: vertex location as (x, y, z) tuple
         """
+
         def key(point):
             """ Vertex key with reduced floating point precision, near points
             will reference the same vertex. This reduces the vertices count, but
@@ -749,11 +770,11 @@ class Polyface(_Entity):
 
             remember: only the key has reduced precision not the point itself. !!!
             """
-            return tuple( [round(coord, self.precision) for coord in point] )
+            return tuple([round(coord, self.precision) for coord in point])
 
         try:
-            index = self.point2index[key(point)] # use existing vertex
-        except KeyError: # add new point
+            index = self.point2index[key(point)]  # use existing vertex
+        except KeyError:  # add new point
             index = len(self.vertices)
             self.vertices.append(self._build_vertex(point))
             self.point2index[key(point)] = index
@@ -764,7 +785,7 @@ class Polyface(_Entity):
         """
         face = self._build_face(color)
         for (key, vertex_index) in enumerate(indices):
-            face[key] = vertex_index + 1 # dxf index is 1 based
+            face[key] = vertex_index + 1  # dxf index is 1 based
         self.faces.append(face)
 
     def extension_point(self):
@@ -772,7 +793,7 @@ class Polyface(_Entity):
         self['ncount'] = len(self.faces)
 
     def get_data(self):
-        return DXFList( [self.vertices, self.faces, DXFAtom('SEQEND')] )
+        return DXFList([self.vertices, self.faces, DXFAtom('SEQEND')])
 
 
 class Vertex(_Entity):
@@ -796,7 +817,7 @@ class Viewport(_Entity):
     """
     DXF_ENTITY_NAME = 'VIEWPORT'
     DXF_ATTRIBUTES = _DXF12_ENTITY_ATTRIBUTE_DEFINITION['VIEWPORT']
-    viewport_id = 2 # notes to id:
+    viewport_id = 2  # notes to id:
     # The id of the first viewport has to be 1, which is the definition of
     # paper space, see also Drawing.default_settings. For the following
     # viewports it seems only important, that the id is greater than 1.
@@ -804,14 +825,14 @@ class Viewport(_Entity):
     def __init__(self, center_point, width, height, **kwargs):
         self.extended_dxf_tags = ViewportExtendedDXFTags()
         default = {
-            'status': 1, # by default highest priority (stack order)
-            'id': Viewport.viewport_id, # with auto increment, user should not care about it
-            'layer': "VIEWPORTS", # use separated layer to turn off for plotting
-            'paper_space': 1, # should always be placed in the paper space
+            'status': 1,  # by default highest priority (stack order)
+            'id': Viewport.viewport_id,  # with auto increment, user should not care about it
+            'layer': "VIEWPORTS",  # use separated layer to turn off for plotting
+            'paper_space': 1,  # should always be placed in the paper space
             'center_point': center_point,
             'width': width,
             'height': height,
-            }
+        }
         default.update(kwargs)
         super(Viewport, self).__init__(**default)
         Viewport.viewport_id += 1
@@ -844,14 +865,15 @@ class ViewportExtendedDXFTags(SubscriptAttributes):
           defines their meaning.
 
     """
+
     def __init__(self):
         # view_target_point & view_direction_vector defines the view direction
         # only important for 3D model views
-        self.view_target_point =  (0., 0., 0.)
+        self.view_target_point = (0., 0., 0.)
         self.view_direction_vector = (0., 0., 0.)
-        self.view_twist_angle = 0. # in radians!!!
-        self.view_height = 1. # height of model space area
-        self.view_center_point = (0., 0.) # point in model space, which is displayed in the viewport center.
+        self.view_twist_angle = 0.  # in radians!!!
+        self.view_height = 1.  # height of model space area
+        self.view_center_point = (0., 0.)  # point in model space, which is displayed in the viewport center.
         self.perspective_lens_length = 50.
         self.front_clip_plane_z_value = 0.
         self.back_clip_plane_z_value = 0.
@@ -875,7 +897,7 @@ class ViewportExtendedDXFTags(SubscriptAttributes):
                 DXFString('ACAD', 1001),
                 DXFString('MVIEW', 1000),
                 DXFString('{', 1002),
-                DXFInt(16, 1070), # extended data version, always 16 for R11/12
+                DXFInt(16, 1070),  # extended data version, always 16 for R11/12
                 DXFPoint(self.view_target_point, 1000),
                 DXFPoint(self.view_direction_vector, 1000),
                 DXFFloat(self.view_twist_angle, 1040),
@@ -901,9 +923,9 @@ class ViewportExtendedDXFTags(SubscriptAttributes):
                 DXFFloat(self.grid_spacing[0], 1040),
                 DXFFloat(self.grid_spacing[1], 1040),
                 DXFInt(self.hidden_plot, 1070),
-                DXFString('{', 1002), # frozen layer list is empty
+                DXFString('{', 1002),  # frozen layer list is empty
                 DXFString('}', 1002),
-                DXFString('}', 1002), # end viewport data
+                DXFString('}', 1002),  # end viewport data
             ]
         )
 

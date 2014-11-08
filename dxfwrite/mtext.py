@@ -41,14 +41,14 @@ class MText(SubscriptAttributes):
         self.textlines = text.split('\n')
         self.insert = insert
         self.linespacing = linespacing
-        self.valign = kwargs.get('valign', dxfwrite.TOP) # only top, middle, bottom
-        if self.valign == dxfwrite.BASELINE: # baseline for MText not usefull
+        self.valign = kwargs.get('valign', dxfwrite.TOP)  # only top, middle, bottom
+        if self.valign == dxfwrite.BASELINE:  # baseline for MText not usefull
             self.valign = dxfwrite.BOTTOM
         self.halign = kwargs.get('halign', dxfwrite.LEFT) # only left, center, right
         self.height = kwargs.get('height', 1.0)
         self.style = kwargs.get('style', 'STANDARD')
-        self.oblique = kwargs.get('oblique', 0.0) # in degree
-        self.rotation = kwargs.get('rotation', 0.0) # in degree
+        self.oblique = kwargs.get('oblique', 0.0)  # in degree
+        self.rotation = kwargs.get('rotation', 0.0)  # in degree
         self.xscale = kwargs.get('xscale', 1.0)
         self.mirror = kwargs.get('mirror', 0)
         self.layer = kwargs.get('layer', '0')
@@ -94,9 +94,9 @@ class MText(SubscriptAttributes):
             y0 = linenum * self.lineheight
             fullheight = (len(self.textlines) - 1) * self.lineheight
             y += (fullheight/2) - y0
-        else: # dxfwrite.BOTTOM
+        else:  # dxfwrite.BOTTOM
             y += (len(self.textlines) - 1 - linenum) * self.lineheight
-        return self._rotate( (x, y, z) ) # consider rotation
+        return self._rotate((x, y, z))  # consider rotation
 
     def _rotate(self, alignpoint):
         """ Rotate alignpoint around insert point about rotation degrees. 
@@ -133,4 +133,4 @@ class MText(SubscriptAttributes):
 
     def __dxftags__(self):
         return self._build_dxf_entities()
-    
+

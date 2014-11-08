@@ -65,7 +65,7 @@ class Insert2(object):
                     attdef = self.blockdef.find_attdef(tag)
                     attrib = attdef.new_attrib(text=text)
                     insert_entity.add(attrib, relative=True, block_basepoint=basepoint)
-                except KeyError: # no attdef <tag> found
+                except KeyError:  # no attdef <tag> found
                     pass
 
         insert = Insert(blockname=self.blockdef['name'], insert=self.insert,

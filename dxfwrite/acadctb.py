@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Purpose: read, create and write acad ctb files
 # Created: 23.03.2010
 # Copyright (C) 2010, Manfred Moitzi
@@ -14,6 +14,7 @@ import sys
 PYTHON3 = sys.version_info[0] > 2
 if PYTHON3:
     from io import StringIO
+
     xrange = range
     unicode = str
     basestring = str
@@ -29,7 +30,6 @@ ENDSTYLE_SQUARE = 1
 ENDSTYLE_ROUND = 2
 ENDSTYLE_DIAMOND = 3
 ENDSTYLE_OBJECT = 4
-
 
 JOINSTYLE_MITER = 0
 JOINSTYLE_BEVEL = 1
@@ -91,7 +91,8 @@ DEFAULT_LINE_WEIGHTS = [
 
 
 def color_name(index):
-    return 'Color_%d' % (index+1)
+    return 'Color_%d' % (index + 1)
+
 
 def get_bool(value):
     if isinstance(value, basestring):
@@ -106,7 +107,9 @@ def get_bool(value):
 
 
 class UserStyle(object):
-    def __init__(self, index, init_dict={}, parent=None):
+    def __init__(self, index, init_dict=None, parent=None):
+        if init_dict is None:
+            init_dict = {}
         self.parent = parent
         self.index = int(index)
         self.description = unicode(init_dict.get('description', ""))
@@ -120,7 +123,7 @@ class UserStyle(object):
         self.virtual_pen_number = int(init_dict.get('virtual_pen_number', AUTOMATIC))
         self.screen = int(init_dict.get('screen', 100))
         self.linepattern_size = float(init_dict.get('linepattern_size', 0.5))
-        self.linetype = int(init_dict.get('linetype', OBJECT_LINETYPE)) # 0 .. 30
+        self.linetype = int(init_dict.get('linetype', OBJECT_LINETYPE))  # 0 .. 30
         self.adaptive_linetype = get_bool(init_dict.get('adaptive_linetype', True))
         self.lineweight = int(init_dict.get('lineweight', OBJECT_LINEWEIGHT))
         self.end_style = int(init_dict.get('end_style', ENDSTYLE_OBJECT))
@@ -164,31 +167,33 @@ class UserStyle(object):
     def get_color(self):
         """Get style color as rgb-tuple or None if style has object color."""
         if self.has_object_color():
-            return None # object color
+            return None  # object color
         else:
             return int2color(self._mode_color)[:3]
 
     def get_dxf_color_index(self):
-        return self.index+1
+        return self.index + 1
 
     def get_dithering(self):
         return bool(self._color_policy & DITHERING_ON)
 
     def set_dithering(self, status):
-        if status :
+        if status:
             self._color_policy |= DITHERING_ON
         else:
             self._color_policy &= ~DITHERING_ON
+
     dithering = property(get_dithering, set_dithering)
 
     def get_grayscale(self):
         return bool(self._color_policy & GRAYSCALE_ON)
 
     def set_grayscale(self, status):
-        if status :
+        if status:
             self._color_policy |= GRAYSCALE_ON
         else:
             self._color_policy &= ~GRAYSCALE_ON
+
     grayscale = property(get_grayscale, set_grayscale)
 
     def write(self, fileobj):
@@ -226,7 +231,7 @@ class UserStyles(object):
         # set custom_line... to 1 for showing lineweights in inch in the Autocad
         # ctb editor window, but lineweights are always defined in mm
         self.custom_lineweight_display_units = 0
-        self.styles = [None] * (STYLE_COUNT+1)
+        self.styles = [None] * (STYLE_COUNT + 1)
         self.lineweights = array('f', DEFAULT_LINE_WEIGHTS)
         self.set_default_styles()
 
@@ -253,7 +258,7 @@ class UserStyles(object):
         dxf_color_index = self.check_color_index(dxf_color_index)
         # ctb table index is dxf_color_index - 1
         # ctb table starts with index 0, where dxf_color_index=0 means BYBLOCK
-        style = UserStyle(dxf_color_index-1, init_dict)
+        style = UserStyle(dxf_color_index - 1, init_dict)
         self._set_style(style)
         return style
 
@@ -288,7 +293,7 @@ class UserStyles(object):
             return self.lineweights.index(lineweight)
         except ValueError:
             self.lineweights.append(lineweight)
-            return len(self.lineweights)-1
+            return len(self.lineweights) - 1
 
     def set_table_lineweight(self, index, weight):
         """Index is the lineweight table index, not the dxf color index.
@@ -301,7 +306,7 @@ class UserStyles(object):
             return index
         except IndexError:
             self.lineweights.append(weight)
-            return len(self.lineweights)-1
+            return len(self.lineweights) - 1
 
     def get_table_lineweight(self, index):
         """Returns lineweight in millimeters.
@@ -322,7 +327,7 @@ class UserStyles(object):
         """Create and compress the ctb-file to <fileobj>."""
         memfile = StringIO()
         self.write_content(memfile)
-        memfile.write(chr(0)) # end of file
+        memfile.write(chr(0))  # end of file
         body = memfile.getvalue()
         memfile.close()
         self._compress(fileobj, body)
@@ -367,6 +372,7 @@ class UserStyles(object):
 
     def parse(self, text):
         """Parse and get values of plot styles from <text>."""
+
         def set_lineweights(lineweights):
             if lineweights is None:
                 return
@@ -390,11 +396,13 @@ class UserStyles(object):
 
     def _compress(self, fileobj, body):
         """Compress ctb-file-body and write it to <fileobj>."""
+
         def writestr(s):
             if PYTHON3:
                 fileobj.write(s.encode())
             else:
                 fileobj.write(s)
+
         if PYTHON3:
             body = body.encode()
         comp_body = zlib.compress(body)
@@ -428,13 +436,14 @@ def _decompress(fileobj):
     """Read and decompress the file content of the file-like object <fileobj>."""
     content = fileobj.read()
     text = zlib.decompress(content[60:])
-    return text[:-1] # truncate trailing \nul
+    return text[:-1]  # truncate trailing \nul
 
 
 class CtbParser(object):
     """A very simple ctb-file parser. Ctb-files are created by programms, so the
     file structure should be correct in the most cases.
     """
+
     def __init__(self, text):
         """Construtor
 
@@ -447,13 +456,14 @@ class CtbParser(object):
     @staticmethod
     def iteritems(text):
         """iterate over all first level (start at col 0) elements"""
+
         def get_name(line_index):
             """Get element name of line <line_index>.
             """
             line = lines[line_index]
-            if line.endswith('{'): # start of a list like 'plot_style{'
+            if line.endswith('{'):  # start of a list like 'plot_style{'
                 name = line[:-1]
-            else: # simple name=value line
+            else:  # simple name=value line
                 name = line.split('=', 1)[0]
             return name.strip()
 
@@ -462,6 +472,7 @@ class CtbParser(object):
 
             lineweigths, plot_styles, aci_table
             """
+
             def end_of_list():
                 return lines[line_index].endswith('}')
 
@@ -470,18 +481,18 @@ class CtbParser(object):
                 name = get_name(line_index)
                 line_index, value = get_value(line_index)  # get value or sub-list
                 data[name] = value
-            return line_index+1, data  # skip '}' - end of list
+            return line_index + 1, data  # skip '}' - end of list
 
         def get_value(line_index):
             """Get value of line <line_index> or the list that starts in line
             <line_index>.
             """
             line = lines[line_index]
-            if line.endswith('{'): # start of a list
-                line_index, value = get_list(line_index+1)
-            else: # it's a simple name=value line
+            if line.endswith('{'):  # start of a list
+                line_index, value = get_list(line_index + 1)
+            else:  # it's a simple name=value line
                 value = line.split('=', 1)[1]
-                value = value.lstrip('"') # strings look like this: name="value
+                value = value.lstrip('"')  # strings look like this: name="value
                 line_index += 1
             return line_index, value
 
@@ -495,7 +506,7 @@ class CtbParser(object):
         while line_index < len(lines):
             name = get_name(line_index)
             line_index, value = get_value(line_index)
-            yield(name, value)
+            yield (name, value)
             line_index = skip_empty_lines(line_index)
 
     def get(self, name, default):
@@ -510,6 +521,7 @@ COLOR_BY_BLOCK = 0xc1
 COLOR_RGB = 0xc2
 # ACI, AutoCAD color index, other bytes are 0,0,index
 COLOR_ACI = 0xc3
+
 
 def int2color(color):
     """Convert color integer value from ctb-file to rgb-tuple plus a magic number.

@@ -196,7 +196,7 @@ class DXFList(list):
     """ Collection of DXFAtoms. """
     def __dxf__(self):
         """ Returns a valid DXF String. """
-        return "".join( ( atom.__dxf__() for atom in self ) )
+        return "".join((atom.__dxf__() for atom in self))
 
     def __dxftags__(self):
         return self
@@ -261,8 +261,7 @@ class DXFPoint(object):
         if len(coords) in (2, 3) :
             # just use a normal list not DXFList, because point has public access
             # and can be set as tuple or list too, so always expect a tuple or list
-            self.point = [DXFFloat(value, (pos+1)*10+index_shift)
-                            for pos, value in enumerate(coords)]
+            self.point = [DXFFloat(value, (pos+1)*10+index_shift) for pos, value in enumerate(coords)]
         else:
             raise ValueError("only 2 or 3 coord-values allowed.")
 
@@ -286,8 +285,8 @@ class DXFPoint(object):
                     return self.point[index].value
                 except IndexError:
                     raise IndexError("DXF-Point has no '%s'-coordinate!" % axis)
-            elif len(axis) > 1: # 'xy' or 'zx' get coords in letter order
-                return [ self.__getitem__(index) for index in axis ]
+            elif len(axis) > 1:  # 'xy' or 'zx' get coords in letter order
+                return [self.__getitem__(index) for index in axis]
             else:
                 raise IndexError("Invalid axis name '%s'" % axis)
         else:
@@ -301,8 +300,7 @@ class DXFPoint(object):
 
     def shift_group_code(self, index_shift):
         """ get DXFPoint with shifted group code """
-        return DXFPoint(self[ "xyz"[:len(self.point)] ],
-                        index_shift)
+        return DXFPoint(self["xyz"[:len(self.point)]], index_shift)
 
     def to_3D(self, zvalue=0.):
         """ add z-axis if absent """
@@ -380,4 +378,4 @@ def get_OCS(zvector):
     else:
         ax = unit_vector(cross_product(_WZ, az))
     ay = unit_vector(cross_product(az, ax))
-    return (ax, ay, az) # 3 unit-vectors!
+    return (ax, ay, az)  # 3 unit-vectors!

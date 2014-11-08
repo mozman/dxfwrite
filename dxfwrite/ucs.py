@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Purpose: user coordinate system
 # module belongs to package dxfwrite
 # Created: 27.03.2010
@@ -13,10 +13,11 @@ from .util import normal_vector, unit_vector, normalize_angle, get_angle
 
 HALF_PI = math.pi / 2.
 
+
 class UCS(object):
-    def __init__(self, origin_vector=(0.,0.,0.),
-                 xaxis_vector=(1.,0.,0.),
-                 yaxis_vector=(0.,1.,0.)):
+    def __init__(self, origin_vector=(0., 0., 0.),
+                 xaxis_vector=(1., 0., 0.),
+                 yaxis_vector=(0., 1., 0.)):
         self._xaxis = unit_vector(xaxis_vector)
         self._yaxis = unit_vector(yaxis_vector)
         self._zaxis = normal_vector(xaxis_vector, yaxis_vector)
@@ -33,7 +34,7 @@ class UCS(object):
         vx = v[0] / self._xaxis
         vy = v[1] / self._yaxis
         vz = v[2] / self._zaxis
-        return  vx + vy + vz
+        return vx + vy + vz
 
     def setup_xy(self, p1_world, p2_world, p1_ucs, p2_ucs):
         """ setup an UCS given by the points p1 and p2
@@ -43,7 +44,7 @@ class UCS(object):
         world_angle_to_x_axis = get_angle(p1_world, p2_world)
         rotation = normalize_angle(world_angle_to_x_axis - ucs_angle_to_x_axis)
         self._xaxis = (math.cos(rotation), math.sin(rotation), 0.)
-        self._yaxis = (math.cos(rotation+HALF_PI), math.sin(rotation+HALF_PI), 0.)
+        self._yaxis = (math.cos(rotation + HALF_PI), math.sin(rotation + HALF_PI), 0.)
         self._zaxis = (0., 0., 1.)
 
         ucs_angle_to_x_axis = get_angle((0., 0.), p1_ucs)
@@ -52,6 +53,7 @@ class UCS(object):
         delta_x = distance_from_ucs_origin * math.cos(world_angle_to_x_axis)
         delta_y = distance_from_ucs_origin * math.sin(world_angle_to_x_axis)
         self._origin = (p1_world[0] - delta_x, p1_world[1] - delta_y, 0.)
+
 
 class GKS(UCS):
     def to_world(self, ucs):
@@ -64,7 +66,6 @@ class GKS(UCS):
         """
         x, y, z = super(GKS, self).to_ucs(world)
         return (y, x, z)
-
 
     def setup_xy(self, p1_world, p2_world, p1_ucs, p2_ucs):
         """ create an GKS by the given points p1 and p2

@@ -58,6 +58,7 @@ DEFAULT_BORDER_PRIORITY = 50
 VISIBLE = 1
 HIDDEN = 0
 
+
 class Table(object):
     """A HTML-table like object.
 
@@ -87,15 +88,15 @@ class Table(object):
             default_style = self.get_cell_style('default')
             default_style.set_border_status(False, False, False, False)
 
-        self._cells = {} # data cells
-        self.frames = [] # border frame objects
+        self._cells = {}  # data cells
+        self.frames = []  # border frame objects
         # visibility_map stores the visibility of the cells, created in _setup
         self.visibility_map = None
         # grid manages the border lines, created in _setup
         self.grid = None
         # data contains the resulting dxf entities
         self.data = None
-        self.empty_cell = Cell(self) # represents all empty cells
+        self.empty_cell = Cell(self)  # represents all empty cells
 
     def set_col_width(self, column, value):
         """ Set column width to value (in drawing units).
@@ -126,7 +127,7 @@ class Table(object):
         return self.set_cell(row, col, cell)
 
     # pylint: disable-msg=W0102
-    def block_cell(self, row, col, blockdef, span=(1, 1), attribs={}, style='default'):
+    def block_cell(self, row, col, blockdef, span=(1, 1), attribs=None, style='default'):
         """ Create a new block cell at position (row, col).
 
         Content is a block reference inserted by a :ref:`INSERT` entity,
@@ -140,6 +141,8 @@ class Table(object):
         The cell spans over 'span' cells and has the cell style with the
         name 'style'.
         """
+        if attribs is None:
+            attribs = {}
         cell = BlockCell(self, blockdef, style=style, attribs=attribs, span=span)
         return self.set_cell(row, col, cell)
 
@@ -157,7 +160,7 @@ class Table(object):
         try:
             return self._cells[row, col]
         except KeyError:
-            return self.empty_cell # emtpy cell with default style
+            return self.empty_cell  # emtpy cell with default style
 
     def validate_index(self, row, col):
         row = int(row)
@@ -250,6 +253,7 @@ class Table(object):
         self.visibility_map = None
         self.grid = None
 
+
 class VisibilityMap(object):
     """ Stores the visibility of the table cells.
     """
@@ -312,8 +316,8 @@ class VisibilityMap(object):
     def __iter__(self):
         """ Iterate over all visible cells.
         """
-        return ( (row, col) for (row, col) in self.iter_all_cells() \
-                 if self.is_visible_cell(row, col) )
+        return ((row, col) for (row, col) in self.iter_all_cells() if self.is_visible_cell(row, col))
+
 
 class Style(dict):
     """ Cell style object.
@@ -334,7 +338,7 @@ class Style(dict):
             # dxf color index, ignored by block cells
             'textcolor': DEFAULT_CELL_TEXTCOLOR,
             # text or block rotation in degrees
-            'rotation' : 0.,
+            'rotation': 0.,
             # Letters are stacked top-to-bottom, but not rotated
             'stacked': False,
             # horizontal alignment (const.LEFT, const.CENTER, const.RIGHT)
@@ -389,6 +393,7 @@ class Style(dict):
                                ('bottom', bottom)):
             if status:
                 self[border] = style
+
 
 class Grid(object):
     """ Grid contains the graphical representation of the table.
@@ -559,7 +564,6 @@ class Grid(object):
             self._set_inner_borders(row, bottom_row, col, right_col,
                                     self.noborder)
 
-
     def _set_inner_borders(self, top_row, bottom_row, left_col, right_col, border_style):
         """ Set <border_style> to the inner borders of the rectangle <top_row...
         """
@@ -594,8 +598,8 @@ class Grid(object):
             left_col = frame.pos[1]
             bottom_row = top_row + frame.span[0]
             right_col = left_col + frame.span[1]
-            self._set_rect_borders(top_row, bottom_row, left_col, right_col,
-                                  frame.style)
+            self._set_rect_borders(top_row, bottom_row, left_col, right_col, frame.style)
+
     def _draw_borders(self, table):
         """ Draw the grid lines as DXF-LINE entities.
         """
@@ -636,10 +640,11 @@ class Grid(object):
         draw_hborders()
         draw_vborders()
 
+
 class Frame(object):
     """ Represent a rectangle cell area enclosed by border lines.
     """
-    def __init__(self, table, pos=(0, 0), span=(1 ,1), style='default'):
+    def __init__(self, table, pos=(0, 0), span=(1, 1), style='default'):
         """ Constructor
 
         :param table: the assigned data table
@@ -658,6 +663,7 @@ class Frame(object):
         """ :returns: Style() object of the associated table.
         """
         return self.table.get_cell_style(self.stylename)
+
 
 class Cell(object):
     """ Cell represents the table cell data.
@@ -704,10 +710,11 @@ class Cell(object):
         """
         hmargin = self.style['hmargin']
         vmargin = self.style['vmargin']
-        return ( coords[0]+hmargin, # left
-                 coords[1]-hmargin, # right
-                 coords[2]-vmargin, # top
-        coords[3]+vmargin ) # bottom
+        return (coords[0] + hmargin,  # left
+                coords[1] - hmargin,  # right
+                coords[2] - vmargin,  # top
+                coords[3] + vmargin)  # bottom
+
 
 class TextCell(Cell):
     """Represents a multi line text. Text lines are separated by '\n'."""
@@ -740,7 +747,7 @@ class TextCell(Cell):
         text = self.text
         if style['stacked']:
             rotated = 0.
-            text = '\n'.join( (char for char in self.text.replace('\n', ' ')) )
+            text = '\n'.join((char for char in self.text.replace('\n', ' ')))
         xpos = (left, float(left+right)/2., right)[halign]
         ypos = (bottom, float(bottom+top)/2., top)[valign-1]
         return MText(text, (xpos, ypos),
@@ -753,6 +760,7 @@ class TextCell(Cell):
                      valign=valign,
                      color=self.style['textcolor'],
                      layer=layer)
+
 
 class CustomCell(Cell):
     """ Cell with 'user' generated content.
@@ -789,7 +797,7 @@ class BlockCell(Cell):
     """ Cell that contains a block reference.
     """
     # pylint: disable-msg=W0102
-    def __init__(self, table, blockdef, style='default', attribs={}, span=(1, 1)):
+    def __init__(self, table, blockdef, style='default', attribs=None, span=(1, 1)):
         """ Constructor
 
         :param table: assigned data table
@@ -801,7 +809,8 @@ class BlockCell(Cell):
 
         see also Cell.__init__()
         """
-
+        if attribs is None:
+            attribs = {}
         super(BlockCell, self).__init__(table, style, span)
         self.blockdef = blockdef # dxf block definition!
         self.attribs = attribs
@@ -832,5 +841,5 @@ class BlockCell(Cell):
                 attrib = attdef.new_attrib(text=str(value))
                 insert.add(attrib, relative=True)
             except KeyError:
-                pass # ignore none existing ATTDEFs
+                pass  # ignore none existing ATTDEFs
         return insert

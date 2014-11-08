@@ -55,9 +55,7 @@ class Header(_Section):
         """
         varlist = [DXFList((DXFAtom(key, 9), value))
                    for key, value in self.variables.items()]
-        return DXFList( (DXFName('HEADER'),
-                          DXFList(varlist)
-                          ) )
+        return DXFList((DXFName('HEADER'), DXFList(varlist)))
 
     def __getitem__(self, key):
         """ Get a header var by the subscript operator::
@@ -123,13 +121,13 @@ class Blocks(_Section):
         block = self.find(blockname)
         return block.find_attdef(tag)
 
+
 class Entities(_Section):
     def __init__(self):
         self.entities = DXFList()
 
     def _get_body(self):
-        return DXFList( (DXFName('ENTITIES'),
-                          self.entities))
+        return DXFList((DXFName('ENTITIES'), self.entities))
 
     def add(self, entity):
         """ Add a DXF entity to the entities section.

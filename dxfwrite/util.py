@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Purpose: utility functions
 # module belongs to package dxfwrite
 # Created: 09.02.2010

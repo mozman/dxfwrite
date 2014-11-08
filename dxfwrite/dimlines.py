@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Purpose: simple with basic dxf eintities created dimension lines, but not
 # the basic DXF-DIMENSION entities.
 # module belongs to package: dxfwrite.py
@@ -44,9 +44,10 @@ __all__ = ['LinearDimension', 'AngularDimension', 'ArcDimension',
 DIMENSIONS_MIN_DISTANCE = 0.05
 DIMENSIONS_FLOATINGPOINT = '.'
 
-ANGLE_DEG = 180./pi
-ANGLE_GRAD = 200./pi
+ANGLE_DEG = 180. / pi
+ANGLE_GRAD = 200. / pi
 ANGLE_RAD = 1.
+
 
 class _DimStyle(dict):
     """ _DimStyle parameter struct, a dumb object just to store values """
@@ -89,7 +90,8 @@ class _DimStyle(dict):
         ('dimextlinecolor', 5),
         # gap between measure target point and end of extension line
         ('dimextlinegap', 0.3)
-        ]
+    ]
+
     def __init__(self, name, **kwargs):
         super(_DimStyle, self).__init__(_DimStyle.default_values)
         # dimestyle name
@@ -102,9 +104,11 @@ class _DimStyle(dict):
     def __setattr__(self, attr, value):
         self[attr] = value
 
+
 class _DimStyles(object):
     """ DimStyle container
     """
+
     def __init__(self):
         self._styles = {}
         self.default = _DimStyle('Default')
@@ -113,12 +117,11 @@ class _DimStyles(object):
                  tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
                  dimextline=False)
         self.new("angle.grad", scale=ANGLE_GRAD, suffix='gon', roundval=0,
-                 tick="DIMTICK_RADIUS",  tick2x=True, dimlineext=0.,
+                 tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
                  dimextline=False)
         self.new("angle.rad", scale=ANGLE_RAD, suffix='rad', roundval=3,
-                  tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
+                 tick="DIMTICK_RADIUS", tick2x=True, dimlineext=0.,
                  dimextline=False)
-
 
     def get(self, name):
         """ Get DimStyle() object by name.
@@ -160,7 +163,7 @@ class _DimStyles(object):
         byblock = const.BYBLOCK
 
         elements = [
-            Line(start=( 0., +.5), end=(0., -.5), color=dimcolor,
+            Line(start=(0., +.5), end=(0., -.5), color=dimcolor,
                  layer=byblock),
             Line(start=(-.2, -.2), end=(.2, +.2), color=4, layer=byblock)
         ]
@@ -174,22 +177,22 @@ class _DimStyles(object):
 
         elements = [
             Line(start=(0., .5), end=(0., -.50), color=dimcolor, layer=byblock),
-            Solid([(0, 0), (.3, .05), (.3,-.05)], color=7,
-                            layer=byblock)
+            Solid([(0, 0), (.3, .05), (.3, -.05)], color=7, layer=byblock)
         ]
         drawing.blocks.add(block('DIMTICK_ARROW', elements))
-        elements = [ # special tick for RadialDimension
-            Solid([(0, 0), (.3, .05), (0.25, 0. ), ( .3,-.05)], color=7,
-                            layer=byblock)
+        elements = [  # special tick for RadialDimension
+                      Solid([(0, 0), (.3, .05), (0.25, 0.), (.3, -.05)], color=7, layer=byblock)
         ]
         drawing.blocks.add(block('DIMTICK_RADIUS', elements))
 
 
-dimstyles = _DimStyles() # use this factory tu create new dimstyles
+dimstyles = _DimStyles()  # use this factory tu create new dimstyles
+
 
 class _DimensionBase(object):
     """ Abstract base class for dimension lines.
     """
+
     def __init__(self, dimstyle, layer, roundval):
         self.dimstyle = dimstyles.get(dimstyle)
         self.layer = layer
@@ -204,7 +207,7 @@ class _DimensionBase(object):
             return self.layer if self.layer is not None else self.dimstyle.layer
         elif property_name == 'roundval':
             return self.roundval if self.roundval is not None else self.dimstyle.roundval
-        else: # pass through self.dimstyle object DimStyle()
+        else:  # pass through self.dimstyle object DimStyle()
             return self.dimstyle[property_name]
 
     def format_dimtext(self, dimvalue):
@@ -224,7 +227,7 @@ class _DimensionBase(object):
         """ Get the dxf string.
         """
         return dxfstr(self.__dxftags__())
-    
+
     def __dxftags__(self):
         """ Get dxf tags as cascading DXFList.
         """
@@ -237,6 +240,7 @@ class LinearDimension(_DimensionBase):
     with basic DXF entities. This is NOT a dxf dimension entity. And This is
     a 2D element, so all z-values will be ignored!
     """
+
     def __init__(self, pos, measure_points, angle=0., dimstyle='Default',
                  layer=None, roundval=None):
         """ LinearDimension Constructor.
@@ -268,8 +272,8 @@ class LinearDimension(_DimensionBase):
                                for point in self.measure_points]
 
         dimlineray = Ray2D(self.dimlinepos, angle=radians(self.angle))
-        self.dimline_points = [ self._get_point_on_dimline(point, dimlineray)
-                                for point in self.measure_points ]
+        self.dimline_points = [self._get_point_on_dimline(point, dimlineray)
+                               for point in self.measure_points]
         self.point_order = self._indices_of_sorted_points(self.dimline_points)
         self._build_vectors()
 
@@ -282,7 +286,7 @@ class LinearDimension(_DimensionBase):
         """ get start and end point on the dimension line of dimension section
         """
         return (self._get_dimline_point(section),
-                self._get_dimline_point(section+1))
+                self._get_dimline_point(section + 1))
 
     def _get_dimline_bounds(self):
         """ get the first and the last point of dimension line """
@@ -292,7 +296,8 @@ class LinearDimension(_DimensionBase):
     @property
     def section_count(self):
         """ count of dimline sections """
-        return len(self.measure_points)-1
+        return len(self.measure_points) - 1
+
     @property
     def point_count(self):
         """ count of dimline points """
@@ -345,9 +350,9 @@ class LinearDimension(_DimensionBase):
         """ build the extension lines entities """
         dimextlinegap = self.prop('dimextlinegap')
         for dimline_point, target_point in \
-            zip(self.dimline_points, self.measure_points):
+                zip(self.dimline_points, self.measure_points):
             if distance(dimline_point, target_point) > \
-               max(dimextlinegap, DIMENSIONS_MIN_DISTANCE):
+                    max(dimextlinegap, DIMENSIONS_MIN_DISTANCE):
                 direction_vector = unit_vector(vsub(target_point,
                                                     dimline_point))
                 target_point = vsub(target_point, vmul_scalar(direction_vector,
@@ -370,7 +375,7 @@ class LinearDimension(_DimensionBase):
                 color=self.prop('textcolor'),
                 halign=const.CENTER,
                 valign=const.MIDDLE,
-                layer= self.prop('layer'),
+                layer=self.prop('layer'),
                 rotation=self.angle,
                 style=self.prop('style'),
                 alignpoint=insert_point))
@@ -394,6 +399,7 @@ class LinearDimension(_DimensionBase):
 
     def _draw_ticks(self):
         """ insert the dimension line ticks, (markers on the dimension line) """
+
         def tick(point, rotate=False):
             """ build the insert-entity for the tick block """
             return Insert(
@@ -409,13 +415,14 @@ class LinearDimension(_DimensionBase):
             self.data.append(tick(self._get_dimline_point(index), rotate))
 
         if self.prop('tick2x'):
-            for index in range(0, self.point_count-1):
+            for index in range(0, self.point_count - 1):
                 set_tick((index), False)
             for index in range(1, self.point_count):
                 set_tick((index), True)
         else:
             for index in range(self.point_count):
                 set_tick((index), False)
+
 
 class AngularDimension(_DimensionBase):
     """ Draw an angle dimensioning line at dimline pos from start to end,
@@ -493,7 +500,7 @@ class AngularDimension(_DimensionBase):
     def _draw_dimension_text(self):
         dimtext = self._get_dimtext()
         insert_point = self._get_text_insert_point()
-        rotation = degrees((self.start_angle + self.end_angle) / 2 - pi/2.)
+        rotation = degrees((self.start_angle + self.end_angle) / 2 - pi / 2.)
         self.data.append(Text(
             text=dimtext,
             insert=insert_point,
@@ -509,8 +516,7 @@ class AngularDimension(_DimensionBase):
     def _get_text_insert_point(self):
         midvector = unit_vector(
             vdiv_scalar(vadd(self.start_vector, self.end_vector), 2.))
-        length = self.pos_radius + self.prop('textabove') + \
-                 self.prop('height') / 2.
+        length = self.pos_radius + self.prop('textabove') + self.prop('height') / 2.
         return vadd(self.center, vmul_scalar(midvector, length))
 
     def _draw_ticks(self):
@@ -535,11 +541,13 @@ class AngularDimension(_DimensionBase):
         angle = (self.end_angle - self.start_angle) * self.prop('scale')
         return self.format_dimtext(angle)
 
+
 class ArcDimension(AngularDimension):
     """ Arc is defined by start- and endpoint on arc and the centerpoint, or
     by three points lying on the arc if acr3points is True. Measured length goes
     from start- to endpoint. The dimension line goes through the dimlinepos.
     """
+
     def __init__(self, pos, center, start, end, arc3points=False,
                  dimstyle='Default', layer=None, roundval=None):
         """
@@ -575,13 +583,15 @@ class ArcDimension(AngularDimension):
 
     def _get_dimtext(self):
         arc_length = (self.end_angle - self.start_angle) * \
-                      self.radius * self.prop('scale')
+                     self.radius * self.prop('scale')
         return self.format_dimtext(arc_length)
+
 
 class RadialDimension(_DimensionBase):
     """ Draw a radius dimension line from `target` in direction of `center` with
     length drawing units. RadialDimension has a special tick!!
     """
+
     def __init__(self, center, target, length=1.,
                  dimstyle='Default', layer=None, roundval=None):
         """
@@ -627,15 +637,15 @@ class RadialDimension(_DimensionBase):
             insert=insert_point,
             height=self.prop('height'),
             rotation=rotation,
-            valign = const.MIDDLE,
-            halign = const.RIGHT,
+            valign=const.MIDDLE,
+            halign=const.RIGHT,
             alignpoint=insert_point,
             layer=self.prop('layer'),
             style=self.prop('style'),
             color=self.prop('textcolor')))
 
     def _get_insert_point(self):
-        return vsub(self.target , vmul_scalar(
+        return vsub(self.target, vmul_scalar(
             self.target_vector, self.length + self.prop('textabove')))
 
     def _get_dimtext(self):
@@ -651,6 +661,7 @@ class RadialDimension(_DimensionBase):
             xscale=self.prop('tickfactor'),
             yscale=self.prop('tickfactor'),
             layer=self.prop('layer')))
+
 
 def center_of_3points_arc(point1, point2, point3):
     """ calc center point of 3 point arc

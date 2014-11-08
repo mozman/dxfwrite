@@ -73,6 +73,7 @@ class Ellipse(_BaseCurve):
             polyline.close()
         return polyline.__dxftags__()
 
+
 class Bezier(_BaseCurve):
     class Segment(object):
         def __init__(self, start, end, start_tangent, end_tangent, segments):
@@ -87,7 +88,7 @@ class Bezier(_BaseCurve):
                 self.start,
                 vadd(self.start, self.start_tangent),
                 vadd(self.end, self.end_tangent),
-                self.end ]
+                self.end]
             bezier = CubicBezierCurve(control_points)
             return bezier.approximate(self.segments)
 
@@ -124,9 +125,9 @@ class Bezier(_BaseCurve):
         if len(self.points) > 1:
             for from_point, to_point in zip(self.points[:-1], self.points[1:]):
                 start_point = from_point[0]
-                start_tangent = from_point[2] # tangent2
+                start_tangent = from_point[2]  # tangent2
                 end_point = to_point[0]
-                end_tangent = to_point[1] # tangent1
+                end_tangent = to_point[1]  # tangent1
                 count = to_point[3]
                 yield Bezier.Segment(start_point, end_point,
                                      start_tangent, end_tangent, count)
@@ -141,9 +142,12 @@ class Bezier(_BaseCurve):
             polyline.add_vertices(points)
         return polyline.__dxftags__()
 
+
 class Spline(_BaseCurve):
-    def __init__(self, points=[], segments=100, color=const.BYLAYER, layer='0',
+    def __init__(self, points=None, segments=100, color=const.BYLAYER, layer='0',
                  linetype=None):
+        if points is None:
+            points = []
         self.color = color
         self.layer = layer
         self.linetype = linetype

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Purpose: tables R12
 # module belongs to package: dxfwrite.py
 # Created: 09.02.2010
@@ -12,6 +12,7 @@ __all__ = ['create_table']
 
 from .base import *
 
+
 def create_table(name):
     """ Table factory.
     """
@@ -22,18 +23,20 @@ def create_table(name):
     else:
         raise ValueError("unknown table '%s'" % str(name))
 
+
 class _Table(object):
     """ Base table class.
     """
+
     def __init__(self, tablename):
         self.tablename = tablename
-        self._entries = {} # use only add() for adding objects
+        self._entries = {}  # use only add() for adding objects
 
     def __dxf__(self):
         return dxfstr(self.__dxftags__())
 
     def __dxftags__(self):
-        return DXFList( (
+        return DXFList((
             DXFAtom('TABLE'),
             DXFName(self.tablename),
             DXFInt(len(self._entries)),
@@ -59,6 +62,7 @@ class _Table(object):
         """ Add a table entry.
         """
         self._entries[entry['name']] = entry
+
 
 class Viewports(_Table):
     def __init__(self):

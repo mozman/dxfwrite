@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Purpose: tables entries R12
 # module belongs to package: dxfwrite.py
 # Created: 09.02.2010
@@ -18,13 +18,13 @@ _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION = {
         'flags': AttribDef(DXFInt, 70, priority=53),
         'description': AttribDef(DXFString, 3, priority=101),
         'pattern': AttribDef(PassThroughFactory, priority=102),
-        },
+    },
     'LAYER': {
         'name': AttribDef(DXFString, 2, priority=52),
         'flags': AttribDef(DXFInt, 70, priority=53),
         'color': AttribDef(DXFInt, 62, priority=101),
         'linetype': AttribDef(DXFString, 6, priority=102),
-        },
+    },
     'STYLE': {
         'name': AttribDef(DXFString, 2, priority=52),
         'flags': AttribDef(DXFInt, 70, priority=53),
@@ -35,7 +35,7 @@ _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION = {
         'generation_flags': AttribDef(DXFInt, 71, priority=105),
         'font': AttribDef(DXFString, 3, priority=106),
         'bigfont': AttribDef(DXFString, 4, priority=107),
-        },
+    },
     'VIEW': {
         'name': AttribDef(DXFString, 2, priority=52),
         'flags': AttribDef(DXFInt, 70, priority=53),
@@ -49,11 +49,11 @@ _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION = {
         'back_clipping': AttribDef(DXFFloat, 44, priority=108),
         'view_twist': AttribDef(DXFAngle, 50, priority=109),
         'view_mode': AttribDef(DXFInt, 71, priority=110),
-        },
+    },
     'VPORT': {
         'name': AttribDef(DXFString, 2, priority=52),
         'flags': AttribDef(DXFInt, 70, priority=53),
-        'lower_left': AttribDef(DXFPoint2D, 0,priority=101),
+        'lower_left': AttribDef(DXFPoint2D, 0, priority=101),
         'upper_right': AttribDef(DXFPoint2D, 1, priority=102),
         'center_point': AttribDef(DXFPoint2D, 2, priority=103),
         'snap_base': AttribDef(DXFPoint2D, 3, priority=104),
@@ -78,19 +78,20 @@ _DXF12_TABLE_ENTRY_ATTRIBUTE_DEFINITION = {
         'grid_on': AttribDef(DXFInt, 76, priority=128),
         'snap_style': AttribDef(DXFInt, 77, priority=129),
         'snap_isopair': AttribDef(DXFInt, 78, priority=130)
-        },
+    },
     'APPID': {
         'name': AttribDef(DXFString, 2, priority=52),
         'flags': AttribDef(DXFInt, 70, priority=53),
-        },
+    },
     'UCS': {
         'name': AttribDef(DXFString, 2, priority=52),
         'flags': AttribDef(DXFInt, 70, priority=53),
-        'origin': AttribDef(DXFPoint3D, 0,priority=101),
+        'origin': AttribDef(DXFPoint3D, 0, priority=101),
         'xaxis': AttribDef(DXFPoint3D, 1, priority=102),
         'yaxis': AttribDef(DXFPoint3D, 2, priority=103),
-        },
-    }
+    },
+}
+
 
 class _TableEntry(object):
     """ Base class for table entries.
@@ -112,7 +113,7 @@ class _TableEntry(object):
 
     def __setitem__(self, key, value):
         if self.is_valid_attribute_name(key):
-            self.attribs[key] = self._get_dxf_atom(key, value) # factory is called
+            self.attribs[key] = self._get_dxf_atom(key, value)  # factory is called
         else:
             raise KeyError("Invalid attribute '%s' for TableEntry '%s'." % (str(key), self.__class__.__name__))
 
@@ -120,9 +121,9 @@ class _TableEntry(object):
         if self.is_valid_attribute_name(key):
             element = self.attribs[key]
             try:
-                return element.value # DXFAtom
+                return element.value  # DXFAtom
             except AttributeError:
-                return element # DXFList or list or tuple
+                return element  # DXFList or list or tuple
         else:
             raise KeyError("Invalid attribute '%s' for TableEntry '%s'." % (str(key), self.__class__.__name__))
 
@@ -141,8 +142,8 @@ class _TableEntry(object):
         """ Get DXF attributes sorted by priority.
         """
         priority_attribs = ( (self._priority(key), value)
-                 for key, value in self.attribs.items() )
-        return ( value for priority, value  in sorted(priority_attribs) )
+                             for key, value in self.attribs.items() )
+        return ( value for priority, value in sorted(priority_attribs) )
 
     def __dxf__(self):
         return dxfstr(self.__dxftags__())
@@ -150,7 +151,7 @@ class _TableEntry(object):
     def __dxftags__(self):
         dxf = DXFList()
         dxf.append(DXFAtom(self.TABLE_NAME))
-        dxf.extend(self.get_attribs()) # sorted attribs
+        dxf.extend(self.get_attribs())  # sorted attribs
         return dxf
 
 
@@ -187,13 +188,14 @@ class Linetype(_TableEntry):
            pattern[n] = line segment, > 0 is line, < 0 is gap, 0.0 = dot
         """
         tags = DXFList()
-        count = len(pattern) - 1 # the number of linetype elements
-        tags.append(DXFInt(65, 72)) # Alignment code; value is always 65, ASCII for 'A'
-        tags.append(DXFInt(count, 73)) # the number of linetype elements
-        tags.append(DXFFloat(pattern[0])) # total pattern length
+        count = len(pattern) - 1  # the number of linetype elements
+        tags.append(DXFInt(65, 72))  # Alignment code; value is always 65, ASCII for 'A'
+        tags.append(DXFInt(count, 73))  # the number of linetype elements
+        tags.append(DXFFloat(pattern[0]))  # total pattern length
         for element in pattern[1:]:
-            tags.append(DXFFloat(element, 49)) # line segment
+            tags.append(DXFFloat(element, 49))  # line segment
         return tags
+
 
 class Layer(_TableEntry):
     """ DXF LAYER table entry - layer definition
@@ -222,16 +224,16 @@ class Layer(_TableEntry):
         super(Layer, self).__init__(name, **default)
 
     def freeze(self):
-        self['flags']= set_flag(self['flags'], const.STD_FLAGS_LAYER_FROZEN, True)
+        self['flags'] = set_flag(self['flags'], const.STD_FLAGS_LAYER_FROZEN, True)
 
     def thaw(self):
-        self['flags']= set_flag(self['flags'], const.STD_FLAGS_LAYER_FROZEN, False)
+        self['flags'] = set_flag(self['flags'], const.STD_FLAGS_LAYER_FROZEN, False)
 
     def lock(self):
-        self['flags']= set_flag(self['flags'], const.STD_FLAGS_LAYER_LOCKED, True)
+        self['flags'] = set_flag(self['flags'], const.STD_FLAGS_LAYER_LOCKED, True)
 
     def unlock(self):
-        self['flags']= set_flag(self['flags'], const.STD_FLAGS_LAYER_LOCKED, False)
+        self['flags'] = set_flag(self['flags'], const.STD_FLAGS_LAYER_LOCKED, False)
 
     def on(self):
         color = self['color']
@@ -242,6 +244,7 @@ class Layer(_TableEntry):
         color = self['color']
         if color > 0:
             self['color'] = color * -1
+
 
 class Style(_TableEntry):
     """ DXF STYLE table entry - textstyle definition
@@ -277,6 +280,7 @@ class Style(_TableEntry):
         default.update(kwargs)
         super(Style, self).__init__(name, **default)
 
+
 class View(_TableEntry):
     """ DXF VIEW table entry - view definition
     """
@@ -307,8 +311,8 @@ class View(_TableEntry):
             'height': 1.0,
             'width': 1.0,
             # index_shift set at output, don't care
-            'center_point': (0.5, 0.5) ,
-            'direction_point': (0, 0, 1) ,
+            'center_point': (0.5, 0.5),
+            'direction_point': (0, 0, 1),
             'target_point': (0, 0, 0),
             'lens_length': 50,
             'front_clipping': 0,
@@ -318,6 +322,7 @@ class View(_TableEntry):
         }
         default.update(kwargs)
         super(View, self).__init__(name, **default)
+
 
 class VPort(_TableEntry):
     """ DXF VPORT table entry - viewport definition
@@ -384,6 +389,7 @@ class VPort(_TableEntry):
         default.update(kwargs)
         super(VPort, self).__init__(name, **default)
 
+
 class AppID(_TableEntry):
     """ DXF AppID table entry - Application ID entries
     """
@@ -396,6 +402,7 @@ class AppID(_TableEntry):
         }
         default.update(kwargs)
         super(AppID, self).__init__(name, **default)
+
 
 class UCS(_TableEntry):
     """ DXF UCS table entry - user coordinate system
@@ -414,8 +421,8 @@ class UCS(_TableEntry):
         default = {
             'flags': 0,
             'origin': (0., 0., 0.),
-            'xaxis':  (1., 0., 0.),
-            'yaxis':  (0., 1., 0.),
+            'xaxis': (1., 0., 0.),
+            'yaxis': (0., 1., 0.),
         }
         default.update(kwargs)
         super(UCS, self).__init__(name, **default)

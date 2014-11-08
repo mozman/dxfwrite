@@ -40,11 +40,11 @@ class TestRectangleAPI(unittest.TestCase):
 class TestRectangleImplementation(unittest.TestCase):
     def test_components(self):
         expected = "  0\nPOLYLINE\n 62\n256\n  8\nRECTANGLE\n 66\n1\n 10\n"\
-                 "0.0\n 20\n0.0\n 30\n0.0\n 70\n9\n  0\nVERTEX\n  8\n0\n 10\n"\
-                 "0.0\n 20\n0.0\n 30\n0.0\n  0\nVERTEX\n  8\n0\n 10\n"\
+                 "0.0\n 20\n0.0\n 30\n0.0\n 70\n9\n  0\nVERTEX\n  8\nRECTANGLE\n 10\n"\
+                 "0.0\n 20\n0.0\n 30\n0.0\n  0\nVERTEX\n  8\nRECTANGLE\n 10\n"\
                  "3.53553390593\n 20\n3.53553390593\n 30\n0.0\n  0\nVERTEX\n"\
-                 "  8\n0\n 10\n1.41421356237\n 20\n5.65685424949\n 30\n0.0\n"\
-                 "  0\nVERTEX\n  8\n0\n 10\n-2.12132034356\n 20\n2.12132034356\n"\
+                 "  8\nRECTANGLE\n 10\n1.41421356237\n 20\n5.65685424949\n 30\n0.0\n"\
+                 "  0\nVERTEX\n  8\nRECTANGLE\n 10\n-2.12132034356\n 20\n2.12132034356\n"\
                  " 30\n0.0\n  0\nSEQEND\n  0\nSOLID\n 62\n3\n  8\nRECTANGLE\n"\
                  " 10\n0.0\n 20\n0.0\n 30\n0.0\n 11\n3.53553390593\n 21\n"\
                  "3.53553390593\n 31\n0.0\n 13\n1.41421356237\n 23\n"\

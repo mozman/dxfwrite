@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Purpose: Drawing R12
 # module belongs to package: dxfwrite.py
 # Created: 09.02.2010
@@ -24,6 +24,7 @@ class Drawing(object):
     
     """
     ENCODING = 'cp1252'
+
     def __init__(self, name='noname.dxf'):
         """ Drawing constructor.
 
@@ -40,17 +41,28 @@ class Drawing(object):
         self.default_settings()
 
     @property
-    def linetypes(self): return self.tables.linetypes
+    def linetypes(self):
+        return self.tables.linetypes
+
     @property
-    def layers(self): return self.tables.layers
+    def layers(self):
+        return self.tables.layers
+
     @property
-    def styles(self): return self.tables.styles
+    def styles(self):
+        return self.tables.styles
+
     @property
-    def views(self): return self.tables.views
+    def views(self):
+        return self.tables.views
+
     @property
-    def viewports(self): return self.tables.viewports
+    def viewports(self):
+        return self.tables.viewports
+
     @property
-    def ucs(self): return self.tables.ucs
+    def ucs(self):
+        return self.tables.ucs
 
     def __dxf__(self):
         """ Returns the drawing DXF content as string.
@@ -163,7 +175,7 @@ class Drawing(object):
         return style
 
     def add_linetype(self, name, **kwargs):
-        linetype=DXFEngine.linetype(name, **kwargs)
+        linetype = DXFEngine.linetype(name, **kwargs)
         self.linetypes.add(linetype)
         return linetype
 
@@ -188,7 +200,7 @@ class Drawing(object):
         return [DXFEngine.linetype(
             name, description=desc,
             pattern=DXFEngine.linepattern(pat))
-            for name, desc, pat in std.linetypes()]
+                for name, desc, pat in std.linetypes()]
 
     def std_styles(self):
         """ Create standard text styles.
@@ -200,6 +212,7 @@ class Drawing(object):
         drawing and `insert` is the insertion point.
 
         """
+
         def normblockname(blockname):
             for char in ' :/\\.':
                 blockname = blockname.replace(char, '')
@@ -211,8 +224,10 @@ class Drawing(object):
         self.blocks.add(xref)
         self.add(DXFEngine.insert(blockname, insert, layer=layer))
 
+
 class ModelSpaceProxy(object):
     LAYOUT = 0
+
     def __init__(self, entities):
         self._entities = entities
 
@@ -220,6 +235,7 @@ class ModelSpaceProxy(object):
         entity['paper_space'] = self.LAYOUT
         self._entities.add(entity)
         return entity
+
 
 class PaperSpaceProxy(ModelSpaceProxy):
     LAYOUT = 1

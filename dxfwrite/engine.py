@@ -192,19 +192,23 @@ class DXFEngine(object):
         return Point(point=point, **kwargs)
 
     @staticmethod
-    def solid(points=[], **kwargs):
+    def solid(points=None, **kwargs):
         """ Create a solid-entity by 3 or 4 vertices, the z-axis for 2D-points is 0.
 
         :param list points: three or four 2D- or 3D-points (tuples)
         """
+        if points is None:
+            points = []
         return Solid(points, **kwargs)
 
     @staticmethod
-    def trace(points=[], **kwargs):
+    def trace(points=None, **kwargs):
         """ Create a trace-entity by 3 or 4 vertices, the z-axis for 2D-points is 0.
 
         :param list points: three or four 2D- or 3D-points (tuples)
         """
+        if points is None:
+            points = []
         return Trace(points, **kwargs)
 
     @staticmethod
@@ -342,13 +346,15 @@ class DXFEngine(object):
         return Attrib(text=text, insert=insert, **kwargs)
 
     @staticmethod
-    def face3d(points=[], **kwargs):
+    def face3d(points=None, **kwargs):
         """ Create a 3DFACE-entity by 3 or 4 vertices, the z-axis for 2D-points is 0.
 
         :param list points: three or four 2D- or 3D-points (tuples)
         :param int flags: edge flags, bit-coded, default=0
 
         """
+        if points is None:
+            points = []
         return Face3D(points, **kwargs)
 
     @staticmethod
@@ -364,7 +370,7 @@ class DXFEngine(object):
         return Block(name=name, basepoint=basepoint, **kwargs)
 
     @staticmethod
-    def polyline(points=[], **kwargs):
+    def polyline(points=None, **kwargs):
         """ Create a new polyline entity. Polymesh and polyface are also polylines.
 
         :param points: list of points, 2D or 3D points, z-value of 2D points is 0.
@@ -384,6 +390,8 @@ class DXFEngine(object):
             ??? see dxf-documentation
 
         """
+        if points is None:
+            points = []
         return Polyline(points, **kwargs)
 
     @staticmethod
@@ -598,7 +606,7 @@ class DXFEngine(object):
                         color, layer, linetype)
 
     @staticmethod
-    def insert2(blockdef, insert=(0., 0.), attribs={}, **kwargs):
+    def insert2(blockdef, insert=(0., 0.), attribs=None, **kwargs):
         """ Insert a new block-reference with auto-creating of :ref:`ATTRIB` from
         :ref:`ATTDEF`, and setting attrib-text by the attribs-dict.
         (multi-insert is not supported)
@@ -618,5 +626,7 @@ class DXFEngine(object):
         :param int color: range [1..255], 0 = **BYBLOCK**, 256 = **BYLAYER**
 
         """
+        if attribs is None:
+            attribs = {}
         return Insert2(blockdef=blockdef, insert=insert, attribs=attribs,
                        **kwargs)

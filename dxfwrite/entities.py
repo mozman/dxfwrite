@@ -604,6 +604,8 @@ class Polyline(_Entity):
 
         :param point: is a (x, y) or (x, y, z) tuple, z-value of a 2D point is 0.
         """
+        if not kwargs.get('layer'):
+            kwargs['layer']=self['layer']
         self.vertices.append(Vertex(location=point, **kwargs))
 
     def add_vertices(self, points):
@@ -663,7 +665,8 @@ class Polymesh(_Entity):
                                  status)
 
     def _build_vertex(self, point):
-        return Vertex(location=point, flags=const.VTX_3D_POLYGON_MESH_VERTEX)
+        return Vertex(location=point, flags=const.VTX_3D_POLYGON_MESH_VERTEX,
+                      layer=self['layer'])
 
     def set_vertex(self, row, col, point):
         """ Set location of vertex (row, col).
@@ -710,11 +713,13 @@ class Polyface(_Entity):
 
     def _build_vertex(self, point):
         return Vertex(location=point,
+                      layer=self['layer'],
                       flags=const.VTX_3D_POLYGON_MESH_VERTEX + \
                       const.VTX_3D_POLYFACE_MESH_VERTEX)
 
     def _build_face(self, color):
-        return Vertex(flags=const.VTX_3D_POLYFACE_MESH_VERTEX, color=color)
+        return Vertex(flags=const.VTX_3D_POLYFACE_MESH_VERTEX, color=color,
+                      layer=self['layer'])
     # do not delete 'location' for the face-vertex, it is needed,
     # even though it is always (0,0,0), tested with AutoCAD
 

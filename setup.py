@@ -7,7 +7,7 @@
 # License: MIT License
 
 import os
-from distutils.core import setup
+from setuptools import setup
 
 from dxfwrite import VERSION, AUTHOR_NAME, AUTHOR_EMAIL
 
@@ -23,8 +23,8 @@ setup(name='dxfwrite',
       version=VERSION,
       description='A Python library to create DXF R12 drawings.',
       author=AUTHOR_NAME,
-      url='http://bitbucket.org/mozman/dxfwrite',
-      download_url='http://bitbucket.org/mozman/dxfwrite/downloads',
+      url='https://github.com/mozman/dxfwrite.git',
+      download_url='https://github.com/mozman/dxfwrite/releases',
       author_email=AUTHOR_EMAIL,
       packages=['dxfwrite', 'dxfwrite/algebra'],
       provides=['dxfwrite'],
@@ -39,6 +39,8 @@ setup(name='dxfwrite',
           "Programming Language :: Python :: 2.7",
           "Programming Language :: Python :: 3",
           "Programming Language :: Python :: 3.4",
+          "Programming Language :: Python :: 3.5",
+          "Programming Language :: Python :: 3.6",
           "Programming Language :: Python :: Implementation :: CPython",
           "Programming Language :: Python :: Implementation :: PyPy",
           "Intended Audience :: Developers",

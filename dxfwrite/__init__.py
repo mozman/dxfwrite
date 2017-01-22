@@ -12,10 +12,10 @@ from dxfwrite.base import *
 from dxfwrite.engine import DXFEngine
 
 
-version = (1, 2, 0)
+version = (1, 2, 1)
 VERSION = "%d.%d.%d"  % version
 
-CYEAR = "2010-2012"
+CYEAR = "2010-2017"
 AUTHOR_NAME = "Manfred Moitzi"
 AUTHOR_EMAIL = "mozman@gmx.at"
 LICENSE = "MIT License"

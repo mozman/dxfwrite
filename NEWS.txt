@@ -2,10 +2,11 @@
 News
 ====
 
-Version 1.2.1 - 2014...
+Version 1.2.1 - 2017-01-22
 
   * BUGFIX: same layer for polyline and vertex entities (Ken Healy)
   * PEP8  refactorings
+  * Moved to GitHub.com: https://github.com/mozman/dxfwrite.git
 
 Version 1.2.0 - 2012-08-01
 

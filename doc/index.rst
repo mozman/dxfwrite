@@ -25,11 +25,10 @@ drawing with the :meth:`Drawing.add` method. :ref:`Layers <Layer>`,
 :ref:`Textstyles <Textstyle>`, :ref:`Linetypes <Linetype>`, :ref:`Views <view>`
 and :ref:`Viewports <vport>` were also created by the :class:`DXFEngine` factory.
 
-Contents
-========
 
 .. toctree::
    :maxdepth: 1
+   :caption: Contents
 
    Drawing
    dxfengine
@@ -43,11 +42,9 @@ Contents
    /entities/vport
 
 
-DXF R12 Entities
-================
-
 .. toctree::
    :maxdepth: 1
+   :caption: DXF R12 Entities
 
    /entities/arc
    /entities/attdef
@@ -67,11 +64,9 @@ DXF R12 Entities
    /entities/text
    /entities/viewport
 
-Composite Entities
-==================
-
 .. toctree::
    :maxdepth: 1
+   :caption: Composite Entities
 
    /entities/mtext
    /entities/insert2
@@ -86,11 +81,10 @@ Composite Entities
    /entities/bezier
    /entities/clothoid
 
-Howtos
-======
 
 .. toctree::
    :maxdepth: 1
+   :caption: Howtos
 
    /howto/document
    /howto/shapes

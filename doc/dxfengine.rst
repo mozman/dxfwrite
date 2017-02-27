@@ -258,6 +258,9 @@ DXF R12 Entities
 
     Insert a new block-reference.
 
+    Hint: mirroring is scaling by -1, for mirroring about y-axis (x, y => -x, y) use xscale=-1, for mirroring about
+    x-axis (x, y => x, -y) use yscale=-1.
+
     :param str blockname: name of block definition
     :param insert: insert point (xy- or xyz-tuple), z-axis is 0 by default
     :param float xscale: x-scale factor, default=1.

@@ -108,7 +108,7 @@ example::
         prompt='input text:', # only important for interactive CAD systems
         tag='BLK')
     block.add(attdef)
-    drawing.block.add(block) # add block definition to drawing
+    drawing.blocks.add(block) # add block definition to drawing
     blockref = dxf.insert(blockname='BLOCK1', insert=(10, 10)) # create a block reference
     # create a new attribute, given keywords override the default values from the attrib definition
     attrib = attdef.new_attrib(height=0.18, text='TEST')

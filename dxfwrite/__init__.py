@@ -13,14 +13,14 @@ from dxfwrite.engine import DXFEngine
 
 
 version = (1, 2, 1)
-VERSION = "%d.%d.%d"  % version
+VERSION = "%d.%d.%d" % version
 
 CYEAR = "2010-2017"
 AUTHOR_NAME = "Manfred Moitzi"
-AUTHOR_EMAIL = "mozman@gmx.at"
+AUTHOR_EMAIL = "me@mozman.at"
 LICENSE = "MIT License"
 
-__author__ = "mozman <mozman@gmx.at>"
+__author__ = "mozman <me@mozman.at>"
 __doc__ = """A Python library to create DXF R12 drawings.
 
 Copyright %s

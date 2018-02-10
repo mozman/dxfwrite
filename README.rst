@@ -2,6 +2,10 @@
 dxfwrite
 ========
 
+.. image:: https://readthedocs.org/projects/pip/badge/
+   :target: https://dxfwrite.readthedocs.io
+   :alt: Read The Docs
+
 Abstract
 --------
 
@@ -96,9 +100,7 @@ or from source::
 Documentation
 -------------
 
-http://dxfwrite.readthedocs.org
-
-http://packages.python.org/dxfwrite/
+http://dxfwrite.readthedocs.io
 
 The source code repository of dxfwrite can be found at GitHub.com:
 
@@ -106,4 +108,7 @@ https://github.com/mozman/dxfwrite.git
 
 Feedback is greatly appreciated.
 
-mozman <mozman@gmx.at>
+Contact
+=======
+
+dxfwrite@mozman.at

@@ -18,17 +18,22 @@ from dxfwrite.base import dxfstr
 from dxfwrite.table import Table, CustomCell
 from dxfwrite.table import Grid, Style, DEFAULT_BORDER_COLOR
 
+
 class DXFMock:
     counter = 0
+
     def __dxf__(self):
         DXFMock.counter += 1
         return ""
 
-class TestCell(CustomCell):
+
+class UserCell(CustomCell):
     counter = 0
+
     def get_dxf_entity(self, coords, layer):
-        TestCell.counter += 1
+        UserCell.counter += 1
         return DXFMock()
+
 
 class TestTableApi(unittest.TestCase):
     def test_init(self):
@@ -125,7 +130,7 @@ class TestTableImplementation(unittest.TestCase):
         indices = [(0, 0), (0, 1), (0, 2),
                    (1, 0), (1, 1), (1, 2),
                    (2, 0), (2, 1), (2, 2)]
-        cell = TestCell(table, 'default', (1, 1))
+        cell = UserCell(table, 'default', (1, 1))
         for row, col in indices:
             table.set_cell(row, col, cell)
         dxfstr(table)
@@ -135,7 +140,7 @@ class TestTableImplementation(unittest.TestCase):
 
     def reset_counter(self):
         DXFMock.counter = 0
-        TestCell.counter = 0
+        UserCell.counter = 0
 
     def test_dxf_creation_span(self):
         self.reset_counter()
@@ -143,10 +148,10 @@ class TestTableImplementation(unittest.TestCase):
         indices = [(0, 0), (0, 1), (0, 2),
                    (1, 0), (1, 1), (1, 2),
                    (2, 0), (2, 1), (2, 2)]
-        cell = TestCell(table, 'default', (1, 1))
+        cell = UserCell(table, 'default', (1, 1))
         for row, col in indices:
             table.set_cell(row, col, cell)
-        spancell = TestCell(table, 'default', span=(2, 2)) # hides 3 cells
+        spancell = UserCell(table, 'default', span=(2, 2)) # hides 3 cells
         table.set_cell(0, 0, spancell)
         table.__dxf__()
         dxfmock = DXFMock()

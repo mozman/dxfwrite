@@ -2,6 +2,10 @@
 News
 ====
 
+Version 1.2.2 - 2020-01-01
+
+  * WARNING: OUTDATED PACKAGE - switch to `ezdxf`: https://pypi.org/project/ezdxf/
+
 Version 1.2.1 - 2017-01-22
 
   * BUGFIX: same layer for polyline and vertex entities (Ken Healy)

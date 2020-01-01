@@ -1,9 +1,13 @@
-# Created by .ignore support plugin (hsz.mobi)
-.idea/
+.idea
+.tox
+.pytest_cache
+build
 MANIFEST
 build/
 dist/
 doc/_build/
 doc/_static/
 dxfwrite.egg-info/
-
+tox.ini
+newctb.ctb
+*.bat

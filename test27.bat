@@ -1,1 +1,0 @@
-@py -2 -m pytest tests

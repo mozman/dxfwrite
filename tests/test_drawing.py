@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 # Created: 27.04.2010
 # Copyright (C) 2010, Manfred Moitzi
 # License: MIT License
@@ -12,6 +12,7 @@ import unittest
 
 from dxfwrite import DXFEngine as dxf
 from dxfwrite.util import is_string
+
 
 class TestDrawing(unittest.TestCase):
     def test_drawing(self):
@@ -44,12 +45,12 @@ class TestDrawing(unittest.TestCase):
 
     def test_anonymous_blockname(self):
         dwg = dxf.drawing()
-        self.assertTrue(re.match("^\*U\d*$", dwg.anonymous_blockname('U')))
+        self.assertTrue(re.match(r"^\*U\d*$", dwg.anonymous_blockname('U')))
 
     def test_add_anonymous_block(self):
         dwg = dxf.drawing()
         blockname = dwg.add_anonymous_block("TEST")
-        self.assertTrue(re.match("^\*U\d*$", blockname))
+        self.assertTrue(re.match(r"^\*U\d*$", blockname))
         block = dwg.blocks.find(blockname)
         entity = block.get_data().pop()
         self.assertEqual(entity, "TEST")
@@ -99,5 +100,5 @@ class TestDrawing(unittest.TestCase):
         self.assertEqual(element['name'], 'TEST')
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     unittest.main()
